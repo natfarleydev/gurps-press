@@ -106,17 +106,18 @@
     }
   }
 
-  if char.attacks.len() > 0 {
-    lines.push(strong[Attacks:])
-    for a in char.attacks.sorted(key: sort-key) {
-      let distance = if a.kind == "melee-attack" {
-        if a.reach != none [ Reach #a.reach.]
-      } else {
-        if a.range != none [ Range #a.range.]
-      }
-      let notes = if a.notes != none [ #a.notes]
-      lines.push([#h(1em)#strong[#a.name (#a.level):] #a.damage.#distance#notes])
+  let attack-entry(a) = {
+    let distance = if a.kind == "melee-attack" {
+      if a.reach != none [ Reach #a.reach.]
+    } else {
+      if a.range != none [ Range #a.range.]
     }
+    let notes = if a.notes != none [ #a.notes]
+    [#h(1em)#strong[#a.name (#a.level):] #a.damage.#distance#notes]
+  }
+  if char.attacks.len() > 0 {
+    let entries = char.attacks.sorted(key: sort-key).map(attack-entry)
+    lines.push([#strong[Attacks:] #block(spacing: 0.65em, entries.join(parbreak()))])
   }
 
   block({
