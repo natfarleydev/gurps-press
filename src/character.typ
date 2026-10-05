@@ -335,11 +335,22 @@
 /// #total-points(napoleon) points
 /// ```
 ///
-/// The result is a dictionary with keys `kind` (`"character"`), `name`,
-/// `attributes` (keyed `ST`, `DX`, `IQ`, `HT`, `HP`, `Will`, `Per`, `FP`,
-/// `Basic Speed`, `Basic Move`; each `(level:, points:)`), `dodge`, `sm`,
-/// `dr`, `thr`, `sw`, and arrays `advantages`, `perks`, `disadvantages`,
-/// `quirks`, `skills`, `spells`, `attacks`. Read values with @level-of.
+/// The result is a plain dictionary, and its shape is public API: read it
+/// directly, or with @level-of, to quote numbers or write your own
+/// renderer. It has these keys:
+///
+/// - `kind`: `"character"`; `name`.
+/// - `attributes`: keyed `ST`, `DX`, `IQ`, `HT`, `HP`, `Will`, `Per`, `FP`,
+///   `Basic Speed`, `Basic Move`, in that order; each `(level:, points:)`.
+/// - `dodge`, `sm`, `dr`, `thr`, `sw`: as given or calculated.
+/// - `advantages`, `perks`, `disadvantages`, `quirks`: arrays of
+///   `(kind:, name:, points:, level:)` in the order given.
+/// - `skills`, `spells`: arrays of `(kind:, name:, level:, points:, base:,
+///   difficulty:)`, with `points` worked out where a base was given.
+/// - `attacks`: arrays of `(kind:, name:, level:, damage:, notes:)` plus
+///   `reach` (melee) or `range` (ranged).
+///
+/// Unknown values are `none`.
 ///
 /// -> dictionary
 #let character(

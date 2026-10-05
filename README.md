@@ -64,7 +64,7 @@ functions are called with `#`.
 | `advantage`, `disadvantage`, `perk`, `quirk` | Traits for `character` | `advantage("Magery", points: 25, level: 2)` |
 | `skill`, `spell` | Skills and spells; cost from points or `"DX/A"` | `skill("Stealth", 12, "DX/A")` |
 | `melee-attack`, `ranged-attack` | Attacks for the stat block | `ranged-attack("Bow", 14, [1d+2 imp], range: "150/200")` |
-| `stat-block(char, show-points: true)` | Typesets a character | `#stat-block(napoleon)` |
+| `stat-block(char, show-points: true, title: auto, section: auto)` | Typesets a character; hooks restyle the title and lists | `#stat-block(napoleon)` |
 | `level-of(char, name)` | Level of an attribute, skill or spell | `#level-of(napoleon, "HP")` |
 | `total-points(char)` | Total character points | `#total-points(napoleon)` |
 
@@ -87,6 +87,10 @@ functions are called with `#`.
 )
 #stat-block(guard, show-points: false)
 ```
+
+`character()` returns a plain dictionary whose shape is documented, so
+you can also quote any number from it or write your own layout; the manual
+has a section on that.
 
 Mistakes such as an unknown difficulty, a skill level too low to buy, or a
 misspelt argument stop compilation with a message saying what to fix.
