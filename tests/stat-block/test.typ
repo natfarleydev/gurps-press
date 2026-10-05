@@ -10,7 +10,9 @@
 // One of everything; lists come out sorted by name.
 #stat-block(character(
   name: "Napoleon",
-  st: 9, hp: 12, dr: [1 (glasses)],
+  st: 9,
+  hp: 12,
+  dr: [1 (glasses)],
   advantage("Natural afro", points: 1),
   advantage("Magery", points: 25, level: 2),
   advantage("Zoology"),
@@ -29,7 +31,9 @@
 // Points hidden.
 #stat-block(show-points: false, character(
   name: [The _Thing_],
-  st: 20, dx: 9, basic-speed: 5.75,
+  st: 20,
+  dx: 9,
+  basic-speed: 5.75,
   advantage("Claws", points: 8),
   skill("Brawling", 12, "DX/E"),
 ))

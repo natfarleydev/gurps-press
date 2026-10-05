@@ -3,13 +3,12 @@
 // This file only re-exports the public API; see the other files in src/.
 
 #import "text.typ": (
-  gurps, sjgames, dice, gurps-book,
-  sjgames-disclaimer, sjgames-notice, sjgames-game-aid,
+  dice, gurps, gurps-book, sjgames, sjgames-disclaimer, sjgames-game-aid,
+  sjgames-notice,
 )
-#import "damage.typ": thrust, swing
+#import "damage.typ": swing, thrust
 #import "character.typ": (
-  advantage, disadvantage, perk, quirk, skill, spell,
-  melee-attack, ranged-attack,
-  character, level-of, total-points,
+  advantage, character, disadvantage, level-of, melee-attack, perk, quirk,
+  ranged-attack, skill, spell, total-points,
 )
 #import "stat-block.typ": stat-block

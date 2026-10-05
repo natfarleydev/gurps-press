@@ -11,7 +11,9 @@
   str(calc.quo(hundredths, 100)) + "." + "0" * (2 - fraction.len()) + fraction
 }
 
-#let format-damage(damage) = if type(damage) == array { dice(..damage) } else { damage }
+#let format-damage(damage) = if type(damage) == array { dice(..damage) } else {
+  damage
+}
 
 // SM is written with a sign (SM +1, SM −2) except for zero.
 #let format-sm(sm) = if sm > 0 { "+" + str(sm) } else { str(sm) }
@@ -19,8 +21,9 @@
 // The hooks' defaults, exactly as documented on stat-block().
 #let default-title(char, total) = {
   let points = if total != none [#total points]
-  if char.name == none { points }
-  else [#strong(char.name)#if points != none [ (#points)]]
+  if char.name == none { points } else [#strong(char.name)#if (
+      points != none
+    ) [ (#points)]]
 }
 #let default-section(label, body) = [#strong[#label:] #body]
 
@@ -29,8 +32,13 @@
   let result = hook(..args)
   if result != none and type(result) not in (content, str) {
     panic(
-      "stat-block() " + name + " hook must return content, a string or none, got "
-        + repr(result) + ". Wrap it in brackets, e.g. [#" + repr(result) + "].",
+      "stat-block() "
+        + name
+        + " hook must return content, a string or none, got "
+        + repr(result)
+        + ". Wrap it in brackets, e.g. [#"
+        + repr(result)
+        + "].",
     )
   }
   result
@@ -110,7 +118,10 @@
     panic("stat-block() expects the result of character(), got " + repr(char))
   }
   if type(show-points) != bool {
-    panic("stat-block() show-points must be true or false, got " + repr(show-points))
+    panic(
+      "stat-block() show-points must be true or false, got "
+        + repr(show-points),
+    )
   }
   if title == auto { title = default-title }
   if section == auto { section = default-section }
@@ -139,13 +150,17 @@
   let lines = ()
 
   if title != none {
-    let heading = call-hook("title", title, char, if show-points { total-points(char) })
+    let heading = call-hook("title", title, char, if show-points {
+      total-points(char)
+    })
     if heading != none { lines.push(heading) }
   }
   lines.push(sentence(("ST", "DX", "IQ", "HT").map(attr)))
   lines.push(sentence(("HP", "Will", "Per", "FP").map(attr)))
   lines.push(sentence((
-    attr("Basic Speed", shown: format-speed(char.attributes.at("Basic Speed").level)),
+    attr("Basic Speed", shown: format-speed(
+      char.attributes.at("Basic Speed").level,
+    )),
     attr("Basic Move"),
     [Dodge #char.dodge],
   )))
@@ -168,7 +183,9 @@
   ) {
     let items = char.at(key)
     if items.len() > 0 {
-      lines.push(call-hook("section", section, label, sentence(items.sorted(key: sort-key).map(entry))))
+      lines.push(call-hook("section", section, label, sentence(
+        items.sorted(key: sort-key).map(entry),
+      )))
     }
   }
 
@@ -183,11 +200,19 @@
   }
   if char.attacks.len() > 0 {
     let entries = char.attacks.sorted(key: sort-key).map(attack-entry)
-    lines.push(call-hook("section", section, "Attacks", block(spacing: 0.65em, entries.join(parbreak()))))
+    lines.push(call-hook("section", section, "Attacks", block(
+      spacing: 0.65em,
+      entries.join(parbreak()),
+    )))
   }
 
   block({
-    set par(first-line-indent: 0pt, hanging-indent: 1em, justify: false, spacing: 0.65em)
+    set par(
+      first-line-indent: 0pt,
+      hanging-indent: 1em,
+      justify: false,
+      spacing: 0.65em,
+    )
     lines.join(parbreak())
   })
 }

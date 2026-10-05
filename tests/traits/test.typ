@@ -16,7 +16,9 @@
 #assert.eq(disadvantage("Bugs").points, none)
 #assert.eq(disadvantage("Odious Habit", points: -5, level: 1).level, 1)
 #assert-panic(() => disadvantage("Bad Temper", points: 10))
-#assert(catch(() => disadvantage("Bad Temper", points: 10)).contains("negative"))
+#assert(
+  catch(() => disadvantage("Bad Temper", points: 10)).contains("negative"),
+)
 
 #assert.eq(perk("Fur").points, 1)
 #assert.eq(perk("Fur").kind, "perk")

@@ -14,7 +14,10 @@ six-sided dice which are notated as #dice($n$, $m$), e.g. #dice(3),
 
 #let foo = character(
   name: "Foo Bar",
-  st: 11, iq: 12, dx: 8, per: 15,
+  st: 11,
+  iq: 12,
+  dx: 8,
+  per: 15,
   advantage("Zoology"),
   advantage("Typesetting skills", points: 15),
   disadvantage("Fear of lions"),
@@ -25,9 +28,27 @@ six-sided dice which are notated as #dice($n$, $m$), e.g. #dice(3),
   skill("Typstpert!", 16, "IQ/Wildcard"),
   skill("Computer Operation (Typst)", 16, "Typstpert!/Hard"),
   spell(`#set`, 16),
-  melee-attack("Punch keyboard", 18, [#dice(5) cr], reach: "C, 1", notes: [Believe it!]),
-  melee-attack("Slam keyboard", 16, [#dice(10) cr], reach: "C, 1", notes: [Believe it _more!_]),
-  ranged-attack("Throw keyboard", 21, [#dice(1) cr], range: "100/1000", notes: [ARRRGGGG!]),
+  melee-attack(
+    "Punch keyboard",
+    18,
+    [#dice(5) cr],
+    reach: "C, 1",
+    notes: [Believe it!],
+  ),
+  melee-attack(
+    "Slam keyboard",
+    16,
+    [#dice(10) cr],
+    reach: "C, 1",
+    notes: [Believe it _more!_],
+  ),
+  ranged-attack(
+    "Throw keyboard",
+    21,
+    [#dice(1) cr],
+    range: "100/1000",
+    notes: [ARRRGGGG!],
+  ),
 )
 #stat-block(foo)
 

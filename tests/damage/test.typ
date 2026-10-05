@@ -1,5 +1,5 @@
 // thrust() and swing() follow the Basic Set damage table (B16).
-#import "/src/lib.typ": thrust, swing
+#import "/src/lib.typ": swing, thrust
 
 #assert.eq(thrust(1), (1, -6))
 #assert.eq(swing(1), (1, -5))

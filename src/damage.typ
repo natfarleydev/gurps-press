@@ -51,7 +51,9 @@
 #let row-for(st, caller) = {
   if type(st) != int or st < 1 or st > 100 {
     panic(
-      caller + "() covers ST 1 to 100, got " + repr(st)
+      caller
+        + "() covers ST 1 to 100, got "
+        + repr(st)
         + ". Set `thr:` and `sw:` on the character explicitly instead.",
     )
   }

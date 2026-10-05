@@ -12,7 +12,10 @@
 #set heading(numbering: "1.1")
 #show link: set text(fill: blue.darken(30%))
 #show raw.where(block: true): block.with(
-  fill: luma(245), inset: 8pt, radius: 3pt, width: 100%,
+  fill: luma(245),
+  inset: 8pt,
+  radius: 3pt,
+  width: 100%,
 )
 
 #align(center)[
@@ -58,7 +61,8 @@ It is a port of the LaTeX package
 
 #block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, stat-block(character(
   name: "Napoleon",
-  st: 9, hp: 12,
+  st: 9,
+  hp: 12,
   advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
@@ -100,8 +104,12 @@ calculated (advantages without points) show `[?]` and count as 0.
   [`\GCPrintCharacter[key]`], [`#stat-block(key)`],
   [`\ST{13}[25]`], [`st: (level: 13, points: 25)`],
   [`\skill{Stealth}[DX/Average]{12}`], [`skill("Stealth", 12, "DX/A")`],
-  [`\levelledadvantage{Magery}{2}[25]`], [`advantage("Magery", points: 25, level: 2)`],
-  [`\meleeattack{name=…, level=…}`], [`melee-attack(name, level, damage, reach: …)`],
+  [`\levelledadvantage{Magery}{2}[25]`],
+  [`advantage("Magery", points: 25, level: 2)`],
+
+  [`\meleeattack{name=…, level=…}`],
+  [`melee-attack(name, level, damage, reach: …)`],
+
   [`\GCGet{ST}\GCResult`], [`#level-of(key, "ST")`],
   [`\GCTotalPoints`], [`#total-points(key)`],
   [`\GCAddToLevel{HP}{4}`], [pass the final value, e.g. `hp: 16`],
@@ -130,12 +138,17 @@ under `character` in the reference below.
 ```
 
 #let one-liner(char) = {
-  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #char.attributes.at(k).level])
+  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #(
+      char.attributes.at(k).level
+    )])
   let skills = char.skills.map(s => [#s.name\-#s.level])
   [*#char.name:* #attributes.join[, ]. _Skills:_ #skills.join[, ].]
 }
-#block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt,
-  one-liner(character(name: "Guard", st: 11, skill("Spear", 12, "DX/A"))))
+#block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, one-liner(character(
+  name: "Guard",
+  st: 11,
+  skill("Spear", 12, "DX/A"),
+)))
 
 Point costs are already worked out (`char.skills.first().points`), and
 `total-points(char)` gives the total.
@@ -153,16 +166,22 @@ hooks and your own functions are the way to customise it.
   set text(font: "Libertinus Serif", size: 11pt)
   body
 })
-#let style = dictionary(tidy.styles.default) + (
-  show-example: (..args) => tidy.show-example.show-example(
-    ..args,
-    layout: tidy.show-example.default-layout-example.with(
-      code-block: block.with(radius: 3pt, stroke: .5pt + luma(200)),
-      preview-block: preview-block.with(radius: 3pt, stroke: .5pt + luma(200)),
-      dir: ttb,
-      scale-preview: 100%,
-    ),
-  ),
+#let style = (
+  dictionary(tidy.styles.default)
+    + (
+      show-example: (..args) => tidy.show-example.show-example(
+        ..args,
+        layout: tidy.show-example.default-layout-example.with(
+          code-block: block.with(radius: 3pt, stroke: .5pt + luma(200)),
+          preview-block: preview-block.with(
+            radius: 3pt,
+            stroke: .5pt + luma(200),
+          ),
+          dir: ttb,
+          scale-preview: 100%,
+        ),
+      ),
+    )
 )
 
 #let show-file(path) = {
@@ -170,7 +189,12 @@ hooks and your own functions are the way to customise it.
     read(path),
     scope: dictionary(lib),
   )
-  tidy.show-module(docs, show-outline: false, sort-functions: none, style: style)
+  tidy.show-module(
+    docs,
+    show-outline: false,
+    sort-functions: none,
+    style: style,
+  )
 }
 
 == Text and dice

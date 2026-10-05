@@ -59,7 +59,10 @@
 #assert.eq(c.spells.first().points, 4)
 
 // Secondary characteristics can be bases too.
-#assert.eq(character(per: 12, skill("Observation", 12, "Per/A")).skills.first().points, 2)
+#assert.eq(
+  character(per: 12, skill("Observation", 12, "Per/A")).skills.first().points,
+  2,
+)
 
 // Unknown base and unaffordable levels fail loudly.
 #assert-panic(() => character(skill("S", 10, "Nope/E")))

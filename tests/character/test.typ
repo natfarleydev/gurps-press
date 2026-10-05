@@ -13,13 +13,32 @@
 #assert.eq(avg.dr, 0)
 #assert.eq(avg.thr, (1, -2))
 #assert.eq(avg.sw, (1, 0))
-#for list in ("advantages", "perks", "disadvantages", "quirks", "skills", "spells", "attacks") {
+#for list in (
+  "advantages",
+  "perks",
+  "disadvantages",
+  "quirks",
+  "skills",
+  "spells",
+  "attacks",
+) {
   assert.eq(avg.at(list), (), message: list)
 }
 // Attribute order is fixed.
 #assert.eq(
   avg.attributes.keys(),
-  ("ST", "DX", "IQ", "HT", "HP", "Will", "Per", "FP", "Basic Speed", "Basic Move"),
+  (
+    "ST",
+    "DX",
+    "IQ",
+    "HT",
+    "HP",
+    "Will",
+    "Per",
+    "FP",
+    "Basic Speed",
+    "Basic Move",
+  ),
 )
 
 // Attribute costs.
@@ -40,7 +59,15 @@
 #assert.eq(c.sw, (1, -1))
 
 // Buying secondary characteristics up or down.
-#let b = character(st: 9, hp: 12, will: 12, per: 9, fp: 12, basic-speed: 5.5, basic-move: 6)
+#let b = character(
+  st: 9,
+  hp: 12,
+  will: 12,
+  per: 9,
+  fp: 12,
+  basic-speed: 5.5,
+  basic-move: 6,
+)
 #assert.eq(b.attributes.HP.points, 6)
 #assert.eq(b.attributes.Will.points, 10)
 #assert.eq(b.attributes.Per.points, -5)
@@ -58,7 +85,14 @@
 #assert.eq(character(st: (level: 13)).attributes.ST.points, 30)
 
 // Properties.
-#let p = character(st: 13, sm: 1, dr: [3 (torso)], dodge: 10, thr: (2, 0), sw: [special])
+#let p = character(
+  st: 13,
+  sm: 1,
+  dr: [3 (torso)],
+  dodge: 10,
+  thr: (2, 0),
+  sw: [special],
+)
 #assert.eq(p.sm, 1)
 #assert.eq(p.dr, [3 (torso)])
 #assert.eq(p.dodge, 10)
@@ -69,8 +103,14 @@
 // Traits are sorted into their lists, in the given order.
 #let t = character(
   name: "Mr. Awesome",
-  advantage("B"), advantage("A"), perk("P"), disadvantage("D"), quirk("Q"),
-  skill("S", 10), spell("Sp", 10), melee-attack("M", 10, [1d]),
+  advantage("B"),
+  advantage("A"),
+  perk("P"),
+  disadvantage("D"),
+  quirk("Q"),
+  skill("S", 10),
+  spell("Sp", 10),
+  melee-attack("M", 10, [1d]),
   ranged-attack("R", 10, [1d]),
 )
 #assert.eq(t.name, "Mr. Awesome")

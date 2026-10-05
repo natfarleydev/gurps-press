@@ -47,6 +47,10 @@
 #assert(msg.contains(quoted("Brawling")), message: msg)
 #assert(msg.contains("string name"), message: msg)
 // Without such names, there is no hint about string names.
-#let plain = catch(() => character(skill("Brawling", 12), skill("Kicking", 12, "Brawl/H")))
+#let plain = catch(() => character(skill("Brawling", 12), skill(
+  "Kicking",
+  12,
+  "Brawl/H",
+)))
 #assert(plain.contains(quoted("Brawling")), message: plain)
 #assert(not plain.contains("string name"), message: plain)

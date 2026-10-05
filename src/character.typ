@@ -3,8 +3,8 @@
 // Everything here returns plain dictionaries. Rendering lives in
 // stat-block.typ.
 
-#import "util.typ": take-optional, plain-text
-#import "damage.typ": thrust, swing
+#import "util.typ": plain-text, take-optional
+#import "damage.typ": swing, thrust
 
 // --- Validation helpers (private) -----------------------------------------
 
@@ -22,7 +22,13 @@
 
 #let check-optional-text(value, caller, what) = {
   if value != none and type(value) not in (str, content) {
-    panic(caller + "() " + what + " must be a string, content or none, got " + repr(value))
+    panic(
+      caller
+        + "() "
+        + what
+        + " must be a string, content or none, got "
+        + repr(value),
+    )
   }
 }
 
@@ -75,8 +81,13 @@
   let d = trait("disadvantage", name, points, level)
   if d.points != none and d.points > 0 {
     panic(
-      "disadvantage() points must be zero or negative, got " + str(d.points)
-        + " for " + repr(plain-text(name)) + ". Write points: -" + str(d.points) + ".",
+      "disadvantage() points must be zero or negative, got "
+        + str(d.points)
+        + " for "
+        + repr(plain-text(name))
+        + ". Write points: -"
+        + str(d.points)
+        + ".",
     )
   }
   d
@@ -103,11 +114,16 @@
 // Accepted spellings (lower case) of each difficulty, and its offset: how
 // far below the base the cheapest (1 point) level is.
 #let difficulty-names = (
-  e: "E", easy: "E",
-  a: "A", average: "A",
-  h: "H", hard: "H",
-  vh: "VH", "very hard": "VH",
-  w: "W", wildcard: "W",
+  e: "E",
+  easy: "E",
+  a: "A",
+  average: "A",
+  h: "H",
+  hard: "H",
+  vh: "VH",
+  "very hard": "VH",
+  w: "W",
+  wildcard: "W",
 )
 #let difficulty-offset = (E: 0, A: 1, H: 2, VH: 3, W: 3)
 
@@ -122,8 +138,10 @@
     let parts = cost.split("/")
     if parts.len() < 2 {
       panic(
-        kind + "() cost must be points or \"<base>/<difficulty>\" such as "
-          + "\"DX/A\", got " + repr(cost),
+        kind
+          + "() cost must be points or \"<base>/<difficulty>\" such as "
+          + "\"DX/A\", got "
+          + repr(cost),
       )
     }
     base = parts.slice(0, -1).join("/").trim()
@@ -131,14 +149,29 @@
     difficulty = difficulty-names.at(lower(given), default: none)
     if difficulty == none {
       panic(
-        kind + "() unknown difficulty " + repr(given) + " in " + repr(cost)
+        kind
+          + "() unknown difficulty "
+          + repr(given)
+          + " in "
+          + repr(cost)
           + "; use E, A, H, VH or W (or Easy, Average, Hard, Very Hard, Wildcard)",
       )
     }
   } else if cost != none {
-    panic(kind + "() cost must be an integer or a string like \"DX/A\", got " + repr(cost))
+    panic(
+      kind
+        + "() cost must be an integer or a string like \"DX/A\", got "
+        + repr(cost),
+    )
   }
-  (kind: kind, name: name, level: level, points: points, base: base, difficulty: difficulty)
+  (
+    kind: kind,
+    name: name,
+    level: level,
+    points: points,
+    base: base,
+    difficulty: difficulty,
+  )
 }
 
 /// A skill at a given level.
@@ -269,7 +302,9 @@
     let unknown = value.keys().filter(k => k not in ("level", "points"))
     if unknown.len() > 0 or "level" not in value {
       panic(
-        "character() " + arg + " dictionary must look like (level: …, points: …), got "
+        "character() "
+          + arg
+          + " dictionary must look like (level: …, points: …), got "
           + repr(value),
       )
     }
@@ -292,9 +327,17 @@
   let relative = s.level - base-level
   if relative < -d {
     panic(
-      s.kind + " " + repr(plain-text(s.name)) + " at " + str(s.level)
-        + " is too low to buy: with " + s.base + "/" + s.difficulty
-        + " the lowest level is " + str(base-level - d)
+      s.kind
+        + " "
+        + repr(plain-text(s.name))
+        + " at "
+        + str(s.level)
+        + " is too low to buy: with "
+        + s.base
+        + "/"
+        + s.difficulty
+        + " the lowest level is "
+        + str(base-level - d)
         + ". Give the points explicitly or leave the cost out.",
     )
   }
@@ -405,7 +448,8 @@
   let unknown = traits.named().keys()
   if unknown.len() > 0 {
     panic(
-      "character() got unknown argument(s): " + unknown.join(", ")
+      "character() got unknown argument(s): "
+        + unknown.join(", ")
         + ". Attributes are st, dx, iq, ht, hp, will, per, fp, basic-speed, "
         + "basic-move, dodge, sm, dr, thr, sw.",
     )
@@ -423,11 +467,17 @@
   a.Per = attribute("per", per, a.IQ.level, 5)
   a.FP = attribute("fp", fp, a.HT.level, 3)
   let speed = attribute(
-    "basic-speed", basic-speed, (a.DX.level + a.HT.level) / 4, 20,
+    "basic-speed",
+    basic-speed,
+    (a.DX.level + a.HT.level) / 4,
+    20,
     numeric: (int, float),
   )
   if calc.fract(speed.level * 4) != 0 {
-    panic("character() basic-speed must be a multiple of 0.25, got " + repr(speed.level))
+    panic(
+      "character() basic-speed must be a multiple of 0.25, got "
+        + repr(speed.level),
+    )
   }
   a.insert("Basic Speed", (level: float(speed.level), points: speed.points))
   let speed-floor = int(calc.floor(speed.level))
@@ -437,8 +487,14 @@
     kind: "character",
     name: name,
     attributes: a,
-    dodge: if dodge == auto { speed-floor + 3 } else { check-int(dodge, "character", "dodge"); dodge },
-    sm: { check-int(sm, "character", "sm"); sm },
+    dodge: if dodge == auto { speed-floor + 3 } else {
+      check-int(dodge, "character", "dodge")
+      dodge
+    },
+    sm: {
+      check-int(sm, "character", "sm")
+      sm
+    },
     dr: dr,
     thr: if thr == auto { thrust(a.ST.level) } else { thr },
     sw: if sw == auto { swing(a.ST.level) } else { sw },
@@ -452,14 +508,19 @@
   )
 
   for t in traits.pos() {
-    let list = if type(t) == dictionary { list-for-kind.at(t.at("kind", default: ""), default: none) }
+    let list = if type(t) == dictionary {
+      list-for-kind.at(t.at("kind", default: ""), default: none)
+    }
     if list == none {
       let hint = if type(t) in (str, content) {
         " Did you mean name: " + repr(t) + "?"
       } else { "" }
       panic(
         "character() takes traits from advantage(), skill(), melee-attack() etc. "
-          + "as positional arguments, got " + repr(t) + "." + hint,
+          + "as positional arguments, got "
+          + repr(t)
+          + "."
+          + hint,
       )
     }
     c.at(list).push(t)
@@ -474,34 +535,48 @@
     let what = s.kind + " " + repr(plain-text(s.name))
     if found.len() > 1 {
       panic(
-        "cannot work out the cost of " + what + ": more than one skill or spell is called "
-          + repr(s.base) + ". Rename one, or give the points explicitly.",
+        "cannot work out the cost of "
+          + what
+          + ": more than one skill or spell is called "
+          + repr(s.base)
+          + ". Rename one, or give the points explicitly.",
       )
     }
     if found.len() == 0 {
       let blank = named.filter(((name, _)) => name.trim() == "")
       let hint = if blank.len() > 0 {
         (
-          " " + str(blank.len()) + " skill(s) or spell(s) have no plain text in their "
+          " "
+            + str(blank.len())
+            + " skill(s) or spell(s) have no plain text in their "
             + "name and can never match: give them a string name."
         )
       } else { "" }
       panic(
-        "cannot work out the cost of " + what + ": no attribute, skill or spell called "
-          + repr(s.base) + ". Attributes: " + a.keys().join(", ") + ". Skills and spells: "
-          + named.map(((name, _)) => repr(name)).join(", ") + "." + hint,
+        "cannot work out the cost of "
+          + what
+          + ": no attribute, skill or spell called "
+          + repr(s.base)
+          + ". Attributes: "
+          + a.keys().join(", ")
+          + ". Skills and spells: "
+          + named.map(((name, _)) => repr(name)).join(", ")
+          + "."
+          + hint,
       )
     }
     let (_, base) = found.first()
     base.level
   }
   for list in ("skills", "spells") {
-    c.at(list) = c.at(list).map(s => {
-      if s.difficulty != none and s.points == none {
-        s.points = skill-points(s, base-level(s))
-      }
-      s
-    })
+    c.at(list) = c
+      .at(list)
+      .map(s => {
+        if s.difficulty != none and s.points == none {
+          s.points = skill-points(s, base-level(s))
+        }
+        s
+      })
   }
   c
 }
@@ -533,13 +608,16 @@
   let found = levels.filter(((k, _)) => k == name)
   if found.len() == 0 {
     panic(
-      "level-of(): no attribute, skill or spell called " + repr(name)
-        + ". Known: " + levels.map(((k, _)) => k).join(", "),
+      "level-of(): no attribute, skill or spell called "
+        + repr(name)
+        + ". Known: "
+        + levels.map(((k, _)) => k).join(", "),
     )
   }
   if found.len() > 1 {
     panic(
-      "level-of(): more than one attribute, skill or spell is called " + repr(name)
+      "level-of(): more than one attribute, skill or spell is called "
+        + repr(name)
         + ". Rename one so it can be looked up.",
     )
   }
@@ -561,7 +639,14 @@
   char,
 ) = {
   let costs = char.attributes.values().map(v => v.points)
-  for list in ("advantages", "perks", "disadvantages", "quirks", "skills", "spells") {
+  for list in (
+    "advantages",
+    "perks",
+    "disadvantages",
+    "quirks",
+    "skills",
+    "spells",
+  ) {
     costs += char.at(list).map(t => t.points)
   }
   costs.filter(p => p != none).sum(default: 0)
