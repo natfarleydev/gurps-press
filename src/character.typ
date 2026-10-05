@@ -38,8 +38,8 @@
 /// An advantage.
 ///
 /// ```example
-/// #let afro = advantage("Natural afro", 1)
-/// #let magery = advantage("Magery", 25, level: 2)
+/// #let afro = advantage("Natural afro", points: 1)
+/// #let magery = advantage("Magery", points: 25, level: 2)
 /// #afro.points, #magery.level
 /// ```
 ///
@@ -47,9 +47,9 @@
 #let advantage(
   /// -> str | content
   name,
-  /// Optional point cost. Shown as `[?]` and counted as 0 when omitted.
-  /// -> int
-  ..points,
+  /// Point cost. Shown as `[?]` and counted as 0 when `none`.
+  /// -> int | none
+  points: none,
   /// Level for levelled advantages, e.g. `Magery 2`.
   /// -> int | none
   level: none,
@@ -63,16 +63,16 @@
 /// A disadvantage. The point cost, if given, must be zero or negative.
 ///
 /// ```example
-/// #disadvantage("Bad Temper", -10).points
+/// #disadvantage("Bad Temper", points: -10).points
 /// ```
 ///
 /// -> dictionary
 #let disadvantage(
   /// -> str | content
   name,
-  /// Optional point cost (≤ 0).
-  /// -> int
-  ..points,
+  /// Point cost (≤ 0). Shown as `[?]` and counted as 0 when `none`.
+  /// -> int | none
+  points: none,
   /// Level for levelled disadvantages.
   /// -> int | none
   level: none,
@@ -337,7 +337,7 @@
 /// #let napoleon = character(
 ///   name: "Napoleon",
 ///   st: 9, hp: 12,
-///   advantage("Natural afro", 1),
+///   advantage("Natural afro", points: 1),
 ///   quirk("Big teeth"),
 ///   skill("Nunchuck", 16, "DX/E"),
 /// )

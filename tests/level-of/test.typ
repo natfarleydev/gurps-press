@@ -3,9 +3,9 @@
 
 #let c = character(
   st: 9, dx: 12, hp: 12, sm: -1,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   advantage("Zoology"),
-  disadvantage("Bad Temper", -10),
+  disadvantage("Bad Temper", points: -10),
   perk("Fur"),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
