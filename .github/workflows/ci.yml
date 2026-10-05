@@ -1,0 +1,80 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    # Tytanic bundles its own Typst compiler, so each tytanic version tests
+    # one Typst version. typst.toml promises 0.13 as the minimum.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - typst: "0.13"
+            tytanic: 0.2.2
+          - typst: "0.14"
+            tytanic: 0.3.4
+          - typst: "0.15"
+            tytanic: 0.4.1
+    name: Tests (Typst ${{ matrix.typst }})
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install tytanic
+        uses: taiki-e/install-action@v2
+        with:
+          tool: tytanic@${{ matrix.tytanic }}
+
+      - name: Run tests
+        run: tt run --no-fail-fast
+
+      - name: Upload test output
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-output-typst-${{ matrix.typst }}
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
+
+  docs:
+    name: Docs, spelling and package check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,typos
+
+      - uses: typst-community/setup-typst@v4
+        with:
+          typst-version: "0.15"
+
+      - name: Spell check
+        run: just spell
+
+      - name: Build manual and README image
+        run: just doc
+
+      - name: Package
+        run: just package out
+
+      - name: Check package against Typst Universe rules
+        run: |
+          docker run --rm -v "$PWD/out/gurps-ink/$(grep -m1 '^version' typst.toml | cut -d'"' -f2):/data" \
+            ghcr.io/typst/package-check check
+
+      - name: Upload built docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: |
+            docs/manual.pdf
+            docs/example.png
+          retention-days: 5
