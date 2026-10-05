@@ -1,7 +1,7 @@
 // An example sourcebook: a one-shot adventure made with gurps-press.
 // `just doc` compiles it to docs/tortoise-and-hare.pdf, and the manual
 // shows its pages. In your own document, import the package with
-// #import "@preview/gurps-press:0.1.0": *
+// #import "@local/gurps-press:0.1.0": *
 #import "/src/lib.typ": *
 
 // Your own look: gurps-press sets no fonts, colours or page layout.

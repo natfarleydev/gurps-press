@@ -3,7 +3,7 @@
 #import "/src/lib.typ"
 
 #let (name, version) = toml("/typst.toml").package
-#let import-line = "#import \"@preview/" + name + ":" + version + "\": *"
+#let import-line = "#import \"@local/" + name + ":" + version + "\": *"
 
 // Every example shows its code on the left and its result on the right.
 // The result is shown at its real size, in the body font.

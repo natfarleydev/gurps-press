@@ -87,9 +87,10 @@ Anything not re-exported from `src/lib.typ` is private.
   and ends in the return type.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
-- Examples in README/docs import `@preview/gurps-press:<version>` (checked
-  by `tests/readme`); tests import
-  `/src/lib.typ`.
+- README examples import `@preview/gurps-press:<version>` (Universe needs
+  that); manual examples import `@local/gurps-press:<version>`, since the
+  manual assumes `just install`. Both are checked by `tests/readme`; tests
+  import `/src/lib.typ`.
 - Docs are for someone writing an unofficial GURPS sourcebook. They know
   GURPS; don't explain its rules. The manual is a user guide first: one
   chapter per pillar (legal notices, dice and books, characters), each

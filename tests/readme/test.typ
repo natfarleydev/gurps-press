@@ -4,6 +4,9 @@
 
 #let (name, version) = toml("/typst.toml").package
 #let import-line = "#import \"@preview/" + name + ":" + version + "\": *"
+// The manual assumes a local install (`just install`); Universe needs the
+// README to show the @preview import.
+#let local-import-line = "#import \"@local/" + name + ":" + version + "\": *"
 #let blocks = (
   read("/README.md")
     .replace("\r\n", "\n")
@@ -30,7 +33,7 @@
   let _ = eval(body, mode: "markup", scope: dictionary(lib))
 }
 
-// The manual's examples are self-contained too, and import this version.
+// The manual's examples are self-contained too, and import the local install.
 #let manual-blocks = (
   (
     "/docs/chapters/start.typ",
@@ -47,8 +50,11 @@
 #assert(manual-blocks.len() >= 3, message: "expected manual examples")
 #for code in manual-blocks {
   assert(
-    code.starts-with(import-line),
-    message: "manual example must start with " + import-line + ":\n" + code,
+    code.starts-with(local-import-line),
+    message: "manual example must start with "
+      + local-import-line
+      + ":\n"
+      + code,
   )
 }
 

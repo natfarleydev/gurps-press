@@ -9,8 +9,7 @@
 
 == Install gurps-press
 
-`gurps-press` is not on Typst Universe yet. Until it is, install it on
-your computer:
+`gurps-press` is not on Typst Universe yet. Install it on your computer:
 
 + Install #link("https://github.com/typst/typst#installation")[Typst]
   and #link("https://just.systems")[just].
@@ -18,10 +17,9 @@ your computer:
 + In the repository, run `just install`.
 + In your document, write `#import "@local/gurps-press:0.1.0": *`.
 
-When `gurps-press` is on Typst Universe, you do not install it. Write
-`#import "@preview/gurps-press:0.1.0": *` and Typst downloads it. This also
-works in the #link("https://typst.app")[Typst web app]. The examples in
-this manual use this import.
+The examples in this manual use this import. Typst finds the package in a
+folder on your computer. It does not download it. The
+#link("https://typst.app")[Typst web app] cannot use this import.
 
 == Make your first page
 
@@ -29,7 +27,7 @@ Copy this example into a new file and compile it. It makes a character,
 shows its stat block and adds the disclaimer.
 
 ```typ
-#import "@preview/gurps-press:0.1.0": *
+#import "@local/gurps-press:0.1.0": *
 
 #let tortoise = character(
   name: "The Tortoise",

@@ -14,6 +14,29 @@ three things:
   ST, and references such as ***GURPS Magic*** p. 14.
 - **Characters.** It makes stat blocks that calculate their point costs.
 
+## Install
+
+`gurps-press` is not on Typst Universe yet. Install it on your computer:
+
+1. Install [Typst](https://github.com/typst/typst#installation) and
+   [just](https://just.systems).
+2. Clone this repository:
+   `git clone https://github.com/natfarleydev/gurps-press`
+3. In the repository, run `just install`. This copies the package into
+   the Typst package folder on your computer.
+4. In your document, write `#import "@local/gurps-press:0.1.0": *`.
+
+Run `just install` again after you pull a new version. The
+[Typst web app](https://typst.app) cannot use `@local` packages. To use
+`gurps-press` there, upload the `src` folder into your project and write
+`#import "src/lib.typ": *`.
+
+When `gurps-press` is on Typst Universe, you do not install it. Write
+`#import "@preview/gurps-press:0.1.0": *` and Typst downloads it. The
+example below uses this import. Until then, change `@preview` to `@local`.
+
+## Example
+
 ```typ
 #import "@preview/gurps-press:0.1.0": *
 
@@ -60,16 +83,6 @@ advice. Read the online policy before you publish.
 - [The Tortoise and the Hare](docs/tortoise-and-hare.pdf) is an example
   one-shot adventure made with `gurps-press`. Its source is
   `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-press).
-
-## Install
-
-`gurps-press` is not on Typst Universe yet, so the `@preview` import does
-not work yet. Until then, install it on your computer:
-
-1. Install [Typst](https://github.com/typst/typst#installation) and
-   [just](https://just.systems).
-2. Clone this repository and run `just install`.
-3. In your document, write `#import "@local/gurps-press:0.1.0": *`.
 
 ## Functions
 
