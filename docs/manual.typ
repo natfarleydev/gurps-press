@@ -130,11 +130,13 @@ The examples use one story: a race between the Tortoise and the Hare.
 This one-shot adventure uses each part of `gurps-ink`. Its source is
 #link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/example/tortoise-and-hare.typ")[`docs/example/tortoise-and-hare.typ`].
 The PDF is
-#link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/tortoise-and-hare.pdf")[`docs/tortoise-and-hare.pdf`].
+#link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/tortoise-and-hare.pdf")[`docs/tortoise-and-hare.pdf`]. The PDF adds an appendix from
+`docs/example/odds.typ`, which calculates the odds in the designer's
+note. The adventure does not need it.
 
 // The number of pages of the example. Change it when the example
 // gets longer or shorter.
-#let example-pages = 6
+#let example-pages = 7
 #grid(
   columns: (1fr, 1fr),
   gutter: 8pt,

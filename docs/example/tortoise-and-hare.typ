@@ -59,6 +59,10 @@
   melee-attack("Kick", 13, [#dice(..thrust(6)) cr], reach: "C"),
 )
 
+// The odds in the designer's note, in per cent. They are calculated,
+// not playtested.
+#let odds = (walks: 26, hedge: 37, taunt: 45, both: 57, awake: 79, asleep: 86)
+
 // The player builds the Tortoise on 50 points. Compilation stops if a
 // change makes it cost more.
 #assert(total-points(tortoise) <= 50, message: "The Tortoise is over 50 points")
@@ -189,13 +193,12 @@ Play the race in three steps.
   winner reaches the pond first. On a tie, the Tortoise wins by the
   length of its nose.
 
-*Designer's note.* These odds are calculated (see the appendix), not
-playtested. If the
-player only walks, the Tortoise wins about 1 race in 4. With the hedge,
-a little over 1 in 3. With the taunt, nearly 1 in 2. With the taunt and
-the hedge, about 6 in 10. Even against the hedge, an awake Hare wins
-about 4 races in 5, and a sleeping Hare loses about 6 in 7. Clever play
-pays, as it should.
+*Designer's note.* These odds are calculated, not playtested. If the
+player only walks, the Tortoise wins #odds.walks% of races. With the
+hedge, it wins #odds.hedge%. With the taunt, #odds.taunt%. With the
+taunt and the hedge, #odds.both%. Even against the hedge, an awake Hare
+wins #odds.awake% of races, and a sleeping Hare loses #odds.asleep%.
+Clever play pays, as it should.
 
 #aside[
   The Hare, lying down by the wayside, fell fast asleep.
@@ -219,114 +222,6 @@ way, the story is over: this one-shot does not lead to a campaign.
 
 #pagebreak()
 
-= Appendix: The Odds
-
-The designer's note quotes exact odds, not playtest results. This Python
-program calculates them from the rules of the #gurps-book("Basic Set"):
-success rolls, critical rolls and Quick Contests (p.~B348). Change the
-numbers at the top to test your own version of the race.
-
-#table(
-  columns: (1fr, auto),
-  stroke: none,
-  inset: (x: 4pt, y: 3pt),
-  table.hline(stroke: 0.4pt + accent),
-  [*The player*], [*The Tortoise wins*],
-  table.hline(stroke: 0.4pt + accent),
-  [Only walks], [26%],
-  [Uses the gap in the hedge], [37%],
-  [Taunts the Hare], [45%],
-  [Taunts the Hare and uses the gap], [57%],
-  table.hline(stroke: 0.4pt + accent),
-)
-
-#[
-  #set text(size: 7pt)
-  #set par(justify: false)
-  ```python
-  """Exact odds for the race in The Tortoise and the Hare.
-
-  Rules (GURPS Basic Set): a success roll is 3d against the effective
-  skill; 3 and 4 always succeed, 17 fails at skill 15 or less, 18 always
-  fails (p. B348). In a Quick Contest both sides roll; the one who succeeds
-  by more, or fails by less, wins (p. B348). A tie in the taunt has no
-  effect; a tie at the finish goes to the Tortoise.
-  """
-
-  from itertools import product
-
-  # The numbers in the adventure.
-  FAST_TALK, HARE_WILL = 12, 10  # step 1: the taunt
-  TAUNT_PENALTY = 4  # to the Hare's self-control roll
-  SELF_CONTROL = 12  # step 2: Overconfidence (12)
-  HIKING, RUNNING = 14, 16  # step 3: the finish
-  AWAKE_BONUS, NAP_PENALTY = 4, 4  # the Hare's speed, or its nap
-  HEDGE_BONUS = 2  # the Tortoise uses the gap in the hedge
-
-  P3D = {}
-  for dice in product(range(1, 7), repeat=3):
-      P3D[sum(dice)] = P3D.get(sum(dice), 0) + 1 / 216
-
-
-  def roll(skill, total):
-      """(success, margin) of one success roll."""
-      if total <= 4:
-          success = True
-      elif total == 18 or (total == 17 and skill <= 15):
-          success = False
-      else:
-          success = total <= skill
-      return success, skill - total
-
-
-  def p_success(skill):
-      return sum(p for total, p in P3D.items() if roll(skill, total)[0])
-
-
-  def p_first_wins_or_ties(a, b):
-      """Return (P(a wins), P(tie)) in a Quick Contest of a against b."""
-      win = tie = 0.0
-      for ta, pa in P3D.items():
-          sa, ma = roll(a, ta)
-          for tb, pb in P3D.items():
-              sb, mb = roll(b, tb)
-              if (sa and not sb) or (sa == sb and ma > mb):
-                  win += pa * pb
-              elif sa == sb and ma == mb:
-                  tie += pa * pb
-      return win, tie
-
-
-  def p_tortoise_wins(taunt, hedge):
-      p_taunt = p_first_wins_or_ties(FAST_TALK, HARE_WILL)[0] if taunt else 0
-      tortoise = HIKING + (HEDGE_BONUS if hedge else 0)
-      total = 0.0
-      for taunted, p1 in ((True, p_taunt), (False, 1 - p_taunt)):
-          p_nap = 1 - p_success(SELF_CONTROL - (TAUNT_PENALTY if taunted else 0))
-          for napped, p2 in ((True, p_nap), (False, 1 - p_nap)):
-              hare = RUNNING + (-NAP_PENALTY if napped else AWAKE_BONUS)
-              total += p1 * p2 * sum(p_first_wins_or_ties(tortoise, hare))
-      return total
-
-
-  if __name__ == "__main__":
-      for taunt, hedge, label in (
-          (False, False, "only walks"),
-          (False, True, "uses the hedge"),
-          (True, False, "taunts"),
-          (True, True, "taunts and uses the hedge"),
-      ):
-          print(f"Tortoise {label}: wins {p_tortoise_wins(taunt, hedge):.0%}")
-      tortoise = HIKING + HEDGE_BONUS
-      awake = 1 - sum(p_first_wins_or_ties(tortoise, RUNNING + AWAKE_BONUS))
-      asleep = sum(p_first_wins_or_ties(tortoise, RUNNING - NAP_PENALTY))
-      print(f"Against the hedge, an awake Hare wins {awake:.0%}")
-      print(f"Against the hedge, a sleeping Hare loses {asleep:.0%}")
-  ```
-]
-
-#pagebreak()
-
 = About This Adventure
 
 #set text(size: 8pt)
@@ -341,8 +236,8 @@ directions and reviewed the result.
 *Tools.* Typeset with #link("https://typst.app")[Typst] and
 #link("https://github.com/natfarleydev/gurps-typst")[`gurps-ink`]
 0.1.0. The source of this adventure is `docs/example/tortoise-and-hare.typ`
-in the `gurps-ink` repository. The appendix gives the program that
-calculates the odds in the designer's note.
+in the `gurps-ink` repository. The odds in the designer's note were
+calculated exactly from the rules; `docs/example/odds.typ` shows how.
 
 *References.*
 - Aesop, "The Hare and the Tortoise", in _Aesop's Fables_, translated by
