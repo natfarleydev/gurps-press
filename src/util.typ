@@ -49,6 +49,7 @@
   if it.has("text") { return plain-text(it.text) }
   if it.has("children") { return it.children.map(plain-text).join("") }
   if it.has("body") { return plain-text(it.body) }
+  if it.has("child") { return plain-text(it.child) }
   if it == [ ] { return " " }
   ""
 }

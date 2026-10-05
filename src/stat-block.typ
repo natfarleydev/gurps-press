@@ -42,6 +42,19 @@
 ///
 /// To frame it, wrap it: `#block(stroke: 0.5pt, inset: 8pt)[#stat-block(c)]`.
 ///
+/// Two hooks restyle parts of the block without rewriting it:
+///
+/// ```example
+/// #stat-block(
+///   character(name: "Guard", st: 11, skill("Spear", 12, "DX/A")),
+///   title: (char, total) => smallcaps[#char.name, #total points],
+///   section: (label, body) => [#emph(label) --- #body],
+/// )
+/// ```
+///
+/// For a different layout altogether, write your own renderer from the
+/// @character dictionary; the manual shows how.
+///
 /// -> content
 #let stat-block(
   /// A result of @character.
@@ -51,6 +64,25 @@
   /// manual feel.
   /// -> bool
   show-points: true,
+  /// Draws the first line. Called as `title(char, total)`, where `total` is
+  /// the total points, or `none` when `show-points` is off. Return `none`,
+  /// or pass `title: none`, to leave the line out. `auto` means
+  /// ```typ
+  /// (char, total) => {
+  ///   let points = if total != none [#total points]
+  ///   if char.name == none { points }
+  ///   else [#strong(char.name)#if points != none [ (#points)]]
+  /// }
+  /// ```
+  /// -> auto | none | function
+  title: auto,
+  /// Draws each labelled list: Advantages, Perks, Disadvantages, Quirks,
+  /// Skills, Spells and Attacks. Called as `section(label, body)`, where
+  /// `body` is the finished list (entries joined by semicolons, ending in
+  /// a full stop; for attacks, a block with one paragraph per attack).
+  /// `auto` means `(label, body) => [#strong[#label:] #body]`.
+  /// -> auto | function
+  section: auto,
 ) = {
   if type(char) != dictionary or char.at("kind", default: none) != "character" {
     panic("stat-block() expects the result of character(), got " + repr(char))
