@@ -530,14 +530,21 @@
   let levels = char.attributes.pairs().map(((k, v)) => (k, v.level))
   levels += (("Dodge", char.dodge), ("SM", char.sm))
   levels += (char.skills + char.spells).map(s => (plain-text(s.name), s.level))
-  let found = levels.find(((k, _)) => k == name)
-  if found == none {
+  let found = levels.filter(((k, _)) => k == name)
+  if found.len() == 0 {
     panic(
       "level-of(): no attribute, skill or spell called " + repr(name)
         + ". Known: " + levels.map(((k, _)) => k).join(", "),
     )
   }
-  found.last()
+  if found.len() > 1 {
+    panic(
+      "level-of(): more than one attribute, skill or spell is called " + repr(name)
+        + ". Rename one so it can be looked up.",
+    )
+  }
+  let ((_, level),) = found
+  level
 }
 
 /// Total character points: the sum of every known cost. Traits without a
