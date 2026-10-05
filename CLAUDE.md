@@ -12,7 +12,7 @@ blocks with automatic point costs. It is a port of the LaTeX package
 Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
 
-## Three rules that override everything else
+## Four rules that override everything else
 
 1. **Port intent, not logic.** The LaTeX package tells us *what a GURPS
    author wants on the page*: dice that read `3d−1`, a stat block whose
@@ -43,6 +43,15 @@ canonical name `gurps`). Not yet submitted; see "Releasing".
      cleverness a newcomer could not follow. The one sanctioned piece of
      argument plumbing is `take-optional` (Typst has no optional
      positional parameters); don't add others.
+4. **Be deterministic wherever we can.** A rule a tool can check is
+   enforced by that tool, not written down as an instruction for a person
+   or an AI reviewer to remember. Spelling is `typos`, package rules are
+   `package-check`, README examples are compiled by `tests/readme`,
+   behaviour is pinned by tytanic tests, and all of it runs in CI. When a
+   new rule comes up, first look for a linter, formatter, test or CI step
+   that can enforce it, and add that. Only a rule no tool can check
+   becomes prose (here, or as a CodeRabbit instruction), and
+   `.coderabbit.yaml` has none for now.
 
 If a request conflicts with these rules, say so and ask; don't quietly
 break one.
