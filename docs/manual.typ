@@ -37,6 +37,9 @@ handouts, house-rule documents. It gives you
 - NPC stat blocks that work out point costs, secondary characteristics and
   basic damage for you.
 
+It is the successor to the LaTeX package
+#link("https://github.com/natfarleydev/gurps-latex-package")[gurps-latex-package].
+
 = Quick start
 
 ```typ
