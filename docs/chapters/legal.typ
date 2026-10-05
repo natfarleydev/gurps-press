@@ -12,7 +12,7 @@
   [Where does the text of the notices come from? (@legal-sources)],
 )
 
-`gurps-ink` gives you text. It does not give legal advice. Read the
+`gurps-press` gives you text. It does not give legal advice. Read the
 #link(policy)[#sjgames online policy] before you publish. The policy is
 for free material. To sell material, read its section VII, "Licensed
 Use".
@@ -30,7 +30,7 @@ Both texts have links to the #sjgames pages, as the policy asks. Put
 them on the title page or on the last page. You can make them small.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@local/gurps-press:0.1.0": *
 
 #set text(size: 7pt)
 #sjgames-disclaimer
@@ -46,7 +46,7 @@ not give this text. Many free #gurps game aids use it, for example the
 GURPS system for Foundry VTT.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@local/gurps-press:0.1.0": *
 
 #set text(size: 7pt)
 #sjgames-game-aid[Jane Doe]
@@ -60,7 +60,7 @@ colour each time you use it. `gurps` writes #gurps in bold italics.
 `emph`.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@local/gurps-press:0.1.0": *
 
 This is a one-shot for #gurps.
 #sjgames publishes
@@ -76,7 +76,7 @@ Section II of the online policy says that if your material looks like a
 #sjgames product, it is "over the line". For example, do not copy the
 covers of #gurps books.
 
-`gurps-ink` does not copy the look of #gurps books. It sets no fonts,
+`gurps-press` does not copy the look of #gurps books. It sets no fonts,
 colours or page layout. It follows the typographic rules of #sjgames:
 how to write dice, book titles, page references and stat blocks. Choose
 your own fonts, colours and layout.

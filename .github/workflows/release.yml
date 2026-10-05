@@ -40,10 +40,10 @@ jobs:
         run: |
           just doc
           just package out
-          cd out && zip -r "../gurps-ink-${VERSION}.zip" gurps-ink
+          cd out && zip -r "../gurps-press-${VERSION}.zip" gurps-press
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
-          files: gurps-ink-${{ env.VERSION }}.zip
+          files: gurps-press-${{ env.VERSION }}.zip
           generate_release_notes: true

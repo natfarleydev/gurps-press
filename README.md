@@ -1,7 +1,7 @@
-# gurps-ink
+# gurps-press
 
-[![CI status](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-typst?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-typst&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+[![CI status](https://github.com/natfarleydev/gurps-press/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-press/actions/workflows/ci.yml)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-press?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-press&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A [Typst](https://typst.app) package for people who write unofficial
 ***GURPS*** material: a sourcebook, an adventure or a handout. It does
@@ -14,8 +14,31 @@ three things:
   ST, and references such as ***GURPS Magic*** p. 14.
 - **Characters.** It makes stat blocks that calculate their point costs.
 
+## Install
+
+`gurps-press` is not on Typst Universe yet. Install it on your computer:
+
+1. Install [Typst](https://github.com/typst/typst#installation) and
+   [just](https://just.systems).
+2. Clone this repository:
+   `git clone https://github.com/natfarleydev/gurps-press`
+3. In the repository, run `just install`. This copies the package into
+   the Typst package folder on your computer.
+4. In your document, write `#import "@local/gurps-press:0.1.0": *`.
+
+Run `just install` again after you pull a new version. The
+[Typst web app](https://typst.app) cannot use `@local` packages. To use
+`gurps-press` there, upload the `src` folder into your project and write
+`#import "src/lib.typ": *`.
+
+When `gurps-press` is on Typst Universe, you do not install it. Write
+`#import "@preview/gurps-press:0.1.0": *` and Typst downloads it. The
+example below uses this import. Until then, change `@preview` to `@local`.
+
+## Example
+
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let hare = character(
   name: "The Hare",
@@ -40,16 +63,16 @@ The Hare rolls #dice(3) to stay awake. Its kick does
 
 ## Not a GURPS look-alike
 
-`gurps-ink` does not copy the look of ***GURPS*** books. The
+`gurps-press` does not copy the look of ***GURPS*** books. The
 [online policy](https://www.sjgames.com/general/online_policy.html)
 (section II) says that material that looks like a Steve Jackson Games
-product is "over the line". `gurps-ink` follows the typographic rules of
+product is "over the line". `gurps-press` follows the typographic rules of
 Steve Jackson Games, from its
 [Authors' Guidelines](https://www.sjgames.com/general/guidelines/authors/style.html)
 and its books: how to write dice, book titles and stat blocks. It sets
 no fonts, colours or page layout. You choose them.
 
-`gurps-ink` gives you the text of the notices. It does not give legal
+`gurps-press` gives you the text of the notices. It does not give legal
 advice. Read the online policy before you publish.
 
 ## Documentation
@@ -58,18 +81,8 @@ advice. Read the online policy before you publish.
   one chapter for each of the three things above. Each chapter starts
   with the questions that it answers.
 - [The Tortoise and the Hare](docs/tortoise-and-hare.pdf) is an example
-  one-shot adventure made with `gurps-ink`. Its source is
-  `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-typst).
-
-## Install
-
-`gurps-ink` is not on Typst Universe yet, so the `@preview` import does
-not work yet. Until then, install it on your computer:
-
-1. Install [Typst](https://github.com/typst/typst#installation) and
-   [just](https://just.systems).
-2. Clone this repository and run `just install`.
-3. In your document, write `#import "@local/gurps-ink:0.1.0": *`.
+  one-shot adventure made with `gurps-press`. Its source is
+  `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-press).
 
 ## Functions
 
@@ -113,7 +126,7 @@ The code is in `src/`. `src/lib.typ` decides what is public. The `///`
 comment above each public function documents it, and the manual shows
 these comments. Work test-first: write the behaviour in the comment, add a
 failing test in `tests/`, then make the test pass. `CLAUDE.md` in the
-[repository](https://github.com/natfarleydev/gurps-typst) has the
+[repository](https://github.com/natfarleydev/gurps-press) has the
 conventions and the release checklist.
 
 ## Legal

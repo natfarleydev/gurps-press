@@ -1,4 +1,4 @@
-// The gurps-ink manual. Build with `just doc` (writes docs/manual.pdf).
+// The gurps-press manual. Build with `just doc` (writes docs/manual.pdf).
 //
 // It is a user guide first and a reference second. The user guide has
 // one chapter for each thing that the package does (legal notices, dice
@@ -15,7 +15,7 @@
 #import "/src/lib.typ": *
 #import "style.typ": import-line, layout-example, version
 
-#set document(title: "gurps-ink manual", author: "Nathanael Farley")
+#set document(title: "gurps-press manual", author: "Nathanael Farley")
 #set page(numbering: "1", margin: (x: 2cm, y: 2.5cm))
 // Number chapters, sections and subsections only. The reference has
 // deeper headings for parameters; numbers would not help there.
@@ -25,7 +25,7 @@
 #show link: set text(fill: blue.darken(30%))
 
 #align(center)[
-  #text(2em, weight: "bold")[gurps-ink] \
+  #text(2em, weight: "bold")[gurps-press] \
   Typeset unofficial #gurps material \
   User guide and reference, version #version
 ]
@@ -34,9 +34,9 @@
 
 #show heading.where(level: 1): it => pagebreak(weak: true) + it
 
-= What gurps-ink does <overview>
+= What gurps-press does <overview>
 
-`gurps-ink` is a Typst package for people who write unofficial #gurps
+`gurps-press` is a Typst package for people who write unofficial #gurps
 material: a sourcebook, an adventure or a handout. It does three things.
 
 #table(
@@ -44,7 +44,7 @@ material: a sourcebook, an adventure or a handout. It does three things.
   stroke: none,
   inset: (x: 4pt, y: 6pt),
   table.hline(),
-  [*Task*], [*What gurps-ink gives you*], [*Chapter*],
+  [*Task*], [*What gurps-press gives you*], [*Chapter*],
   table.hline(stroke: 0.5pt),
   [Legal notices],
   [The disclaimer and the notice that the #sjgames online
@@ -63,7 +63,7 @@ material: a sourcebook, an adventure or a handout. It does three things.
 It does not do these things:
 
 - It does not copy the look of #gurps books. The #sjgames online policy
-  does not let you do that (@legal-look). `gurps-ink` follows the
+  does not let you do that (@legal-look). `gurps-press` follows the
   typographic rules of #sjgames, and you choose the fonts and layout.
 - It does not give legal advice.
 - It does not calculate the cost of advantages and disadvantages. You
@@ -93,7 +93,7 @@ The examples use one story: a race between the Tortoise and the Hare.
   table.hline(),
   [*I want to …*], [*Go to*],
   table.hline(stroke: 0.5pt),
-  [install `gurps-ink`], [@start],
+  [install `gurps-press`], [@start],
   [add the notices that #sjgames asks for], [@legal-notices],
   [know if my book can look like a #gurps book], [@legal-look],
   [write dice or damage], [@dice-dice, @dice-damage],
@@ -127,10 +127,10 @@ The examples use one story: a race between the Tortoise and the Hare.
 
 = Example: The Tortoise and the Hare <example>
 
-This one-shot adventure uses each part of `gurps-ink`. Its source is
-#link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/example/tortoise-and-hare.typ")[`docs/example/tortoise-and-hare.typ`].
+This one-shot adventure uses each part of `gurps-press`. Its source is
+#link("https://github.com/natfarleydev/gurps-press/blob/main/docs/example/tortoise-and-hare.typ")[`docs/example/tortoise-and-hare.typ`].
 The PDF is
-#link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/tortoise-and-hare.pdf")[`docs/tortoise-and-hare.pdf`]. The PDF adds an appendix from
+#link("https://github.com/natfarleydev/gurps-press/blob/main/docs/tortoise-and-hare.pdf")[`docs/tortoise-and-hare.pdf`]. The PDF adds an appendix from
 `docs/example/odds.typ`, which calculates the odds in the designer's
 note. The adventure does not need it.
 

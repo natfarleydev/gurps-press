@@ -77,7 +77,7 @@ jobs:
 
       - name: Check package against Typst Universe rules
         run: |
-          docker run --rm -v "$PWD/out/gurps-ink/$(just version):/data" \
+          docker run --rm -v "$PWD/out/gurps-press/$(just version):/data" \
             ghcr.io/typst/package-check check
 
       - name: Upload built docs

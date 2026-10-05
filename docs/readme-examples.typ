@@ -6,11 +6,8 @@
 #set page(width: 10cm, height: auto, margin: 5mm)
 #set text(size: 9pt)
 
-#let import-line = (
-  "#import \"@preview/gurps-ink:"
-    + toml("/typst.toml").package.version
-    + "\": *"
-)
+#let (name, version) = toml("/typst.toml").package
+#let import-line = "#import \"@preview/" + name + ":" + version + "\": *"
 #let blocks = (
   read("/README.md")
     .replace("\r\n", "\n")
