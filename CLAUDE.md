@@ -7,11 +7,43 @@ Guidance for AI agents (and humans) working in this repository.
 A Typst package for typesetting home-made **GURPS** material: dice notation,
 book references, Steve Jackson Games online-policy boilerplate, and NPC stat
 blocks with automatic point costs. It is a port of the LaTeX package
-<https://github.com/natfarleydev/gurps-latex-package> — the *behaviour* is
-ported, not the Lua implementation. Re-derive logic in idiomatic Typst.
+<https://github.com/natfarleydev/gurps-latex-package>.
 
 Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
+
+## Three rules that override everything else
+
+1. **Port intent, not logic.** The LaTeX package tells us *what a GURPS
+   author wants on the page*: dice that read `3d−1`, a stat block whose
+   points add up, the SJ Games notices. It does **not** tell us how to
+   build it. Never translate Lua, TeX macros, `\newcommand` optional
+   arguments, key–value parsing or global registers line by line. Ask
+   "what was the LaTeX version trying to give its user?", then design the
+   answer a Typst user would expect. If a LaTeX feature only existed to
+   work around TeX, drop it.
+2. **Always work test-driven.** No behaviour change lands without a test
+   that failed first. The loop is: doc-comment (the spec) → failing test →
+   smallest code that passes → refactor while green. Bug fix? Reproduce it
+   in a test first. Refactor? The behaviour must already be covered; add
+   the missing tests first. "Tests afterwards" is never acceptable, not
+   even for "trivial" changes.
+3. **Relentlessly pursue idiomatic Typst.** Every change, and every review
+   (ours and CodeRabbit's), asks "is this how a seasoned Typst author
+   would write it?" Working but awkward code gets rewritten. Concretely:
+   - Read like Typst's standard library: positional arguments only for
+     the obvious subject (`dice(3, -1)`, `skill(name, level, cost)`),
+     named arguments for anything optional or ambiguous, `auto`/`none`
+     defaults, accept `str` or `content` wherever text is expected.
+   - Data in, content out: constructors return plain dictionaries; only
+     rendering functions return content. No `state`, counters or
+     `context` unless the feature truly needs them.
+   - Use the language: `array.map`/`filter`/`find`, destructuring,
+     dictionaries, `calc`, show/set rules. No hand-rolled argument
+     parsing, string surgery or cleverness a newcomer could not follow.
+
+If a request conflicts with these rules, say so and ask; don't quietly
+break one.
 
 ## Layout
 
@@ -24,7 +56,7 @@ src/character.typ     trait constructors, character(), level-of(), total-points(
 src/stat-block.typ    stat-block() renderer
 tests/<name>/test.typ tytanic unit tests (one directory per test)
 docs/manual.typ       manual, generated from doc-comments with tidy
-examples/             example documents linked from README (excluded from bundle)
+docs/example.typ      source of the README picture docs/example.png
 scripts/              packaging helpers used by the Justfile and CI
 ```
 
@@ -36,21 +68,23 @@ Anything not re-exported from `src/lib.typ` is private.
 - Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4 syntax):
   description, a ```` ```example ```` block where useful, per-parameter
   docs with `-> type`, and a return `-> type`. The doc-comment **is the spec**.
-- Data in, content out: constructors return plain dictionaries; only
-  `stat-block` and the text helpers produce content. No global state.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
 - Examples in README/docs import `@preview/gurps-ink:<version>`; tests import
   `/src/lib.typ`.
 
-## Workflow: TDD
+## Workflow: TDD (always)
 
 1. Write/extend the doc-comment describing the behaviour.
 2. Write a failing test in `tests/` (`tt new --compile-only <name>` for logic,
    `tt new <name>` for a visual reference test, or add `ref.typ` for an
    ephemeral test comparing against hand-written expected markup).
-3. Implement until `just test` passes.
-4. Prefer compile-only tests with `assert.eq` for logic; keep persistent PNG
+3. Run it and watch it fail *for the right reason* (the assertion, not a
+   typo). Commit it as `test: …` if that helps review.
+4. Write the smallest idiomatic code that makes `just test` pass, then
+   refactor while green. Commit as `feat:`/`fix:`/`refactor:`.
+5. Update README and manual examples last, so they show the final API.
+6. Prefer compile-only tests with `assert.eq` for logic; keep persistent PNG
    references few (they break on any layout change). Regenerate them with
    `just update <test>` and eyeball the PNG files before committing.
 
