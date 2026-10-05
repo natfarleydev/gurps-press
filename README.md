@@ -36,7 +36,7 @@ The Hare rolls #dice(3) to stay awake. Its kick does
 #text(size: 7pt, sjgames-disclaimer)
 ```
 
-![The Hare's stat block, a sentence with dice and a book title, and the disclaimer](https://raw.githubusercontent.com/natfarleydev/gurps-typst/main/docs/readme-1.png)
+![The Hare's stat block, a sentence with dice and a book title, and the disclaimer](docs/readme-1.png)
 
 ## Not a GURPS look-alike
 
@@ -54,12 +54,12 @@ advice. Read the online policy before you publish.
 
 ## Documentation
 
-- The [manual](https://github.com/natfarleydev/gurps-typst/blob/main/docs/manual.pdf) is a user guide and a reference. It has
+- The [manual](docs/manual.pdf) is a user guide and a reference. It has
   one chapter for each of the three things above. Each chapter starts
   with the questions that it answers.
-- [The Tortoise and the Hare](https://github.com/natfarleydev/gurps-typst/blob/main/docs/tortoise-and-hare.pdf) is an example
+- [The Tortoise and the Hare](docs/tortoise-and-hare.pdf) is an example
   one-shot adventure made with `gurps-ink`. Its source is
-  [docs/example/tortoise-and-hare.typ](https://github.com/natfarleydev/gurps-typst/blob/main/docs/example/tortoise-and-hare.typ).
+  `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-typst).
 
 ## Install
 
@@ -90,7 +90,7 @@ not work yet. Until then, install it on your computer:
 | `level-of(char, name)` | get the level of an attribute, skill or spell |
 | `total-points(char)` | get the point total of a character |
 
-The [manual](https://github.com/natfarleydev/gurps-typst/blob/main/docs/manual.pdf) gives the arguments of each function.
+The [manual](docs/manual.pdf) gives the arguments of each function.
 
 ## Contributing
 
