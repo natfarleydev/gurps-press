@@ -31,6 +31,9 @@
 // Duplicates that are never used as a base are fine.
 #let _ = character(skill("Typst", 12), spell([Typst], 12))
 
+// Typst before 0.15 escapes quotes in caught messages.
+#let quoted(name) = regex("\\\\?\"" + name + "\\\\?\"")
+
 // No match: the message lists what exists, and points out names whose
 // plain text is empty, which can never match.
 #let unmatched() = character(
@@ -40,10 +43,10 @@
 )
 #assert-panic(unmatched)
 #let msg = catch(unmatched)
-#assert(msg.contains("\"Brawl\""), message: msg)
-#assert(msg.contains("\"Brawling\""), message: msg)
+#assert(msg.contains(quoted("Brawl")), message: msg)
+#assert(msg.contains(quoted("Brawling")), message: msg)
 #assert(msg.contains("string name"), message: msg)
 // Without such names, there is no hint about string names.
 #let plain = catch(() => character(skill("Brawling", 12), skill("Kicking", 12, "Brawl/H")))
-#assert(plain.contains("\"Brawling\""), message: plain)
+#assert(plain.contains(quoted("Brawling")), message: plain)
 #assert(not plain.contains("string name"), message: plain)
