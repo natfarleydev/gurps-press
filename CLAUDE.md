@@ -126,14 +126,15 @@ typos                # spell check (CI runs this too)
 
 - Never commit to `main` directly. One branch and PR per change (`feat/…`, `fix/…`,
   `docs/…`, `refactor/…`), then open a PR with `gh pr create`; CodeRabbit
-  reviews every PR.
+  reviews every PR with its default settings (`.coderabbit.yaml` holds no
+  review instructions) and approves or requests changes.
 - Commit small and often: each red→green TDD step, or each logical change,
   is its own Conventional Commit (`feat:`, `fix:`, `test:`, `docs:`, …).
 - Push after every commit or two so CodeRabbit and CI see progress; don't
   sit on unpushed work.
 - Address CodeRabbit comments with new commits (no force-push rewrites) and
   reply when declining a suggestion.
-- Merge only when CI is green.
+- Merge when CodeRabbit has approved the PR and CI is green; not before.
 
 ## Status and next steps (handover)
 
@@ -151,7 +152,7 @@ review comments arrive the same way (a branch stacked on
 is MIT-0 (Universe requires OSI approval, which CC0 lacks).
 
 **Next:**
-1. Get PR #1 through CodeRabbit and merge it into `main`.
+1. Merge PR #1 into `main` once CodeRabbit approves it (CI is green).
 2. Cut `v0.1.0` (see "Releasing"), then submit to typst/packages.
 
 **Later / not started:** importing characters from GCS (`.gcs` is JSON;
