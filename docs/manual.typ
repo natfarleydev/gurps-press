@@ -132,10 +132,13 @@ This one-shot adventure uses each part of `gurps-ink`. Its source is
 The PDF is
 #link("https://github.com/natfarleydev/gurps-typst/blob/main/docs/tortoise-and-hare.pdf")[`docs/tortoise-and-hare.pdf`].
 
+// The number of pages of the example. Change it when the example
+// gets longer or shorter.
+#let example-pages = 4
 #grid(
   columns: (1fr, 1fr),
   gutter: 8pt,
-  ..range(1, 3).map(p => block(
+  ..range(1, example-pages + 1).map(p => block(
     stroke: 0.5pt + luma(200),
     image("tortoise-and-hare-" + str(p) + ".png", width: 100%),
   ))
@@ -156,9 +159,10 @@ The PDF is
   [@characters-make,
     @characters-column],
   [The Tortoise is built on 50 points], [@characters-budget],
-  [Skill levels in the text of the race], [@characters-quote],
+  [Skill levels and SM in the text], [@characters-quote],
   [#dice(3) for the nap roll], [@dice-dice],
   [The disclaimer and the notice at the end], [@legal-notices],
+  [Authors, tools and references at the end], [@legal-sources],
   table.hline(),
 )
 
