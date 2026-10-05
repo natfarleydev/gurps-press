@@ -224,7 +224,7 @@ Each example needs the import line first.
 )
 
 == Dice and book references <reference-dice>
-#show-group("dice", "thrust", "swing", "gurps-book")
+#show-group("dice", "thrust", "swing", "gurps-book", "basic-set")
 
 == Characters and stat blocks <reference-characters>
 #show-group(

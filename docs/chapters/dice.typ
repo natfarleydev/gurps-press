@@ -29,7 +29,7 @@ With a symbol: #dice(2, $n$).
 == Write damage from ST <dice-damage>
 
 `thrust(st)` and `swing(st)` give the basic damage for a ST, from the
-table on p. B16. They cover ST 1 to 100. Spread the result into `dice`
+table on #basic-set(16). They cover ST 1 to 100. Spread the result into `dice`
 with `..`.
 
 ```typ
@@ -47,8 +47,8 @@ A character from `character()` has its damage in `thr` and `sw`
 == Refer to a GURPS book <dice-books>
 
 Use `gurps-book(title, pages)`. Do not write "GURPS" in the title: the
-function adds it. The pages are optional. One page gets "p."; more pages
-get "pp.".
+function adds it. The pages are optional. If you give them, a comma
+follows the title. One page gets "p."; more pages get "pp.".
 
 ```typ
 #import "@preview/gurps-ink:0.1.0": *
@@ -58,17 +58,23 @@ See #gurps-book("Magic", 14) and
 #gurps-book("Fantasy", (12, 20)).
 ```
 
-For a page of the _Basic Set_, the style of #sjgames is "p. B348". Write
-it as text: `p.~B348`. The `~` keeps "p." and the number on one line.
+For a page of the _Basic Set_, use `basic-set(pages)`. It writes
+"p. B348", with no title. `gurps-book("Basic Set", 348)` stops with an
+error that tells you to use `basic-set`.
 
 ```typ
 #import "@preview/gurps-ink:0.1.0": *
 
-Roll a Quick Contest (p.~B348).
+Roll a Quick Contest (#basic-set(348)).
+See #basic-set((16, 170)).
 ```
+
+To show the title of the _Basic Set_ with a page, write the title as
+content: `gurps-book([Basic Set], 348)`.
 
 == Where the rules come from <dice-sources>
 
-The dice notation and the bold italic book titles follow the
+The dice notation, the bold italic book titles and the page references
+follow the
 #link(style-guide)[#sjgames Authors' Guidelines: Editorial Style]. The
-damage table is on p. B16 of the #gurps-book("Basic Set").
+damage table is on #basic-set(16).

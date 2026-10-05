@@ -81,7 +81,8 @@ not work yet. Until then, install it on your computer:
 | `gurps`, `sjgames` | write ***GURPS*** in bold italics, or "Steve Jackson Games" |
 | `dice(count, modifier)` | write dice, such as `#dice(2, -1)` for 2d−1 |
 | `thrust(st)`, `swing(st)` | get the basic damage for a ST, such as `#dice(..swing(13))` |
-| `gurps-book(title, pages)` | refer to a ***GURPS*** book, such as `#gurps-book("Magic", 14)` |
+| `gurps-book(title, pages)` | refer to a ***GURPS*** book, such as `#gurps-book("Magic", 14)` for ***GURPS Magic,*** p. 14 |
+| `basic-set(pages)` | refer to a page of the _Basic Set_, such as `#basic-set(348)` for p. B348 |
 | `character(..)` | make a character and calculate its costs |
 | `advantage`, `disadvantage`, `perk`, `quirk` | add traits to a character |
 | `skill`, `spell` | add skills and spells to a character |

@@ -67,8 +67,8 @@ This is a one-shot for #gurps.
 #strong(emph[Munchkin]) too.
 ```
 
-Do not put `#gurps` in italic text. In italic text, `emph` makes it
-upright.
+In italic text, `emph` makes #gurps upright, as it does with other
+emphasis. It stays bold, so it still meets the policy.
 
 == Use your own look <legal-look>
 

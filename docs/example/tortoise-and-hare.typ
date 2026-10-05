@@ -62,7 +62,7 @@ The player uses the Tortoise. It is built on 50 points.
 #block(breakable: false, stat-block(tortoise))
 
 The GM plays the Hare. The Hare is fast, but it has Overconfidence
-(p. B148).
+(#basic-set(148)).
 
 #block(breakable: false, stat-block(hare))
 
@@ -71,13 +71,13 @@ The GM plays the Hare. The Hare is fast, but it has Overconfidence
 The race has three steps.
 
 + *Taunt (optional).* Before the start, the Tortoise can mock the Hare.
-  Roll a Quick Contest (p. B348) of the Tortoise's Fast-Talk-#level-of(tortoise, "Fast-Talk")
+  Roll a Quick Contest (#basic-set(348)) of the Tortoise's Fast-Talk-#level-of(tortoise, "Fast-Talk")
   against the Hare's Will of #level-of(hare, "Will"). If the Tortoise
   wins, the Hare takes −2 on its roll in step 2.
 + *The nap.* Halfway, the Hare is far ahead. The GM rolls #dice(3)
-  against the Hare's self-control number of 12 (p. B120). On a failure,
+  against the Hare's self-control number of 12 (#basic-set(120)). On a failure,
   the Hare stops for a nap.
-+ *The finish.* Roll a Quick Contest of Running (p. B218): the
++ *The finish.* Roll a Quick Contest of Running (#basic-set(218)): the
   Tortoise's Running-#level-of(tortoise, "Running") against the Hare's
   Running-#level-of(hare, "Running"). The Hare gets +4 for its speed.
   If it took a nap, it gets −6 instead. The winner reaches the pond
