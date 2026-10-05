@@ -126,8 +126,9 @@ just ci            # everything CI runs
 Code lives in `src/`; `src/lib.typ` decides what is public. Every public
 function is documented by the `///` comments above it, which also produce
 the manual. Work test-first: describe the behaviour in the doc comment, add
-a failing test under `tests/`, then make it pass. See
-[CLAUDE.md](https://github.com/natfarleydev/gurps-typst/blob/main/CLAUDE.md) for conventions and the release checklist.
+a failing test under `tests/`, then make it pass. `CLAUDE.md` in the
+[repository](https://github.com/natfarleydev/gurps-typst) has the
+conventions and the release checklist.
 
 ## Legal
 
