@@ -5,7 +5,8 @@
 
 #let napoleon = character(
   name: "Napoleon",
-  st: 9, hp: 12,
+  st: 9,
+  hp: 12,
   advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),

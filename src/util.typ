@@ -22,14 +22,18 @@
   let named = args.named()
   if named.len() > 0 {
     panic(
-      caller + "() got unexpected named argument(s): "
+      caller
+        + "() got unexpected named argument(s): "
         + named.keys().join(", "),
     )
   }
   let pos = args.pos()
   if pos.len() > 1 {
     panic(
-      caller + "() takes at most one optional `" + param + "` argument, got "
+      caller
+        + "() takes at most one optional `"
+        + param
+        + "` argument, got "
         + str(pos.len()),
     )
   }

@@ -120,12 +120,14 @@ package into your local Typst package directory; then import it with
 
 You need [Typst](https://github.com/typst/typst) 0.15,
 [tytanic](https://typst-community.github.io/tytanic/) 0.4 (the test runner,
-command `tt`), [just](https://just.systems) and, for spell checking,
-[typos](https://github.com/crate-ci/typos).
+command `tt`), [just](https://just.systems),
+[typstyle](https://github.com/typstyle-rs/typstyle) (formatting) and
+[typos](https://github.com/crate-ci/typos) (spelling).
 
 ```sh
 just test          # run the tests
 just update NAME   # accept new output for a picture-comparison test
+just fmt           # format the Typst files
 just doc           # rebuild docs/manual.pdf and docs/example.png
 just ci            # everything CI runs
 ```

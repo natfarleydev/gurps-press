@@ -57,11 +57,14 @@ jobs:
 
       - uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2
         with:
-          tool: just,typos
+          tool: just,typos,typstyle@0.15.1
 
       - uses: typst-community/setup-typst@48aeee7543d37f01afd1ffb27307dc277387ba13 # v4
         with:
           typst-version: "0.15"
+
+      - name: Formatting
+        run: just fmt-check
 
       - name: Spell check
         run: just spell

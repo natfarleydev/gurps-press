@@ -1,57 +1,9 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-# CodeRabbit reviews every pull request. Docs: https://docs.coderabbit.ai
-language: en-GB
+# CodeRabbit with its default review settings and no custom instructions.
 reviews:
-  profile: chill
-  request_changes_workflow: false
-  high_level_summary: true
-  review_status: true
-  poem: false
+  # Approve the PR once every CodeRabbit comment is resolved; request
+  # changes while any are open. An approval means the PR can be merged.
+  request_changes_workflow: true
   auto_review:
-    enabled: true
-    drafts: false
-  path_filters:
-    # Generated files: reviewed through the sources that produce them.
-    - "!tests/**/ref/**"
-    - "!docs/*.pdf"
-    - "!docs/*.png"
-  path_instructions:
-    # The ground rules from CLAUDE.md, applied to every file.
-    - path: "**"
-      instructions: |
-        Hold every change to the three rules in CLAUDE.md:
-        1. Port intent, not logic: flag code that mirrors the LaTeX/Lua
-           implementation (TeX-style optional arguments, key-value parsing,
-           global registers) instead of doing what a Typst user would expect.
-        2. Test-driven: every behaviour change needs a test that would have
-           failed without it; flag untested behaviour and untested panic paths.
-        3. Idiomatic Typst: flag code a seasoned Typst author would write
-           differently (named vs positional arguments, auto/none defaults,
-           array/dictionary methods, data in and content out) and suggest the
-           idiomatic version.
-    - path: "src/**/*.typ"
-      instructions: |
-        Typst package source. Check that:
-        - every public definition (re-exported from src/lib.typ) has a tidy
-          doc-comment (`///`) with parameter types (`-> type`) and a return
-          type, and that the doc-comment matches the behaviour;
-        - invalid input panics with a message saying what was wrong and how
-          to fix it, and each panic path has a test;
-        - GURPS rules (point costs, defaults, damage table) match the
-          GURPS 4th edition Basic Set;
-        - names are kebab-case and indentation is two spaces;
-        - nothing in a code block accidentally returns a value that gets
-          joined into the result (a common Typst pitfall).
-    - path: "tests/**/*.typ"
-      instructions: |
-        Tytanic tests. Prefer compile-only tests with assert.eq for logic and
-        ephemeral tests (test.typ + ref.typ) for rendering. Check that both
-        success and failure paths (assert-panic / catch) are covered.
-    - path: "README.md"
-      instructions: |
-        Shown on Typst Universe. Examples must use the
-        `@preview/gurps-ink:<version>` import matching typst.toml and must
-        compile (tests/readme checks this). Keep it readable for people new
-        to Typst.
-chat:
-  auto_reply: true
+    # Also review PRs stacked on other branches, not just PRs into main.
+    base_branches: [".*"]

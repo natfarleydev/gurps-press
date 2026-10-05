@@ -12,7 +12,7 @@ blocks with automatic point costs. It is a port of the LaTeX package
 Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
 
-## Three rules that override everything else
+## Four rules that override everything else
 
 1. **Port intent, not logic.** The LaTeX package tells us *what a GURPS
    author wants on the page*: dice that read `3d−1`, a stat block whose
@@ -43,6 +43,17 @@ canonical name `gurps`). Not yet submitted; see "Releasing".
      cleverness a newcomer could not follow. The one sanctioned piece of
      argument plumbing is `take-optional` (Typst has no optional
      positional parameters); don't add others.
+4. **Be deterministic wherever we can.** A rule a tool can check is
+   enforced by that tool, not written down as an instruction for a person
+   or an AI reviewer to remember. Spelling is `typos`, package rules are
+   `package-check`, formatting is `typstyle` (`just fmt-check`), README
+   and manual examples are checked by `tests/readme`, doc-comments on the
+   public API by `tests/doc-comments`, behaviour by the other tytanic
+   tests, and all of it runs in CI. When a
+   new rule comes up, first look for a linter, formatter, test or CI step
+   that can enforce it, and add that. Only a rule no tool can check
+   becomes prose (here, or as a CodeRabbit instruction), and
+   `.coderabbit.yaml` has none for now.
 
 If a request conflicts with these rules, say so and ask; don't quietly
 break one.
@@ -66,13 +77,17 @@ Anything not re-exported from `src/lib.typ` is private.
 
 ## Conventions
 
-- Two-space indent, `kebab-case` names (Typst Universe recommendation).
-- Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4 syntax):
-  description, a ```` ```example ```` block where useful, per-parameter
-  docs with `-> type`, and a return `-> type`. The doc-comment **is the spec**.
+- Formatting is whatever `typstyle` (defaults) produces: run `just fmt`.
+  Names are `kebab-case` (Typst Universe recommendation).
+- Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4
+  syntax): description, a ```` ```example ```` block where useful,
+  per-parameter docs with `-> type`, and a return `-> type`. The
+  doc-comment **is the spec**. `tests/doc-comments` checks that it exists
+  and ends in the return type.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
-- Examples in README/docs import `@preview/gurps-ink:<version>`; tests import
+- Examples in README/docs import `@preview/gurps-ink:<version>` (checked
+  by `tests/readme`); tests import
   `/src/lib.typ`.
 
 ## Workflow: TDD (always)
@@ -92,11 +107,13 @@ Anything not re-exported from `src/lib.typ` is private.
 
 ## Commands
 
-Requires `typst` (0.15), `tt` (tytanic 0.4) and `just`.
+Requires `typst` (0.15), `tt` (tytanic 0.4), `typstyle` (0.15), `typos`
+and `just`.
 
 ```
 just test            # run all tests
 just update <name>   # regenerate reference images
+just fmt             # format all Typst files (CI checks with fmt-check)
 just doc             # build docs/manual.pdf and README example image
 just install         # install as @local/gurps-ink:<version>
 just ci              # what CI runs
@@ -126,14 +143,15 @@ typos                # spell check (CI runs this too)
 
 - Never commit to `main` directly. One branch and PR per change (`feat/…`, `fix/…`,
   `docs/…`, `refactor/…`), then open a PR with `gh pr create`; CodeRabbit
-  reviews every PR.
+  reviews every PR with its default settings (`.coderabbit.yaml` holds no
+  review instructions) and approves or requests changes.
 - Commit small and often: each red→green TDD step, or each logical change,
   is its own Conventional Commit (`feat:`, `fix:`, `test:`, `docs:`, …).
 - Push after every commit or two so CodeRabbit and CI see progress; don't
   sit on unpushed work.
 - Address CodeRabbit comments with new commits (no force-push rewrites) and
   reply when declining a suggestion.
-- Merge only when CI is green.
+- Merge when CodeRabbit has approved the PR and CI is green; not before.
 
 ## Status and next steps (handover)
 
@@ -146,12 +164,12 @@ clear to a newcomer, ready for Typst Universe but not yet submitted.
 **Done:** the port is feature-complete for v0.1.0 and lives in PR #1
 (`feat/initial-port`). PR #2 was stacked on it and merged in; fixes for
 review comments arrive the same way (a branch stacked on
-`feat/initial-port`, merged when green). 17 tytanic tests pass on Typst
+`feat/initial-port`, merged when green). 18 tytanic tests pass on Typst
 0.13, 0.14 and 0.15; CI, `typos` and `package-check` are green. Licence
 is MIT-0 (Universe requires OSI approval, which CC0 lacks).
 
 **Next:**
-1. Get PR #1 through CodeRabbit and merge it into `main`.
+1. Merge PR #1 into `main` once CodeRabbit approves it (CI is green).
 2. Cut `v0.1.0` (see "Releasing"), then submit to typst/packages.
 
 **Later / not started:** importing characters from GCS (`.gcs` is JSON;

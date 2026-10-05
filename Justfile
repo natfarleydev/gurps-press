@@ -1,5 +1,6 @@
 # Task runner: https://just.systems. Run `just` to list recipes.
-# Needs typst, tytanic (`tt`) and, for `spell`, typos. Packaging needs bash.
+# Needs typst, tytanic (`tt`), typstyle (`fmt`) and typos (`spell`).
+# Packaging needs bash.
 
 root := justfile_directory()
 
@@ -26,6 +27,14 @@ doc:
 version:
   @sed -n 's/^version[[:space:]]*=[[:space:]]*"\(.*\)"$/\1/p' typst.toml
 
+# format all Typst files in place
+fmt:
+  typstyle -i src tests docs
+
+# fail if any Typst file is not formatted (CI runs this)
+fmt-check:
+  typstyle --check src tests docs
+
 # check spelling
 spell:
   typos
@@ -51,4 +60,4 @@ uninstall: (remove "@local")
 uninstall-preview: (remove "@preview")
 
 # everything CI checks
-ci: test spell doc
+ci: test fmt-check spell doc

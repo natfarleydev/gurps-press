@@ -23,7 +23,10 @@
   // eval cannot resolve @preview imports of an unpublished version, so the
   // import is replaced by handing the library in as the scope.
   let body = code.replace(import-line, "")
-  assert(not body.contains("@preview/gurps-ink"), message: "stale import in README:\n" + code)
+  assert(
+    not body.contains("@preview/gurps-ink"),
+    message: "stale import in README:\n" + code,
+  )
   let _ = eval(body, mode: "markup", scope: dictionary(lib))
 }
 
@@ -45,6 +48,10 @@
 // Other documentation must not mention an old version either.
 #for path in ("/docs/manual.typ",) {
   for m in read(path).matches(regex("@preview/gurps-ink:([0-9.]+)")) {
-    assert.eq(m.captures.first(), version, message: path + " has a stale import")
+    assert.eq(
+      m.captures.first(),
+      version,
+      message: path + " has a stale import",
+    )
   }
 }

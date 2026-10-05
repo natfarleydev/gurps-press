@@ -55,17 +55,23 @@
   ..modifier,
 ) = {
   if type(count) == int {
-    if count < 0 { panic("dice() count must be a non-negative integer, got " + str(count)) }
+    if count < 0 {
+      panic("dice() count must be a non-negative integer, got " + str(count))
+    }
   } else if type(count) != content {
     panic("dice() count must be an int or content, got " + str(type(count)))
   }
   let modifier = take-optional(modifier, "dice", "modifier", default: 0)
   let suffix = if type(modifier) == int {
-    if modifier > 0 { "+" + str(modifier) } else if modifier < 0 { str(modifier) }
+    if modifier > 0 { "+" + str(modifier) } else if modifier < 0 {
+      str(modifier)
+    }
   } else if type(modifier) == content {
     [+#modifier]
   } else {
-    panic("dice() modifier must be an int or content, got " + str(type(modifier)))
+    panic(
+      "dice() modifier must be an int or content, got " + str(type(modifier)),
+    )
   }
   box[#(count)d#suffix]
 }
@@ -97,7 +103,10 @@
     none
   } else if type(pages) == array {
     [ pp.~#pages.map(p => [#p]).join([, ])]
-  } else if type(pages) == int or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none) {
+  } else if (
+    type(pages) == int
+      or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
+  ) {
     [ p.~#pages]
   } else {
     [ pp.~#pages]

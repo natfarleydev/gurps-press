@@ -2,7 +2,10 @@
 #import "/src/lib.typ": *
 
 #let c = character(
-  st: 9, dx: 12, hp: 12, sm: -1,
+  st: 9,
+  dx: 12,
+  hp: 12,
+  sm: -1,
   advantage("Natural afro", points: 1),
   advantage("Zoology"),
   disadvantage("Bad Temper", points: -10),
