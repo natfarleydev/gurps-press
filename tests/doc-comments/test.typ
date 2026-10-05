@@ -40,7 +40,7 @@
     message: name + " in src/" + file + " has no /// doc-comment",
   )
   assert(
-    doc-lines.last().starts-with("/// ->"),
+    doc-lines.last().match(regex("^/// ->\\s*\\S")) != none,
     message: name
       + " in src/"
       + file
