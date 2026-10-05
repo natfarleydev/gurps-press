@@ -143,8 +143,9 @@ typos                # spell check (CI runs this too)
 
 ## Releasing
 
-1. Bump `version` in `typst.toml`, every `@preview/gurps-press:x.y.z` import in
-   README/docs/examples, and `CHANGELOG.md`.
+1. Bump `version` in `typst.toml`, every `@preview/gurps-press:x.y.z` and
+   `@local/gurps-press:x.y.z` import in README/docs/examples, and
+   `CHANGELOG.md`. `tests/readme` fails on any import you miss.
 2. `just ci`, commit, tag `vX.Y.Z`, push the tag. `release.yml` builds the
    bundle and attaches it to a GitHub release.
 3. Submission to typst/packages is manual for now (copy the bundle into
