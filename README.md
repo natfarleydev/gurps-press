@@ -15,7 +15,7 @@ and NPC stat blocks that work out point costs for you.
 #let napoleon = character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C",
@@ -61,7 +61,7 @@ functions are called with `#`.
 | `sjgames-game-aid(author)` | Notice for free game aids | `#sjgames-game-aid[Jane Doe]` |
 | `thrust(st)`, `swing(st)` | Basic damage from ST, as `(dice, modifier)` | `#dice(..swing(13))` → 2d−1 |
 | `character(..)` | Builds a character; returns a dictionary | see above |
-| `advantage`, `disadvantage`, `perk`, `quirk` | Traits for `character` | `advantage("Magery", 25, level: 2)` |
+| `advantage`, `disadvantage`, `perk`, `quirk` | Traits for `character` | `advantage("Magery", points: 25, level: 2)` |
 | `skill`, `spell` | Skills and spells; cost from points or `"DX/A"` | `skill("Stealth", 12, "DX/A")` |
 | `melee-attack`, `ranged-attack` | Attacks for the stat block | `ranged-attack("Bow", 14, [1d+2 imp], range: "150/200")` |
 | `stat-block(char, show-points: true)` | Typesets a character | `#stat-block(napoleon)` |
@@ -78,8 +78,8 @@ functions are called with `#`.
   per: 11,                          // bought up from IQ: costs 5
   basic-speed: 6,                   // multiples of 0.25
   dr: [2 (leather)],                // DR, SM, Dodge, thr and sw can be set too
-  advantage("Combat Reflexes", 15),
-  disadvantage("Duty (town watch)", -10),
+  advantage("Combat Reflexes", points: 15),
+  disadvantage("Duty (town watch)", points: -10),
   skill("Broadsword", 13, "DX/A"),  // cost from controlling attribute
   skill("Shield", 12, 2),           // or the points directly
   skill("Fast-Draw (Sword)", 14, "Broadsword/E"), // based on another skill

@@ -45,7 +45,7 @@ It is a port of the LaTeX package
 #let napoleon = character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
@@ -59,7 +59,7 @@ It is a port of the LaTeX package
 #block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, stat-block(character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
@@ -98,7 +98,7 @@ calculated (advantages without points) show `[?]` and count as 0.
   [`\GCPrintCharacter[key]`], [`#stat-block(key)`],
   [`\ST{13}[25]`], [`st: (level: 13, points: 25)`],
   [`\skill{Stealth}[DX/Average]{12}`], [`skill("Stealth", 12, "DX/A")`],
-  [`\levelledadvantage{Magery}{2}[25]`], [`advantage("Magery", 25, level: 2)`],
+  [`\levelledadvantage{Magery}{2}[25]`], [`advantage("Magery", points: 25, level: 2)`],
   [`\meleeattack{name=…, level=…}`], [`melee-attack(name, level, damage, reach: …)`],
   [`\GCGet{ST}\GCResult`], [`#level-of(key, "ST")`],
   [`\GCTotalPoints`], [`#total-points(key)`],
