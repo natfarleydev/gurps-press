@@ -18,7 +18,7 @@ modifier has a true minus sign, not a hyphen. The result does not break
 across lines.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 The Hare rolls #dice(3) against
 its self-control number.
@@ -33,7 +33,7 @@ table on #basic-set(16). They cover ST 1 to 100. Spread the result into `dice`
 with `..`.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 At ST 6, the Hare kicks for
 #dice(..thrust(6)) cr.
@@ -51,7 +51,7 @@ function adds it. The pages are optional. If you give them, a comma
 follows the title. One page gets "p."; more pages get "pp.".
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 You need the #gurps-book("Basic Set").
 See #gurps-book("Magic", 14) and
@@ -63,7 +63,7 @@ For a page of the _Basic Set_, use `basic-set(pages)`. It writes
 error that tells you to use `basic-set`.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 Roll a Quick Contest (#basic-set(348)).
 See #basic-set((16, 170)).

@@ -8,7 +8,7 @@ A Typst package for typesetting home-made **GURPS** material: dice notation,
 book references, Steve Jackson Games online-policy boilerplate, and NPC stat
 blocks with automatic point costs.
 
-Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
+Package name on Typst Universe: `gurps-press` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
 
 ## Four rules that override everything else
@@ -87,7 +87,7 @@ Anything not re-exported from `src/lib.typ` is private.
   and ends in the return type.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
-- Examples in README/docs import `@preview/gurps-ink:<version>` (checked
+- Examples in README/docs import `@preview/gurps-press:<version>` (checked
   by `tests/readme`); tests import
   `/src/lib.typ`.
 - Docs are for someone writing an unofficial GURPS sourcebook. They know
@@ -135,19 +135,19 @@ just test            # run all tests
 just update <name>   # regenerate reference images
 just fmt             # format all Typst files (CI checks with fmt-check)
 just doc             # build docs/manual.pdf and README example image
-just install         # install as @local/gurps-ink:<version>
+just install         # install as @local/gurps-press:<version>
 just ci              # what CI runs
 typos                # spell check (CI runs this too)
 ```
 
 ## Releasing
 
-1. Bump `version` in `typst.toml`, every `@preview/gurps-ink:x.y.z` import in
+1. Bump `version` in `typst.toml`, every `@preview/gurps-press:x.y.z` import in
    README/docs/examples, and `CHANGELOG.md`.
 2. `just ci`, commit, tag `vX.Y.Z`, push the tag. `release.yml` builds the
    bundle and attaches it to a GitHub release.
 3. Submission to typst/packages is manual for now (copy the bundle into
-   `packages/preview/gurps-ink/X.Y.Z` in a fork and open a PR).
+   `packages/preview/gurps-press/X.Y.Z` in a fork and open a PR).
 
 ## GURPS rules encoded (Basic Set, 4th ed.)
 
@@ -214,6 +214,6 @@ show/set rules once Typst supports user-defined elements.
   assert on message text with quote-agnostic patterns.
 - Check older Typst locally with tytanic 0.2.2 / 0.3.4 binaries before
   pushing; CI runs all three.
-- Package name `gurps-ink`, because Universe forbids canonical names like
-  `gurps`. Change it before first submission if wanted (typst.toml, README,
-  manual, tests/readme, CLAUDE.md).
+- Package name `gurps-press`, because Universe forbids canonical names like
+  `gurps`. It is permanent once on Universe. Docs and checks read it from
+  `typst.toml`; the prose mentions it by hand.

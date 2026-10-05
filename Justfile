@@ -41,14 +41,14 @@ fmt-check:
 spell:
   typos
 
-# copy the files that get published into TARGET/gurps-ink/<version>
+# copy the files that get published into TARGET/gurps-press/<version>
 package target:
   ./scripts/package "{{ target }}"
 
-# install as @local/gurps-ink:<version> to try it in your own documents
+# install as @local/gurps-press:<version> to try it in your own documents
 install: (package "@local")
 
-# install as @preview/gurps-ink:<version>, to test READMEs before release
+# install as @preview/gurps-press:<version>, to test READMEs before release
 install-preview: (package "@preview")
 
 [private]

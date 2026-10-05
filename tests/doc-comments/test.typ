@@ -14,10 +14,10 @@
 )
 
 // The parser finds exactly the names the module exports, no more, no less.
-#import "/src/lib.typ" as gurps-ink
+#import "/src/lib.typ" as gurps-press
 #assert.eq(
   exports.map(((file, name)) => name).sorted(),
-  dictionary(gurps-ink).keys().sorted(),
+  dictionary(gurps-press).keys().sorted(),
 )
 
 // The parser sees both import styles in lib.typ: lists and single names.

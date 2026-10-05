@@ -5,7 +5,7 @@
 #answers(
   [How do I make a character and show its stat block?
     (@characters-make)],
-  [Which point costs does `gurps-ink` calculate? (@characters-costs)],
+  [Which point costs does `gurps-press` calculate? (@characters-costs)],
   [How do I hide the point costs? (@characters-hide)],
   [How do I write a character's numbers in my text?
     (@characters-quote)],
@@ -30,7 +30,7 @@ are not the default. Give the traits, skills, spells and attacks as
 positional arguments, in any order.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let hare = character(
   name: "The Hare",
@@ -79,7 +79,7 @@ points: 90)`. If an advantage or disadvantage has no `points:`, the
 stat block shows `[?]` and the total counts it as 0.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #stat-block(character(
   name: "The Tortoise",
@@ -100,7 +100,7 @@ Players do not need point costs in a handout or a bestiary. Use
 `show-points: false`.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #stat-block(
   character(
@@ -119,7 +119,7 @@ spell. Use `char.thr` and `char.sw` for the damage. If you change the
 character, the text changes too.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let hare = character(
   st: 6, dx: 13,
@@ -139,7 +139,7 @@ Put all characters in one dictionary. Then each chapter can use the
 same characters.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let npcs = (
   tortoise: character(
@@ -164,7 +164,7 @@ compilation stops and shows your message. This is useful for a
 pregenerated character or a template.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let tortoise = character(
   name: "The Tortoise",
@@ -184,7 +184,7 @@ A stat block can break across columns and pages. To prevent this, put
 it in a block that cannot break.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #block(
   breakable: false,
@@ -200,7 +200,7 @@ The `section` hook makes each list, such as "Skills". To frame a stat
 block, put it in a `block` with a `stroke`.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #block(stroke: 0.5pt, inset: 6pt,
   stat-block(
@@ -224,7 +224,7 @@ reference for `character()` (@reference-characters) shows all keys of
 this dictionary.
 
 ```typ
-#import "@preview/gurps-ink:0.1.0": *
+#import "@preview/gurps-press:0.1.0": *
 
 #let cast(char) = {
   let skills = char.skills
