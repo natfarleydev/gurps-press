@@ -1,6 +1,6 @@
 # gurps-ink
 
-[![CI](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
+[![CI status](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-typst?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-typst&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 Typeset home-made ***GURPS*** material in [Typst](https://typst.app): dice
@@ -127,7 +127,7 @@ Code lives in `src/`; `src/lib.typ` decides what is public. Every public
 function is documented by the `///` comments above it, which also produce
 the manual. Work test-first: describe the behaviour in the doc comment, add
 a failing test under `tests/`, then make it pass. See
-[CLAUDE.md](CLAUDE.md) for conventions and the release checklist.
+[CLAUDE.md](https://github.com/natfarleydev/gurps-typst/blob/main/CLAUDE.md) for conventions and the release checklist.
 
 ## Legal
 
