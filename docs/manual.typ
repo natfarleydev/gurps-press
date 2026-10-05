@@ -134,7 +134,7 @@ The PDF is
 
 // The number of pages of the example. Change it when the example
 // gets longer or shorter.
-#let example-pages = 4
+#let example-pages = 6
 #grid(
   columns: (1fr, 1fr),
   gutter: 8pt,
@@ -162,7 +162,8 @@ The PDF is
   [Skill levels and SM in the text], [@characters-quote],
   [#dice(3) for the nap roll], [@dice-dice],
   [The disclaimer and the notice at the end], [@legal-notices],
-  [Authors, tools and references at the end], [@legal-sources],
+  [Author, use of AI, tools and references at the end], [@legal-sources],
+  [A box that says it is an untested example], [@overview],
   table.hline(),
 )
 

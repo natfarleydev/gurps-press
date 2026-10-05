@@ -68,7 +68,6 @@ docs/manual.typ       manual: overview, chapters, example, reference (tidy)
 docs/chapters/        one file per user-guide chapter (start, legal, dice, characters)
 docs/style.typ        example layout and `examples` show rule shared by the chapters
 docs/example/tortoise-and-hare.typ  example one-shot; `just doc` builds its PDF and pictures
-docs/example/race-odds.py  exact odds quoted in the one-shot's designer's note
 docs/readme-examples.typ  renders each README ```typ block to docs/readme-<n>.png
 scripts/              packaging helpers used by the Justfile and CI
 ```

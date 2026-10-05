@@ -15,10 +15,16 @@
 
 // The old story, quoted beside the adventure. The text is the
 // public-domain translation by George Fyler Townsend (1867).
-#let aside(body) = block(
+#let aside(body, source: [Aesop]) = block(
+  width: 100%,
   inset: (left: 8pt, y: 2pt),
   stroke: (left: 1.5pt + accent),
-  text(fill: accent.darken(20%), emph(body)),
+  text(fill: accent.darken(20%))[
+    #set par(justify: false)
+    #emph(body)
+    #linebreak()
+    --- #source
+  ],
 )
 
 // The two characters. Each section below uses them again.
@@ -89,13 +95,14 @@ One player is the Tortoise: slow, stubborn and very hard to stop. The GM
 plays the Hare: the fastest animal in the meadow, and the first to say
 so.
 
-The adventure is short. It fits in a lunch break, or opens a longer
-session. It needs one player, one GM, three six-sided dice and the
+The adventure is short. It fits in a lunch break. It needs one player, one GM, three six-sided dice and the
 #gurps-book("Basic Set"). New players learn Quick Contests and
-self-control rolls. Old hands can play it for the fun of a story that
-they think they know.
+self-control rolls.
 
-#aside[
+#aside(
+  source: [Aesop, "The Hare and the Tortoise", translated by George Fyler
+    Townsend (1867). Each quotation in this style is from this fable.],
+)[
   A Hare one day ridiculed the short feet and slow pace of the Tortoise,
   who replied, laughing: "Though you be swift as the wind, I will beat you
   in a race."
@@ -182,7 +189,8 @@ Play the race in three steps.
   winner reaches the pond first. On a tie, the Tortoise wins by the
   length of its nose.
 
-*Designer's note.* These odds are calculated, not playtested. If the
+*Designer's note.* These odds are calculated (see the appendix), not
+playtested. If the
 player only walks, the Tortoise wins about 1 race in 4. With the hedge,
 a little over 1 in 3. With the taunt, nearly 1 in 2. With the taunt and
 the hedge, about 6 in 10. Even against the hedge, an awake Hare wins
@@ -196,8 +204,8 @@ pays, as it should.
 = After the Race
 
 If the Tortoise wins, the meadow cheers, and the Hare is quiet for a
-whole week. If the Hare wins, it boasts until the leaves fall. In both
-cases, give the player 1 character point.
+whole week. If the Hare wins, it boasts until the leaves fall. Either
+way, the story is over: this one-shot does not lead to a campaign.
 
 #aside[Slow but steady wins the race.]
 
@@ -211,20 +219,130 @@ cases, give the player 1 character point.
 
 #pagebreak()
 
+= Appendix: The Odds
+
+The designer's note quotes exact odds, not playtest results. This Python
+program calculates them from the rules of the #gurps-book("Basic Set"):
+success rolls, critical rolls and Quick Contests (p.~B348). Change the
+numbers at the top to test your own version of the race.
+
+#table(
+  columns: (1fr, auto),
+  stroke: none,
+  inset: (x: 4pt, y: 3pt),
+  table.hline(stroke: 0.4pt + accent),
+  [*The player*], [*The Tortoise wins*],
+  table.hline(stroke: 0.4pt + accent),
+  [Only walks], [26%],
+  [Uses the gap in the hedge], [37%],
+  [Taunts the Hare], [45%],
+  [Taunts the Hare and uses the gap], [57%],
+  table.hline(stroke: 0.4pt + accent),
+)
+
+#[
+  #set text(size: 7pt)
+  #set par(justify: false)
+  ```python
+  """Exact odds for the race in The Tortoise and the Hare.
+
+  Rules (GURPS Basic Set): a success roll is 3d against the effective
+  skill; 3 and 4 always succeed, 17 fails at skill 15 or less, 18 always
+  fails (p. B348). In a Quick Contest both sides roll; the one who succeeds
+  by more, or fails by less, wins (p. B348). A tie in the taunt has no
+  effect; a tie at the finish goes to the Tortoise.
+  """
+
+  from itertools import product
+
+  # The numbers in the adventure.
+  FAST_TALK, HARE_WILL = 12, 10  # step 1: the taunt
+  TAUNT_PENALTY = 4  # to the Hare's self-control roll
+  SELF_CONTROL = 12  # step 2: Overconfidence (12)
+  HIKING, RUNNING = 14, 16  # step 3: the finish
+  AWAKE_BONUS, NAP_PENALTY = 4, 4  # the Hare's speed, or its nap
+  HEDGE_BONUS = 2  # the Tortoise uses the gap in the hedge
+
+  P3D = {}
+  for dice in product(range(1, 7), repeat=3):
+      P3D[sum(dice)] = P3D.get(sum(dice), 0) + 1 / 216
+
+
+  def roll(skill, total):
+      """(success, margin) of one success roll."""
+      if total <= 4:
+          success = True
+      elif total == 18 or (total == 17 and skill <= 15):
+          success = False
+      else:
+          success = total <= skill
+      return success, skill - total
+
+
+  def p_success(skill):
+      return sum(p for total, p in P3D.items() if roll(skill, total)[0])
+
+
+  def p_first_wins_or_ties(a, b):
+      """Return (P(a wins), P(tie)) in a Quick Contest of a against b."""
+      win = tie = 0.0
+      for ta, pa in P3D.items():
+          sa, ma = roll(a, ta)
+          for tb, pb in P3D.items():
+              sb, mb = roll(b, tb)
+              if (sa and not sb) or (sa == sb and ma > mb):
+                  win += pa * pb
+              elif sa == sb and ma == mb:
+                  tie += pa * pb
+      return win, tie
+
+
+  def p_tortoise_wins(taunt, hedge):
+      p_taunt = p_first_wins_or_ties(FAST_TALK, HARE_WILL)[0] if taunt else 0
+      tortoise = HIKING + (HEDGE_BONUS if hedge else 0)
+      total = 0.0
+      for taunted, p1 in ((True, p_taunt), (False, 1 - p_taunt)):
+          p_nap = 1 - p_success(SELF_CONTROL - (TAUNT_PENALTY if taunted else 0))
+          for napped, p2 in ((True, p_nap), (False, 1 - p_nap)):
+              hare = RUNNING + (-NAP_PENALTY if napped else AWAKE_BONUS)
+              total += p1 * p2 * sum(p_first_wins_or_ties(tortoise, hare))
+      return total
+
+
+  if __name__ == "__main__":
+      for taunt, hedge, label in (
+          (False, False, "only walks"),
+          (False, True, "uses the hedge"),
+          (True, False, "taunts"),
+          (True, True, "taunts and uses the hedge"),
+      ):
+          print(f"Tortoise {label}: wins {p_tortoise_wins(taunt, hedge):.0%}")
+      tortoise = HIKING + HEDGE_BONUS
+      awake = 1 - sum(p_first_wins_or_ties(tortoise, RUNNING + AWAKE_BONUS))
+      asleep = sum(p_first_wins_or_ties(tortoise, RUNNING - NAP_PENALTY))
+      print(f"Against the hedge, an awake Hare wins {awake:.0%}")
+      print(f"Against the hedge, a sleeping Hare loses {asleep:.0%}")
+  ```
+]
+
+#pagebreak()
+
 = About This Adventure
 
 #set text(size: 8pt)
 
-*Authors.* Nathanael Farley and Claude. Nathanael Farley had the idea,
-directed the work and reviewed the result. Claude, an AI model by
-Anthropic (Claude Opus 5.5), drafted the text, the characters and the
-race rules, and typeset them. Made in October 2026.
+*Author.* Nathanael Farley, October 2026.
+
+*Use of AI.* Claude Opus 5.5, an AI model by Anthropic, was used to
+draft the text, the characters and the race rules, to calculate the
+odds, and to typeset the adventure. Nathanael Farley gave the
+directions and reviewed the result.
 
 *Tools.* Typeset with #link("https://typst.app")[Typst] and
 #link("https://github.com/natfarleydev/gurps-typst")[`gurps-ink`]
 0.1.0. The source of this adventure is `docs/example/tortoise-and-hare.typ`
-in the `gurps-ink` repository. The odds in the designer's note come from
-`docs/example/race-odds.py`, which calculates them exactly.
+in the `gurps-ink` repository. The appendix gives the program that
+calculates the odds in the designer's note.
 
 *References.*
 - Aesop, "The Hare and the Tortoise", in _Aesop's Fables_, translated by
