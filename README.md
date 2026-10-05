@@ -35,6 +35,9 @@ HP/Will/Per/FP, Basic Speed and Move, Dodge, thrust/swing damage and skill
 costs are worked out from the Basic Set rules. The full manual, with every
 function and its options, is [docs/manual.pdf](docs/manual.pdf).
 
+`gurps-ink` is the successor to the LaTeX package
+[gurps-latex-package](https://github.com/natfarleydev/gurps-latex-package).
+
 ## Getting started
 
 New to Typst? It is a modern alternative to LaTeX: you write a `.typ`
@@ -101,14 +104,6 @@ has a section on that.
 
 Mistakes such as an unknown difficulty, a skill level too low to buy, or a
 misspelt argument stop compilation with a message saying what to fix.
-
-### Coming from the LaTeX `gurps` package?
-
-This is a port of [gurps-latex-package](https://github.com/natfarleydev/gurps-latex-package).
-`\dice{3}[-1]` becomes `#dice(3, -1)`, `\gurpsbook{Zombies}[3]` becomes
-`#gurps-book("Zombies", 3)`, and a `character` environment becomes
-`#stat-block(character(...))`. The manual has a full translation table.
-Importing from GCS is not supported yet.
 
 ## Using an unreleased version
 
