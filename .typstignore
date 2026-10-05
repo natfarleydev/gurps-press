@@ -10,6 +10,9 @@ CLAUDE.md
 _typos.toml
 .gitignore
 .gitattributes
+# build output
+out
+dist
 # Keep rendered docs (linked from README), drop their sources.
 docs/*
 !docs/*.pdf

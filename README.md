@@ -43,10 +43,15 @@ file, and the compiler turns it into a PDF. There are no class files or
 functions are called with `#`.
 
 - **In the web app** ([typst.app](https://typst.app)): create a project,
-  paste the example above into `main.typ`. The package downloads itself.
+  paste the example above into `main.typ`. Once the package is on Typst
+  Universe it downloads itself.
 - **On your computer**: [install Typst](https://github.com/typst/typst#installation),
   save the example as `npc.typ`, and run `typst compile npc.typ` (or
   `typst watch npc.typ` to rebuild on every save).
+
+Until `gurps-ink` is published on Typst Universe, `@preview` imports will
+not find it: install it locally instead (see
+[Using an unreleased version](#using-an-unreleased-version)).
 
 ## What's in the box
 
@@ -71,6 +76,8 @@ functions are called with `#`.
 ### Characters in a little more detail
 
 ```typ
+#import "@preview/gurps-ink:0.1.0": *
+
 #let guard = character(
   name: "Town Guard",
   st: 12,                           // ST, DX, IQ, HT default to 10

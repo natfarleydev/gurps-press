@@ -143,25 +143,15 @@ Last updated 2026-10-05. Pick up from here.
 gurps-latex-package by intent (not by Lua code), idiomatic Typst, TDD,
 clear to a newcomer, ready for Typst Universe but not yet submitted.
 
-**Done:** the port is feature-complete for v0.1.0. Draft PR #1
-(`feat/initial-port`) holds the initial port; branch
-`claude/port-completion-clarity-q93kzp` stacks on it with, one commit per
-TDD step:
-- CI fix (packaging scripts were not executable).
-- Named `points:` on `advantage`/`disadvantage`.
-- `stat-block` hooks `title:` and `section:`; `character()` dictionary
-  documented as public API (pinned by `tests/character-api`); manual
-  section "Writing your own renderer".
-- Skill/spell bases matched by plain-text name; panics on duplicate or
-  unmatchable names.
-17 tytanic tests pass on Typst 0.13, 0.14 and 0.15.
+**Done:** the port is feature-complete for v0.1.0 and lives in PR #1
+(`feat/initial-port`). PR #2 was stacked on it and merged in; fixes for
+review comments arrive the same way (a branch stacked on
+`feat/initial-port`, merged when green). 17 tytanic tests pass on Typst
+0.13, 0.14 and 0.15; CI, `typos` and `package-check` are green. Licence
+is MIT-0 (Universe requires OSI approval, which CC0 lacks).
 
 **Next:**
-1. Merge the stacked branch into PR #1 (or PR it against `main` after
-   #1), mark ready for review so CodeRabbit runs, address its comments.
-   Confirm the CI docs job (tidy manual, `package-check`) is green:
-   `docs/manual.pdf` in git was built before these changes and must be
-   regenerated with `just doc`.
+1. Get PR #1 through CodeRabbit and merge it into `main`.
 2. Cut `v0.1.0` (see "Releasing"), then submit to typst/packages.
 
 **Later / not started:** importing characters from GCS (`.gcs` is JSON;
