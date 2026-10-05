@@ -508,9 +508,10 @@
 
 // --- Reading characters ---------------------------------------------------
 
-/// The level of an attribute, skill or spell, looked up by name. Also
-/// knows `"Dodge"` and `"SM"`. Panics, listing what exists, if the name is
-/// unknown.
+/// The level of an attribute, skill or spell, looked up by name (skills
+/// and spells by the plain text of theirs). Also knows `"Dodge"` and
+/// `"SM"`. Panics, listing what exists, if the name is unknown, and if more
+/// than one attribute, skill or spell has that name.
 ///
 /// ```example
 /// #let c = character(dx: 12, skill("Stealth", 13, "DX/A"))
