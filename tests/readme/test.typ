@@ -2,8 +2,8 @@
 // and import the current version (Typst Universe requires both).
 #import "/src/lib.typ"
 
-#let version = toml("/typst.toml").package.version
-#let import-line = "#import \"@preview/gurps-ink:" + version + "\": *"
+#let (name, version) = toml("/typst.toml").package
+#let import-line = "#import \"@preview/" + name + ":" + version + "\": *"
 #let blocks = (
   read("/README.md")
     .replace("\r\n", "\n")
@@ -24,7 +24,7 @@
   // import is replaced by handing the library in as the scope.
   let body = code.replace(import-line, "")
   assert(
-    not body.contains("@preview/gurps-ink"),
+    not body.contains("@preview/" + name),
     message: "stale import in README:\n" + code,
   )
   let _ = eval(body, mode: "markup", scope: dictionary(lib))
@@ -52,13 +52,23 @@
   )
 }
 
-// Other documentation must not mention an old version either.
-#for path in ("/docs/manual.typ", "/docs/example/tortoise-and-hare.typ") {
-  for m in read(path).matches(regex("@preview/gurps-ink:([0-9.]+)")) {
+// No documentation may mention an old name or version, in examples or prose.
+#for path in (
+  "/README.md",
+  "/docs/manual.typ",
+  "/docs/chapters/start.typ",
+  "/docs/chapters/legal.typ",
+  "/docs/chapters/dice.typ",
+  "/docs/chapters/characters.typ",
+  "/docs/example/tortoise-and-hare.typ",
+) {
+  for m in read(path).matches(
+    regex("@(?:preview|local)/(gurps-[a-z-]+):([0-9.]+)"),
+  ) {
     assert.eq(
-      m.captures.first(),
-      version,
-      message: path + " has a stale import",
+      m.captures,
+      (name, version),
+      message: path + " has a stale import: " + m.text,
     )
   }
 }

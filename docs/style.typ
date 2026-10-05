@@ -2,8 +2,8 @@
 #import "@preview/tidy:0.4.3"
 #import "/src/lib.typ"
 
-#let version = toml("/typst.toml").package.version
-#let import-line = "#import \"@preview/gurps-ink:" + version + "\": *"
+#let (name, version) = toml("/typst.toml").package
+#let import-line = "#import \"@preview/" + name + ":" + version + "\": *"
 
 // Every example shows its code on the left and its result on the right.
 // The result is shown at its real size, in the body font.
