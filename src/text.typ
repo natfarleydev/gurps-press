@@ -78,6 +78,28 @@
   box[#(count)d#suffix]
 }
 
+// "p. 3" for one page, "pp. 1, 5" or "pp. 3–5" otherwise. Each page in an
+// array gets the prefix; a single string or content gets it once.
+#let page-ref(caller, pages, prefix: "") = {
+  let one-page = (
+    type(pages) == int
+      or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
+  )
+  if type(pages) == array {
+    [pp.~#pages.map(p => [#prefix#p]).join([, ])]
+  } else if one-page {
+    [p.~#prefix#pages]
+  } else if type(pages) in (str, content) {
+    [pp.~#prefix#pages]
+  } else {
+    panic(
+      caller
+        + "() pages must be an int, str, content or array, got "
+        + str(type(pages)),
+    )
+  }
+}
+
 /// A reference to a GURPS book in the house style of SJ Games: the title
 /// in bold italics, then a comma and the pages if you give them.
 ///
@@ -107,24 +129,25 @@
 ) = {
   let pages = take-optional(pages, "gurps-book", "pages")
   if pages == none { return strong(emph[GURPS #title]) }
-  let ref = if type(pages) == array {
-    [pp.~#pages.map(p => [#p]).join([, ])]
-  } else if (
-    type(pages) == int
-      or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
-  ) {
-    [p.~#pages]
-  } else {
-    [pp.~#pages]
+  if title == "Basic Set" {
+    panic(
+      "gurps-book(\"Basic Set\", ...): SJ Games writes Basic Set pages as "
+        + "\"p. B348\"; use basic-set("
+        + repr(pages)
+        + "). To show the title anyway, write it as content: "
+        + "gurps-book([Basic Set], ...)",
+    )
   }
-  [#strong(emph[GURPS #title,]) #ref]
+  [#strong(emph[GURPS #title,]) #page-ref("gurps-book", pages)]
 }
 
 /// A page reference to the GURPS _Basic Set_ in the house style of
 /// SJ Games: each page gets a "B", and no title is shown.
 ///
 /// ```example
-/// Roll a Quick Contest (#basic-set(348)). /// #basic-set((16, 170)) /// #basic-set("16–17")
+/// Roll a Quick Contest (#basic-set(348)). \
+/// #basic-set((16, 170)) \
+/// #basic-set("16–17")
 /// ```
 ///
 /// One page (an `int`, or a string of digits) gets "p.". All other pages
@@ -135,7 +158,7 @@
   /// The page or pages.
   /// -> int | str | content | array
   pages,
-) = { }
+) = page-ref("basic-set", pages, prefix: "B")
 
 #let gurps-linked = link(gurps-url, gurps)
 #let sjgames-linked = link(sjgames-url, sjgames)

@@ -12,6 +12,7 @@
 #gurps-book[Magic]
 
 #assert-panic(() => gurps-book("A", 1, 2))
+#assert-panic(() => gurps-book("A", 1.5))
 
 // Basic Set pages belong in basic-set(); a content title opts out.
 #assert-panic(() => gurps-book("Basic Set", 348))
