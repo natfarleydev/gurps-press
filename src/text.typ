@@ -85,11 +85,16 @@
 /// #gurps-book("High Tech") \
 /// #gurps-book("Zombies", 3) \
 /// #gurps-book("Warehouse 23", "1, 3–5") \
-/// #gurps-book("Basic Set", (16, 170))
+/// #gurps-book("Fantasy", (12, 20))
 /// ```
 ///
 /// One page (an `int`, or a string of digits) gets "p.". All other pages
 /// get "pp.". Commas join the pages in an array.
+///
+/// For pages of the _Basic Set_, use @basic-set: SJ Games writes them as
+/// "p. B348". So `gurps-book("Basic Set", 348)` panics. To cite the
+/// _Basic Set_ by title anyway, give the title as content:
+/// `gurps-book([Basic Set], 348)`.
 ///
 /// -> content
 #let gurps-book(
@@ -114,6 +119,23 @@
   }
   [#strong(emph[GURPS #title,]) #ref]
 }
+
+/// A page reference to the GURPS _Basic Set_ in the house style of
+/// SJ Games: each page gets a "B", and no title is shown.
+///
+/// ```example
+/// Roll a Quick Contest (#basic-set(348)). /// #basic-set((16, 170)) /// #basic-set("16–17")
+/// ```
+///
+/// One page (an `int`, or a string of digits) gets "p.". All other pages
+/// get "pp.". Commas join the pages in an array, and each gets a "B".
+///
+/// -> content
+#let basic-set(
+  /// The page or pages.
+  /// -> int | str | content | array
+  pages,
+) = { }
 
 #let gurps-linked = link(gurps-url, gurps)
 #let sjgames-linked = link(sjgames-url, sjgames)
