@@ -53,12 +53,7 @@
   /// Level for levelled advantages, e.g. `Magery 2`.
   /// -> int | none
   level: none,
-) = trait(
-  "advantage",
-  name,
-  take-optional(points, "advantage", "points"),
-  level,
-)
+) = trait("advantage", name, points, level)
 
 /// A disadvantage. The point cost, if given, must be zero or negative.
 ///
@@ -77,16 +72,11 @@
   /// -> int | none
   level: none,
 ) = {
-  let d = trait(
-    "disadvantage",
-    name,
-    take-optional(points, "disadvantage", "points"),
-    level,
-  )
+  let d = trait("disadvantage", name, points, level)
   if d.points != none and d.points > 0 {
     panic(
       "disadvantage() points must be zero or negative, got " + str(d.points)
-        + " for " + repr(plain-text(name)) + ". Write -" + str(d.points) + ".",
+        + " for " + repr(plain-text(name)) + ". Write points: -" + str(d.points) + ".",
     )
   }
   d
