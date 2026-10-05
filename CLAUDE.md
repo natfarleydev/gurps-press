@@ -98,3 +98,67 @@ typos                # spell check (CI runs this too)
 - Address CodeRabbit comments with new commits (no force-push rewrites) and
   reply when declining a suggestion.
 - Merge only when CI is green.
+
+## Status and next steps (handover)
+
+Last updated 2026-10-05. Pick up from here.
+
+**Done** (branch `feat/initial-port`, draft PR): full port with docs-as-spec,
+13 passing tytanic tests (also pass on Typst 0.13 and 0.14 locally), tidy
+manual, README with compiled-example test, CI (`.github/workflows/ci.yml`),
+tag-triggered release (`release.yml`, GitHub release only), CodeRabbit
+config. CI and CodeRabbit have **not yet run**: check the PR first and fix
+anything red (likely suspects: `taiki-e/install-action` installing
+`tytanic@0.2.2`/`0.3.4`, and the `ghcr.io/typst/package-check` docker step).
+
+**Intent:** a Typst package for GURPS game aids, ported from
+gurps-latex-package by behaviour (not by Lua code), idiomatic Typst, TDD,
+clear to a newcomer, ready for Typst Universe but not yet submitted. Cut a
+`v0.1.0` release once the follow-ups below are merged and it looks ready.
+
+**Follow-ups, in order, one branch + PR each** (requested by the user):
+
+1. `refactor/named-points`: `advantage(name, points: none, level: none)` and
+   `disadvantage(name, points: none, level: none)` take *named* `points:`.
+   Keep `perk`/`quirk` as they are. Keep `dice(count, modifier)` and
+   `skill(name, level, cost)` positional (GURPS reads them as pairs). Delete
+   `take-optional` from `src/util.typ` if nothing else uses it (dice,
+   gurps-book and skill still do, so probably keep). Order: docstrings
+   first, then tests (traits, level-of, stat-block, showcase, README), then
+   code, then README/manual examples. Commits: docs+tests (red),
+   implementation (green), cleanup.
+2. `feat/stat-block-hooks`: add 1–2 function hooks to `stat-block`, e.g.
+   `title: (char, total) => content` and `section: (label, body) => content`,
+   defaults matching current output. No theme system. Document the
+   `character()` dictionary as public API; add a manual section "Writing
+   your own renderer" building a block from `char.attributes` and
+   `char.skills`. Note that a custom element (show/set rules) is the plan
+   once Typst ships custom elements. Tests: an ephemeral test proving the
+   defaults are unchanged, plus a test using each hook.
+3. `fix/skill-base-names`: skills based on other skills (`"TeXpert/H"`)
+   match by `plain-text(name)`, which mismatches for formatted content
+   names. Document "base names are matched against the plain text of
+   skill/spell names". When a base matches no attribute but some skill or
+   spell name has empty or ambiguous plain text, panic with a hint to use a
+   string name. Panic if two skills/spells share a plain-text name and one
+   is used as a base. Tests first: content-named base that works, ambiguous
+   duplicate that panics, error message text.
+
+**Later / not started:** importing characters from GCS (`.gcs` is JSON;
+the LaTeX package shelled out to `gcs`), ST above 100 damage, SM-based ST
+cost discount (users can override `st: (level:, points:)` for now),
+publishing via a PR to typst/packages.
+
+**Gotchas learnt:**
+- In code blocks every expression statement is joined into the result:
+  validators must return `none`, not their argument.
+- In markup, `#let x = f()` ends at the newline; wrap multi-line method
+  chains in parentheses.
+- tidy example previews need the custom style in `docs/manual.typ`
+  (stacked, fixed scale) or long paragraphs shrink to nothing.
+- Tytanic bundles its own Typst: tytanic 0.2.x = Typst 0.13, 0.3.x = 0.14,
+  0.4.x = 0.15. Ephemeral tests' `ref/` dirs are git-ignored; persistent
+  tests need a `!tests/<name>/ref/` exception in `.gitignore`.
+- Package name `gurps-ink`, because Universe forbids canonical names like
+  `gurps`. Change it before first submission if wanted (typst.toml, README,
+  manual, tests/readme, CLAUDE.md).
