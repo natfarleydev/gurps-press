@@ -147,7 +147,10 @@
 /// directly, or give the controlling attribute and difficulty as GURPS
 /// writes them (`"DX/E"`, `"IQ/VH"`, `"Per/Average"`) and the cost is
 /// worked out by @character. The base may also be another skill or spell on
-/// the same character. Difficulties: `E`/`Easy`, `A`/`Average`, `H`/`Hard`,
+/// the same character (`"Typst/H"`); it is matched against the plain text
+/// of skill and spell names, so `[_Typst_]` matches `"Typst"`. Give a skill
+/// a string name if other skills are based on it and its name is mostly
+/// formatting or symbols. Difficulties: `E`/`Easy`, `A`/`Average`, `H`/`Hard`,
 /// `VH`/`Very Hard`, `W`/`Wildcard`.
 ///
 /// ```example
