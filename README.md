@@ -24,7 +24,7 @@ three things:
   basic-move: 9,
   disadvantage("Overconfidence (12)", points: -5),
   quirk("Naps after lunch"),
-  skill("Running", 13, "HT/A"),
+  skill("Running", 16, "HT/A"),
   melee-attack("Kick", 13, [#dice(..thrust(6)) cr], reach: "C"),
 )
 

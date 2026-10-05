@@ -42,7 +42,7 @@ positional arguments, in any order.
     points: -5,
   ),
   quirk("Naps after lunch"),
-  skill("Running", 13, "HT/A"),
+  skill("Running", 16, "HT/A"),
   melee-attack("Kick", 13,
     [#dice(1, -4) cr], reach: "C"),
 )
@@ -86,8 +86,8 @@ stat block shows `[?]` and the total counts it as 0.
   ht: 13,
   advantage("Fit", points: 5),
   advantage("Patience"),
-  skill("Running", 14, "HT/A"),
-  skill("Fast-Talk", 11, 2),
+  skill("Hiking", 14, "HT/A"),
+  skill("Fast-Talk", 12, 4),
 ))
 ```
 
@@ -106,7 +106,7 @@ Players do not need point costs in a handout or a bestiary. Use
   character(
     name: "The Hare",
     dx: 13,
-    skill("Running", 13, "HT/A"),
+    skill("Running", 16, "HT/A"),
   ),
   show-points: false,
 )
@@ -124,7 +124,7 @@ character, the text changes too.
 #let hare = character(
   st: 6, dx: 13,
   basic-move: 9,
-  skill("Running", 13, "HT/A"),
+  skill("Running", 16, "HT/A"),
 )
 
 The Hare has Move
@@ -206,7 +206,7 @@ block, put it in a `block` with a `stroke`.
   stat-block(
     character(
       name: "The Hare",
-      skill("Running", 13, "HT/A"),
+      skill("Running", 16, "HT/A"),
     ),
     title: (char, total) => smallcaps(
       [#char.name, #total points],
@@ -235,12 +235,12 @@ this dictionary.
 
 #cast(character(
   name: "The Tortoise", ht: 13,
-  skill("Running", 14, "HT/A"),
+  skill("Hiking", 14, "HT/A"),
 ))
 
 #cast(character(
   name: "The Hare", dx: 13,
-  skill("Running", 13, "HT/A"),
+  skill("Running", 16, "HT/A"),
 ))
 ```
 

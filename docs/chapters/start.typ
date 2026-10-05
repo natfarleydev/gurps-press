@@ -35,12 +35,12 @@ shows its stat block and adds the disclaimer.
   name: "The Tortoise",
   ht: 13,
   basic-move: 1,
-  skill("Running", 14, "HT/A"),
+  skill("Hiking", 14, "HT/A"),
 )
 
 #stat-block(tortoise)
 
-The Tortoise runs at Move
+The Tortoise walks at Move
 #level-of(tortoise, "Basic Move").
 
 #text(size: 7pt, sjgames-disclaimer)
