@@ -1,0 +1,12 @@
+# tytanic outputs
+tests/**/out/
+tests/**/diff/
+# References are regenerated from ref.typ for ephemeral tests; only
+# persistent tests (no ref.typ) commit their ref/ directory.
+tests/**/ref/
+!tests/stat-block/ref/
+!tests/showcase/ref/
+
+# packaging output
+/out/
+/dist/

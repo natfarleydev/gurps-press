@@ -1,0 +1,16 @@
+# Files NOT copied into the typst/packages submission by `scripts/package`.
+# (Separate from `exclude` in typst.toml, which trims the downloaded bundle.)
+# Patterns match from the repository root; `*` also matches `/`.
+.github
+scripts
+tests
+Justfile
+CLAUDE.md
+.coderabbit.yaml
+_typos.toml
+.gitignore
+.gitattributes
+# Keep rendered docs (linked from README), drop their sources.
+docs/*
+!docs/*.pdf
+!docs/*.png
