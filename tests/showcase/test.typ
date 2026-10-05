@@ -1,4 +1,4 @@
-// End-to-end port of the LaTeX package's test document. Persistent
+// End-to-end tour of the whole package in one document. Persistent
 // reference: inspect ref/*.png when updating.
 #import "/src/lib.typ": *
 #set page(width: 14cm, height: auto, margin: 5mm)

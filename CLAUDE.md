@@ -6,22 +6,18 @@ Guidance for AI agents (and humans) working in this repository.
 
 A Typst package for typesetting home-made **GURPS** material: dice notation,
 book references, Steve Jackson Games online-policy boilerplate, and NPC stat
-blocks with automatic point costs. It is a port of the LaTeX package
-<https://github.com/natfarleydev/gurps-latex-package>.
+blocks with automatic point costs.
 
 Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
 
 ## Four rules that override everything else
 
-1. **Port intent, not logic.** The LaTeX package tells us *what a GURPS
-   author wants on the page*: dice that read `3d−1`, a stat block whose
-   points add up, the SJ Games notices. It does **not** tell us how to
-   build it. Never translate Lua, TeX macros, `\newcommand` optional
-   arguments, key–value parsing or global registers line by line. Ask
-   "what was the LaTeX version trying to give its user?", then design the
-   answer a Typst user would expect. If a LaTeX feature only existed to
-   work around TeX, drop it.
+1. **Start from what the author wants on the page.** A GURPS author
+   wants dice that read `3d−1`, a stat block whose points add up, the SJ
+   Games notices. Design every feature from that intent and give it the
+   interface a Typst user would expect; don't copy the shape of how some
+   other tool does it.
 2. **Always work test-driven.** No behaviour change lands without a test
    that failed first. The loop is: doc-comment (the spec) → failing test →
    smallest code that passes → refactor while green. Bug fix? Reproduce it
@@ -157,11 +153,10 @@ typos                # spell check (CI runs this too)
 
 Last updated 2026-10-05. Pick up from here.
 
-**Intent:** a Typst package for GURPS game aids, ported from
-gurps-latex-package by intent (not by Lua code), idiomatic Typst, TDD,
+**Intent:** a Typst package for GURPS game aids: idiomatic Typst, TDD,
 clear to a newcomer, ready for Typst Universe but not yet submitted.
 
-**Done:** the port is feature-complete for v0.1.0 and lives in PR #1
+**Done:** the package is feature-complete for v0.1.0 and lives in PR #1
 (`feat/initial-port`). PR #2 was stacked on it and merged in; fixes for
 review comments arrive the same way (a branch stacked on
 `feat/initial-port`, merged when green). 18 tytanic tests pass on Typst
@@ -172,8 +167,8 @@ is MIT-0 (Universe requires OSI approval, which CC0 lacks).
 1. Merge PR #1 into `main` once CodeRabbit approves it (CI is green).
 2. Cut `v0.1.0` (see "Releasing"), then submit to typst/packages.
 
-**Later / not started:** importing characters from GCS (`.gcs` is JSON;
-the LaTeX package shelled out to `gcs`; in Typst, `json()` it directly),
+**Later / not started:** importing characters from GCS (`.gcs` is JSON,
+so `json()` it directly),
 ST above 100 damage, SM-based ST cost discount (users can override
 `st: (level:, points:)` for now), `stat-block` as a custom element with
 show/set rules once Typst supports user-defined elements.

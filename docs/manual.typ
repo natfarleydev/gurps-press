@@ -37,9 +37,6 @@ handouts, house-rule documents. It gives you
 - NPC stat blocks that work out point costs, secondary characteristics and
   basic damage for you.
 
-It is a port of the LaTeX package
-#link("https://github.com/natfarleydev/gurps-latex-package")[`gurps`].
-
 = Quick start
 
 ```typ
@@ -87,35 +84,6 @@ The guard swings for #dice(..guard.sw) and has
 Only say what differs from an average human. Leave a cost out and it is
 calculated; give one and it is used as-is. Traits whose cost cannot be
 calculated (advantages without points) show `[?]` and count as 0.
-
-== Coming from the LaTeX package
-
-#table(
-  columns: 2,
-  [*LaTeX*], [*Typst*],
-  [`\gurps`], [`#gurps`],
-  [`\dice{3}[-1]`], [`#dice(3, -1)`],
-  [`\gurpsbook{Zombies}[3]`], [`#gurps-book("Zombies", 3)`],
-  [`\SJGamesOnlinePolicyDisclaimer`], [`#sjgames-disclaimer`],
-  [`\SJGamesOnlinePolicyNotice`], [`#sjgames-notice`],
-  [`\SJGamesOnlinePolicyGameAid{Me}`], [`#sjgames-game-aid[Me]`],
-  [`\begin{character} … \end{character}`], [`#stat-block(character(…))`],
-  [`\begin{character*}[key]`], [`#let key = character(…)`],
-  [`\GCPrintCharacter[key]`], [`#stat-block(key)`],
-  [`\ST{13}[25]`], [`st: (level: 13, points: 25)`],
-  [`\skill{Stealth}[DX/Average]{12}`], [`skill("Stealth", 12, "DX/A")`],
-  [`\levelledadvantage{Magery}{2}[25]`],
-  [`advantage("Magery", points: 25, level: 2)`],
-
-  [`\meleeattack{name=…, level=…}`],
-  [`melee-attack(name, level, damage, reach: …)`],
-
-  [`\GCGet{ST}\GCResult`], [`#level-of(key, "ST")`],
-  [`\GCTotalPoints`], [`#total-points(key)`],
-  [`\GCAddToLevel{HP}{4}`], [pass the final value, e.g. `hp: 16`],
-)
-
-Reading characters from GCS files is not supported yet.
 
 = Writing your own renderer
 
