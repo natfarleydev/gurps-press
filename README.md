@@ -131,7 +131,8 @@ a failing test under `tests/`, then make it pass. See
 
 ## Legal
 
-The code is released under [CC0 1.0](LICENSE) (public domain).
+The code is released under the [MIT No Attribution licence](LICENSE)
+(MIT-0): use it for anything, no credit needed.
 
 The material presented here is the original creation of Nathanael Farley,
 intended for use with the [***GURPS***](http://www.sjgames.com/gurps/)
