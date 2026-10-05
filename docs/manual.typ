@@ -43,7 +43,9 @@ This manual has four parts:
 - *Reference* (@reference): all functions and their arguments.
 
 In each example, the code is on the left and the result is on the right.
-Each example is complete: copy it into a new file and it compiles.
+Each example in the tutorial and the how-to guides is complete: copy it
+into a new file and it compiles. A reference example needs the import
+line first.
 
 = Tutorial: make a sourcebook page <tutorial>
 
@@ -102,7 +104,8 @@ Next, read the how-to guides for the tasks that you need.
 - The point cost of each attribute and secondary characteristic.
 - The point cost of each skill and spell that has a cost such as
   `"DX/A"`.
-- Dodge, and thrust and swing damage from ST.
+- Dodge, from Basic Speed.
+- Thrust and swing damage, from ST.
 - The point total.
 
 You must give these values:
