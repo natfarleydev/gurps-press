@@ -7,14 +7,14 @@
 #let sjgames-url = "http://www.sjgames.com/"
 #let online-policy-url = "http://www.sjgames.com/general/online_policy.html"
 
-/// The name #gurps in bold italics, as the SJ Games online policy
-/// requires for trademarks. Use it like any other piece of content.
+/// The name #gurps in bold italics. The SJ Games online policy asks for
+/// this style. Use it as you use other content.
 ///
 /// ```example
 /// #gurps is a generic, universal roleplaying system.
 /// ```
 ///
-/// To link it to the GURPS home page, wrap it in `link`:
+/// To link it to the GURPS home page, put it in `link`:
 /// `#link("http://www.sjgames.com/gurps/", gurps)`.
 ///
 /// -> content
@@ -29,8 +29,8 @@
 /// -> content
 #let sjgames = [Steve Jackson Games]
 
-/// Dice in GURPS notation: the `6` of `d6` is dropped and a modifier is
-/// written straight after the `d`. The result never breaks across lines.
+/// Dice in the notation of the GURPS books. The result does not break
+/// across lines.
 ///
 /// ```example
 /// #dice(3) \
@@ -39,18 +39,20 @@
 /// #dice(1, 0)
 /// ```
 ///
-/// The modifier is optional. Zero prints nothing, negative numbers use a
-/// true minus sign. Content modifiers (e.g. `$m$`) get a leading `+`.
+/// The modifier is optional. A zero modifier shows nothing. A negative
+/// modifier has a true minus sign. A content modifier, such as `$m$`,
+/// gets a `+`.
 ///
-/// Combine with @thrust or @swing by spreading: `#dice(..thrust(13))`.
+/// To write basic damage, spread @thrust or @swing into it:
+/// `#dice(..thrust(13))`.
 ///
 /// -> content
 #let dice(
-  /// Number of dice. Must be a non-negative integer, or content for
-  /// symbolic notation such as `$n$`.
+  /// The number of dice: an integer of 0 or more, or content such as
+  /// `$n$`.
   /// -> int | content
   count,
-  /// Optional modifier added to the roll. Defaults to `0`.
+  /// The modifier. It is optional; the default is `0`.
   /// -> int | content
   ..modifier,
 ) = {
@@ -76,8 +78,8 @@
   box[#(count)d#suffix]
 }
 
-/// A reference to a GURPS book, in SJ Games house style: the title in bold
-/// italics, optionally followed by a page reference.
+/// A reference to a GURPS book in the house style of SJ Games: the title
+/// in bold italics, then the pages if you give them.
 ///
 /// ```example
 /// #gurps-book("High Tech") \
@@ -86,15 +88,15 @@
 /// #gurps-book("Basic Set", (16, 170))
 /// ```
 ///
-/// A single page (an `int`, or a string of digits) gets "p."; anything else
-/// gets "pp.". An array of pages is joined with commas.
+/// One page (an `int`, or a string of digits) gets "p.". All other pages
+/// get "pp.". Commas join the pages in an array.
 ///
 /// -> content
 #let gurps-book(
-  /// Book title without the leading "GURPS".
+  /// The title of the book, without "GURPS".
   /// -> str | content
   title,
-  /// Optional page or pages.
+  /// The page or pages. They are optional.
   /// -> int | str | content | array
   ..pages,
 ) = {
@@ -117,7 +119,8 @@
 #let gurps-linked = link(gurps-url, gurps)
 #let sjgames-linked = link(sjgames-url, sjgames)
 
-/// The disclaimer the SJ Games online policy asks fan material to carry.
+/// The disclaimer from the SJ Games online policy. It says that the
+/// material is yours and not official.
 ///
 /// ```example
 /// #sjgames-disclaimer
@@ -130,8 +133,8 @@
   and is not endorsed by #sjgames.
 ]
 
-/// The trademark notice the SJ Games online policy asks fan material to
-/// carry. "The art here" is omitted because no SJ Games art is included.
+/// The trademark notice from the SJ Games online policy. It does not
+/// mention art, because the package includes no SJ Games art.
 ///
 /// ```example
 /// #sjgames-notice
@@ -145,7 +148,8 @@
   #link(online-policy-url)[online policy].
 ]
 
-/// The notice for a free game aid made without an official license.
+/// The notice from the SJ Games online policy for a free game aid that
+/// has no official license.
 ///
 /// ```example
 /// #sjgames-game-aid[Jane Doe]
@@ -153,7 +157,7 @@
 ///
 /// -> content
 #let sjgames-game-aid(
-  /// Who made the game aid.
+  /// The author of the game aid.
   /// -> str | content
   author,
 ) = [

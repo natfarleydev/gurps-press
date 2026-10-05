@@ -60,27 +60,27 @@
   damage-table.filter(row => row.first() <= st).last()
 }
 
-/// Thrust damage for a given ST, as a `(count, modifier)` pair that can be
-/// spread into @dice.
+/// The thrust damage for a ST, as a `(count, modifier)` pair. Spread it
+/// into @dice.
 ///
 /// ```example
 /// #thrust(10) \
 /// #dice(..thrust(10))
 /// ```
 ///
-/// Covers ST 1–100 using the Basic Set table. Between the table's rows above
-/// ST 40 (45, 50, …) the lower row applies. Panics outside that range: set
-/// `thr:` explicitly on the character instead.
+/// It covers ST 1 to 100. Above ST 40, the Basic Set table has a row for
+/// each 5 ST; between two rows, the lower row applies. For a ST that is
+/// not in this range, compilation stops: give `thr:` to @character.
 ///
 /// -> array
 #let thrust(
-  /// Striking strength.
+  /// The striking strength.
   /// -> int
   st,
 ) = row-for(st, "thrust").at(1)
 
-/// Swing damage for a given ST, as a `(count, modifier)` pair that can be
-/// spread into @dice. Same range rules as @thrust.
+/// The swing damage for a ST, as a `(count, modifier)` pair. Spread it
+/// into @dice. It covers the same ST as @thrust.
 ///
 /// ```example
 /// #dice(..swing(10))
@@ -88,7 +88,7 @@
 ///
 /// -> array
 #let swing(
-  /// Striking strength.
+  /// The striking strength.
   /// -> int
   st,
 ) = row-for(st, "swing").at(2)
