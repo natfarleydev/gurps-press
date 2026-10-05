@@ -79,7 +79,7 @@
 }
 
 /// A reference to a GURPS book in the house style of SJ Games: the title
-/// in bold italics, then the pages if you give them.
+/// in bold italics, then a comma and the pages if you give them.
 ///
 /// ```example
 /// #gurps-book("High Tech") \
