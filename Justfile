@@ -22,6 +22,10 @@ doc:
   typst compile --root . docs/manual.typ docs/manual.pdf
   typst compile --root . docs/example.typ docs/example.png --ppi 144
 
+# print the package version from typst.toml (used by CI and release)
+version:
+  @sed -n 's/^version[[:space:]]*=[[:space:]]*"\(.*\)"$/\1/p' typst.toml
+
 # check spelling
 spell:
   typos

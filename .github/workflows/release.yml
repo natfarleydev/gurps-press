@@ -12,19 +12,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
 
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2
         with:
           tool: just,tytanic@0.4.1
 
-      - uses: typst-community/setup-typst@v4
+      - uses: typst-community/setup-typst@48aeee7543d37f01afd1ffb27307dc277387ba13 # v4
         with:
           typst-version: "0.15"
 
       - name: Check tag matches typst.toml
         run: |
-          version="$(grep -m1 '^version' typst.toml | cut -d'"' -f2)"
+          version="$(just version)"
           if [[ "${GITHUB_REF_NAME}" != "v${version}" ]]; then
             echo "Tag ${GITHUB_REF_NAME} does not match typst.toml version ${version}" >&2
             exit 1
@@ -41,7 +43,7 @@ jobs:
           cd out && zip -r "../gurps-ink-${VERSION}.zip" gurps-ink
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: gurps-ink-${{ env.VERSION }}.zip
           generate_release_notes: true
