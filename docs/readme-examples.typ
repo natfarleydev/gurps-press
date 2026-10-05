@@ -7,7 +7,9 @@
 #set text(size: 9pt)
 
 #let import-line = (
-  "#import \"@preview/gurps-ink:" + toml("/typst.toml").package.version + "\": *"
+  "#import \"@preview/gurps-ink:"
+    + toml("/typst.toml").package.version
+    + "\": *"
 )
 #let blocks = (
   read("/README.md")
