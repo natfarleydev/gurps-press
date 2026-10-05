@@ -8,7 +8,7 @@
 #let napoleon = character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C",

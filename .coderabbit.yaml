@@ -16,6 +16,19 @@ reviews:
     - "!docs/*.pdf"
     - "!docs/*.png"
   path_instructions:
+    # The ground rules from CLAUDE.md, applied to every file.
+    - path: "**"
+      instructions: |
+        Hold every change to the three rules in CLAUDE.md:
+        1. Port intent, not logic: flag code that mirrors the LaTeX/Lua
+           implementation (TeX-style optional arguments, key-value parsing,
+           global registers) instead of doing what a Typst user would expect.
+        2. Test-driven: every behaviour change needs a test that would have
+           failed without it; flag untested behaviour and untested panic paths.
+        3. Idiomatic Typst: flag code a seasoned Typst author would write
+           differently (named vs positional arguments, auto/none defaults,
+           array/dictionary methods, data in and content out) and suggest the
+           idiomatic version.
     - path: "src/**/*.typ"
       instructions: |
         Typst package source. Check that:

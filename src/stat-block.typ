@@ -16,6 +16,14 @@
 // SM is written with a sign (SM +1, SM −2) except for zero.
 #let format-sm(sm) = if sm > 0 { "+" + str(sm) } else { str(sm) }
 
+// The hooks' defaults, exactly as documented on stat-block().
+#let default-title(char, total) = {
+  let points = if total != none [#total points]
+  if char.name == none { points }
+  else [#strong(char.name)#if points != none [ (#points)]]
+}
+#let default-section(label, body) = [#strong[#label:] #body]
+
 // Sort key: letters and digits only, case-insensitive (so "TeX" ≈ "tex").
 #let sort-key(t) = lower(plain-text(t.name)).replace(regex("[^\p{L}\p{N}]"), "")
 
@@ -32,7 +40,7 @@
 /// #stat-block(character(
 ///   name: "Napoleon",
 ///   st: 9, hp: 12,
-///   advantage("Natural afro", 1),
+///   advantage("Natural afro", points: 1),
 ///   quirk("Big teeth"),
 ///   skill("Nunchuck", 16, "DX/E"),
 ///   melee-attack("Punch", 18, [#dice(5) cr], reach: "C, 1",
@@ -41,6 +49,19 @@
 /// ```
 ///
 /// To frame it, wrap it: `#block(stroke: 0.5pt, inset: 8pt)[#stat-block(c)]`.
+///
+/// Two hooks restyle parts of the block without rewriting it:
+///
+/// ```example
+/// #stat-block(
+///   character(name: "Guard", st: 11, skill("Spear", 12, "DX/A")),
+///   title: (char, total) => smallcaps[#char.name, #total points],
+///   section: (label, body) => [#emph(label) --- #body],
+/// )
+/// ```
+///
+/// For a different layout altogether, write your own renderer from the
+/// @character dictionary; the manual shows how.
 ///
 /// -> content
 #let stat-block(
@@ -51,12 +72,45 @@
   /// manual feel.
   /// -> bool
   show-points: true,
+  /// Draws the first line. Called as `title(char, total)`, where `total` is
+  /// the total points, or `none` when `show-points` is off. Return `none`,
+  /// or pass `title: none`, to leave the line out. `auto` means
+  /// ```typ
+  /// (char, total) => {
+  ///   let points = if total != none [#total points]
+  ///   if char.name == none { points }
+  ///   else [#strong(char.name)#if points != none [ (#points)]]
+  /// }
+  /// ```
+  /// -> auto | none | function
+  title: auto,
+  /// Draws each labelled list: Advantages, Perks, Disadvantages, Quirks,
+  /// Skills, Spells and Attacks. Called as `section(label, body)`, where
+  /// `body` is the finished list (entries joined by semicolons, ending in
+  /// a full stop; for attacks, a block with one paragraph per attack).
+  /// `auto` means `(label, body) => [#strong[#label:] #body]`.
+  /// -> auto | function
+  section: auto,
 ) = {
   if type(char) != dictionary or char.at("kind", default: none) != "character" {
     panic("stat-block() expects the result of character(), got " + repr(char))
   }
   if type(show-points) != bool {
     panic("stat-block() show-points must be true or false, got " + repr(show-points))
+  }
+  if title == auto { title = default-title }
+  if section == auto { section = default-section }
+  if title != none and type(title) != function {
+    panic(
+      "stat-block() title must be a function (char, total) => content, auto or none, got "
+        + repr(title),
+    )
+  }
+  if type(section) != function {
+    panic(
+      "stat-block() section must be a function (label, body) => content or auto, got "
+        + repr(section),
+    )
   }
 
   let cost(points) = if show-points {
@@ -70,11 +124,9 @@
 
   let lines = ()
 
-  if char.name != none or show-points {
-    let total = if show-points [#total-points(char) points]
-    lines.push(if char.name == none { total } else {
-      [#strong(char.name)#if show-points [ (#total)]]
-    })
+  if title != none {
+    let heading = title(char, if show-points { total-points(char) })
+    if heading != none { lines.push(heading) }
   }
   lines.push(sentence(("ST", "DX", "IQ", "HT").map(attr)))
   lines.push(sentence(("HP", "Will", "Per", "FP").map(attr)))
@@ -102,21 +154,22 @@
   ) {
     let items = char.at(key)
     if items.len() > 0 {
-      lines.push([#strong[#label:] #sentence(items.sorted(key: sort-key).map(entry))])
+      lines.push(section(label, sentence(items.sorted(key: sort-key).map(entry))))
     }
   }
 
-  if char.attacks.len() > 0 {
-    lines.push(strong[Attacks:])
-    for a in char.attacks.sorted(key: sort-key) {
-      let distance = if a.kind == "melee-attack" {
-        if a.reach != none [ Reach #a.reach.]
-      } else {
-        if a.range != none [ Range #a.range.]
-      }
-      let notes = if a.notes != none [ #a.notes]
-      lines.push([#h(1em)#strong[#a.name (#a.level):] #a.damage.#distance#notes])
+  let attack-entry(a) = {
+    let distance = if a.kind == "melee-attack" {
+      if a.reach != none [ Reach #a.reach.]
+    } else {
+      if a.range != none [ Range #a.range.]
     }
+    let notes = if a.notes != none [ #a.notes]
+    [#h(1em)#strong[#a.name (#a.level):] #a.damage.#distance#notes]
+  }
+  if char.attacks.len() > 0 {
+    let entries = char.attacks.sorted(key: sort-key).map(attack-entry)
+    lines.push(section("Attacks", block(spacing: 0.65em, entries.join(parbreak()))))
   }
 
   block({

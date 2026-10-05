@@ -1,6 +1,6 @@
 # gurps-ink
 
-[![CI](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
+[![CI status](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-typst?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-typst&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 Typeset home-made ***GURPS*** material in [Typst](https://typst.app): dice
@@ -15,7 +15,7 @@ and NPC stat blocks that work out point costs for you.
 #let napoleon = character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C",
@@ -61,10 +61,10 @@ functions are called with `#`.
 | `sjgames-game-aid(author)` | Notice for free game aids | `#sjgames-game-aid[Jane Doe]` |
 | `thrust(st)`, `swing(st)` | Basic damage from ST, as `(dice, modifier)` | `#dice(..swing(13))` → 2d−1 |
 | `character(..)` | Builds a character; returns a dictionary | see above |
-| `advantage`, `disadvantage`, `perk`, `quirk` | Traits for `character` | `advantage("Magery", 25, level: 2)` |
+| `advantage`, `disadvantage`, `perk`, `quirk` | Traits for `character` | `advantage("Magery", points: 25, level: 2)` |
 | `skill`, `spell` | Skills and spells; cost from points or `"DX/A"` | `skill("Stealth", 12, "DX/A")` |
 | `melee-attack`, `ranged-attack` | Attacks for the stat block | `ranged-attack("Bow", 14, [1d+2 imp], range: "150/200")` |
-| `stat-block(char, show-points: true)` | Typesets a character | `#stat-block(napoleon)` |
+| `stat-block(char, show-points: true, title: auto, section: auto)` | Typesets a character; hooks restyle the title and lists | `#stat-block(napoleon)` |
 | `level-of(char, name)` | Level of an attribute, skill or spell | `#level-of(napoleon, "HP")` |
 | `total-points(char)` | Total character points | `#total-points(napoleon)` |
 
@@ -78,8 +78,8 @@ functions are called with `#`.
   per: 11,                          // bought up from IQ: costs 5
   basic-speed: 6,                   // multiples of 0.25
   dr: [2 (leather)],                // DR, SM, Dodge, thr and sw can be set too
-  advantage("Combat Reflexes", 15),
-  disadvantage("Duty (town watch)", -10),
+  advantage("Combat Reflexes", points: 15),
+  disadvantage("Duty (town watch)", points: -10),
   skill("Broadsword", 13, "DX/A"),  // cost from controlling attribute
   skill("Shield", 12, 2),           // or the points directly
   skill("Fast-Draw (Sword)", 14, "Broadsword/E"), // based on another skill
@@ -87,6 +87,10 @@ functions are called with `#`.
 )
 #stat-block(guard, show-points: false)
 ```
+
+`character()` returns a plain dictionary whose shape is documented, so
+you can also quote any number from it or write your own layout; the manual
+has a section on that.
 
 Mistakes such as an unknown difficulty, a skill level too low to buy, or a
 misspelt argument stop compilation with a message saying what to fix.
@@ -122,12 +126,14 @@ just ci            # everything CI runs
 Code lives in `src/`; `src/lib.typ` decides what is public. Every public
 function is documented by the `///` comments above it, which also produce
 the manual. Work test-first: describe the behaviour in the doc comment, add
-a failing test under `tests/`, then make it pass. See
-[CLAUDE.md](CLAUDE.md) for conventions and the release checklist.
+a failing test under `tests/`, then make it pass. `CLAUDE.md` in the
+[repository](https://github.com/natfarleydev/gurps-typst) has the
+conventions and the release checklist.
 
 ## Legal
 
-The code is released under [CC0 1.0](LICENSE) (public domain).
+The code is released under the [MIT No Attribution licence](LICENSE)
+(MIT-0): use it for anything, no credit needed.
 
 The material presented here is the original creation of Nathanael Farley,
 intended for use with the [***GURPS***](http://www.sjgames.com/gurps/)

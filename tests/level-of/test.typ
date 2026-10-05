@@ -3,9 +3,9 @@
 
 #let c = character(
   st: 9, dx: 12, hp: 12, sm: -1,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   advantage("Zoology"),
-  disadvantage("Bad Temper", -10),
+  disadvantage("Bad Temper", points: -10),
   perk("Fur"),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
@@ -25,3 +25,12 @@
 // teeth -1, Nunchuck (DX+4, E) 12, Light (IQ, H) 4.
 #assert.eq(total-points(c), -10 + 40 + 6 + 1 - 10 + 1 - 1 + 12 + 4)
 #assert.eq(total-points(character()), 0)
+
+// A name shared by several entries is ambiguous, not "the first one".
+#let twins = character(skill("Typst", 12), spell([Typst], 14))
+#assert-panic(() => level-of(twins, "Typst"))
+#assert(catch(() => level-of(twins, "Typst")).contains("more than one"))
+#let shadow = character(per: 12, skill("Per", 9))
+#assert-panic(() => level-of(shadow, "Per"))
+// Other names on the same character still work.
+#assert.eq(level-of(twins, "ST"), 10)

@@ -1,22 +1,22 @@
 // Trait constructors return plain dictionaries.
 #import "/src/lib.typ": *
 
-#let a = advantage("Natural afro", 1)
+#let a = advantage("Natural afro", points: 1)
 #assert.eq(a.kind, "advantage")
 #assert.eq(a.name, "Natural afro")
 #assert.eq(a.points, 1)
 #assert.eq(a.level, none)
 #assert.eq(advantage("Zoology").points, none)
-#assert.eq(advantage("Magery", 25, level: 2).level, 2)
+#assert.eq(advantage("Magery", points: 25, level: 2).level, 2)
 #assert.eq(advantage[Content *name*].name, [Content *name*])
 
-#let d = disadvantage("Bad Temper", -10)
+#let d = disadvantage("Bad Temper", points: -10)
 #assert.eq(d.kind, "disadvantage")
 #assert.eq(d.points, -10)
 #assert.eq(disadvantage("Bugs").points, none)
-#assert.eq(disadvantage("Odious Habit", -5, level: 1).level, 1)
-#assert-panic(() => disadvantage("Bad Temper", 10))
-#assert(catch(() => disadvantage("Bad Temper", 10)).contains("negative"))
+#assert.eq(disadvantage("Odious Habit", points: -5, level: 1).level, 1)
+#assert-panic(() => disadvantage("Bad Temper", points: 10))
+#assert(catch(() => disadvantage("Bad Temper", points: 10)).contains("negative"))
 
 #assert.eq(perk("Fur").points, 1)
 #assert.eq(perk("Fur").kind, "perk")
@@ -35,7 +35,10 @@
 #assert.eq(r.notes, none)
 
 // Typos are caught.
-#assert-panic(() => advantage("A", 1, 2))
-#assert-panic(() => advantage("A", 1.5))
+// Points are named: a bare number after the name is a mistake.
+#assert-panic(() => advantage("A", 1))
+#assert-panic(() => disadvantage("D", -5))
+#assert-panic(() => advantage("A", points: 1.5))
+#assert-panic(() => advantage("A", level: "2"))
 #assert-panic(() => advantage("A", lvl: 2))
 #assert-panic(() => melee-attack("Punch", "18", [1d]))

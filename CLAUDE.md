@@ -7,11 +7,45 @@ Guidance for AI agents (and humans) working in this repository.
 A Typst package for typesetting home-made **GURPS** material: dice notation,
 book references, Steve Jackson Games online-policy boilerplate, and NPC stat
 blocks with automatic point costs. It is a port of the LaTeX package
-<https://github.com/natfarleydev/gurps-latex-package> — the *behaviour* is
-ported, not the Lua implementation. Re-derive logic in idiomatic Typst.
+<https://github.com/natfarleydev/gurps-latex-package>.
 
 Package name on Typst Universe: `gurps-ink` (Universe forbids the bare
 canonical name `gurps`). Not yet submitted; see "Releasing".
+
+## Three rules that override everything else
+
+1. **Port intent, not logic.** The LaTeX package tells us *what a GURPS
+   author wants on the page*: dice that read `3d−1`, a stat block whose
+   points add up, the SJ Games notices. It does **not** tell us how to
+   build it. Never translate Lua, TeX macros, `\newcommand` optional
+   arguments, key–value parsing or global registers line by line. Ask
+   "what was the LaTeX version trying to give its user?", then design the
+   answer a Typst user would expect. If a LaTeX feature only existed to
+   work around TeX, drop it.
+2. **Always work test-driven.** No behaviour change lands without a test
+   that failed first. The loop is: doc-comment (the spec) → failing test →
+   smallest code that passes → refactor while green. Bug fix? Reproduce it
+   in a test first. Refactor? The behaviour must already be covered; add
+   the missing tests first. "Tests afterwards" is never acceptable, not
+   even for "trivial" changes.
+3. **Relentlessly pursue idiomatic Typst.** Every change, and every review
+   (ours and CodeRabbit's), asks "is this how a seasoned Typst author
+   would write it?" Working but awkward code gets rewritten. Concretely:
+   - Read like Typst's standard library: positional arguments only for
+     the obvious subject (`dice(3, -1)`, `skill(name, level, cost)`),
+     named arguments for anything optional or ambiguous, `auto`/`none`
+     defaults, accept `str` or `content` wherever text is expected.
+   - Data in, content out: constructors return plain dictionaries; only
+     rendering functions return content. No `state`, counters or
+     `context` unless the feature truly needs them.
+   - Use the language: `array.map`/`filter`/`find`, destructuring,
+     dictionaries, `calc`, show/set rules. No string surgery or
+     cleverness a newcomer could not follow. The one sanctioned piece of
+     argument plumbing is `take-optional` (Typst has no optional
+     positional parameters); don't add others.
+
+If a request conflicts with these rules, say so and ask; don't quietly
+break one.
 
 ## Layout
 
@@ -24,7 +58,7 @@ src/character.typ     trait constructors, character(), level-of(), total-points(
 src/stat-block.typ    stat-block() renderer
 tests/<name>/test.typ tytanic unit tests (one directory per test)
 docs/manual.typ       manual, generated from doc-comments with tidy
-examples/             example documents linked from README (excluded from bundle)
+docs/example.typ      source of the README picture docs/example.png
 scripts/              packaging helpers used by the Justfile and CI
 ```
 
@@ -36,21 +70,23 @@ Anything not re-exported from `src/lib.typ` is private.
 - Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4 syntax):
   description, a ```` ```example ```` block where useful, per-parameter
   docs with `-> type`, and a return `-> type`. The doc-comment **is the spec**.
-- Data in, content out: constructors return plain dictionaries; only
-  `stat-block` and the text helpers produce content. No global state.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
 - Examples in README/docs import `@preview/gurps-ink:<version>`; tests import
   `/src/lib.typ`.
 
-## Workflow: TDD
+## Workflow: TDD (always)
 
 1. Write/extend the doc-comment describing the behaviour.
 2. Write a failing test in `tests/` (`tt new --compile-only <name>` for logic,
    `tt new <name>` for a visual reference test, or add `ref.typ` for an
    ephemeral test comparing against hand-written expected markup).
-3. Implement until `just test` passes.
-4. Prefer compile-only tests with `assert.eq` for logic; keep persistent PNG
+3. Run it and watch it fail *for the right reason* (the assertion, not a
+   typo). Commit it as `test: …` if that helps review.
+4. Write the smallest idiomatic code that makes `just test` pass, then
+   refactor while green. Commit as `feat:`/`fix:`/`refactor:`.
+5. Update README and manual examples last, so they show the final API.
+6. Prefer compile-only tests with `assert.eq` for logic; keep persistent PNG
    references few (they break on any layout change). Regenerate them with
    `just update <test>` and eyeball the PNG files before committing.
 
@@ -88,7 +124,7 @@ typos                # spell check (CI runs this too)
 
 ## Git workflow
 
-- Never commit to `main` directly. Branch per change (`feat/…`, `fix/…`,
+- Never commit to `main` directly. One branch and PR per change (`feat/…`, `fix/…`,
   `docs/…`, `refactor/…`), then open a PR with `gh pr create`; CodeRabbit
   reviews every PR.
 - Commit small and often: each red→green TDD step, or each logical change,
@@ -103,51 +139,36 @@ typos                # spell check (CI runs this too)
 
 Last updated 2026-10-05. Pick up from here.
 
-**Done** (branch `feat/initial-port`, draft PR): full port with docs-as-spec,
-13 passing tytanic tests (also pass on Typst 0.13 and 0.14 locally), tidy
-manual, README with compiled-example test, CI (`.github/workflows/ci.yml`),
-tag-triggered release (`release.yml`, GitHub release only), CodeRabbit
-config. CI and CodeRabbit have **not yet run**: check the PR first and fix
-anything red (likely suspects: `taiki-e/install-action` installing
-`tytanic@0.2.2`/`0.3.4`, and the `ghcr.io/typst/package-check` docker step).
-
 **Intent:** a Typst package for GURPS game aids, ported from
-gurps-latex-package by behaviour (not by Lua code), idiomatic Typst, TDD,
-clear to a newcomer, ready for Typst Universe but not yet submitted. Cut a
-`v0.1.0` release once the follow-ups below are merged and it looks ready.
+gurps-latex-package by intent (not by Lua code), idiomatic Typst, TDD,
+clear to a newcomer, ready for Typst Universe but not yet submitted.
 
-**Follow-ups, in order, one branch + PR each** (requested by the user):
+**Done:** the port is feature-complete for v0.1.0. Draft PR #1
+(`feat/initial-port`) holds the initial port; branch
+`claude/port-completion-clarity-q93kzp` stacks on it with, one commit per
+TDD step:
+- CI fix (packaging scripts were not executable).
+- Named `points:` on `advantage`/`disadvantage`.
+- `stat-block` hooks `title:` and `section:`; `character()` dictionary
+  documented as public API (pinned by `tests/character-api`); manual
+  section "Writing your own renderer".
+- Skill/spell bases matched by plain-text name; panics on duplicate or
+  unmatchable names.
+17 tytanic tests pass on Typst 0.13, 0.14 and 0.15.
 
-1. `refactor/named-points`: `advantage(name, points: none, level: none)` and
-   `disadvantage(name, points: none, level: none)` take *named* `points:`.
-   Keep `perk`/`quirk` as they are. Keep `dice(count, modifier)` and
-   `skill(name, level, cost)` positional (GURPS reads them as pairs). Delete
-   `take-optional` from `src/util.typ` if nothing else uses it (dice,
-   gurps-book and skill still do, so probably keep). Order: docstrings
-   first, then tests (traits, level-of, stat-block, showcase, README), then
-   code, then README/manual examples. Commits: docs+tests (red),
-   implementation (green), cleanup.
-2. `feat/stat-block-hooks`: add 1–2 function hooks to `stat-block`, e.g.
-   `title: (char, total) => content` and `section: (label, body) => content`,
-   defaults matching current output. No theme system. Document the
-   `character()` dictionary as public API; add a manual section "Writing
-   your own renderer" building a block from `char.attributes` and
-   `char.skills`. Note that a custom element (show/set rules) is the plan
-   once Typst ships custom elements. Tests: an ephemeral test proving the
-   defaults are unchanged, plus a test using each hook.
-3. `fix/skill-base-names`: skills based on other skills (`"TeXpert/H"`)
-   match by `plain-text(name)`, which mismatches for formatted content
-   names. Document "base names are matched against the plain text of
-   skill/spell names". When a base matches no attribute but some skill or
-   spell name has empty or ambiguous plain text, panic with a hint to use a
-   string name. Panic if two skills/spells share a plain-text name and one
-   is used as a base. Tests first: content-named base that works, ambiguous
-   duplicate that panics, error message text.
+**Next:**
+1. Merge the stacked branch into PR #1 (or PR it against `main` after
+   #1), mark ready for review so CodeRabbit runs, address its comments.
+   Confirm the CI docs job (tidy manual, `package-check`) is green:
+   `docs/manual.pdf` in git was built before these changes and must be
+   regenerated with `just doc`.
+2. Cut `v0.1.0` (see "Releasing"), then submit to typst/packages.
 
 **Later / not started:** importing characters from GCS (`.gcs` is JSON;
-the LaTeX package shelled out to `gcs`), ST above 100 damage, SM-based ST
-cost discount (users can override `st: (level:, points:)` for now),
-publishing via a PR to typst/packages.
+the LaTeX package shelled out to `gcs`; in Typst, `json()` it directly),
+ST above 100 damage, SM-based ST cost discount (users can override
+`st: (level:, points:)` for now), `stat-block` as a custom element with
+show/set rules once Typst supports user-defined elements.
 
 **Gotchas learnt:**
 - In code blocks every expression statement is joined into the result:
@@ -159,6 +180,13 @@ publishing via a PR to typst/packages.
 - Tytanic bundles its own Typst: tytanic 0.2.x = Typst 0.13, 0.3.x = 0.14,
   0.4.x = 0.15. Ephemeral tests' `ref/` dirs are git-ignored; persistent
   tests need a `!tests/<name>/ref/` exception in `.gitignore`.
+- In code blocks a newline also ends an expression: a line starting with
+  `+ "..."` is a new (unary-plus) statement. Wrap multi-line string
+  concatenations in parentheses.
+- `catch` in Typst < 0.15 returns the message `repr`-escaped (`\"`), so
+  assert on message text with quote-agnostic patterns.
+- Check older Typst locally with tytanic 0.2.2 / 0.3.4 binaries before
+  pushing; CI runs all three.
 - Package name `gurps-ink`, because Universe forbids canonical names like
   `gurps`. Change it before first submission if wanted (typst.toml, README,
   manual, tests/readme, CLAUDE.md).

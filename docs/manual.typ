@@ -45,7 +45,7 @@ It is a port of the LaTeX package
 #let napoleon = character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
@@ -59,7 +59,7 @@ It is a port of the LaTeX package
 #block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, stat-block(character(
   name: "Napoleon",
   st: 9, hp: 12,
-  advantage("Natural afro", 1),
+  advantage("Natural afro", points: 1),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
@@ -98,7 +98,7 @@ calculated (advantages without points) show `[?]` and count as 0.
   [`\GCPrintCharacter[key]`], [`#stat-block(key)`],
   [`\ST{13}[25]`], [`st: (level: 13, points: 25)`],
   [`\skill{Stealth}[DX/Average]{12}`], [`skill("Stealth", 12, "DX/A")`],
-  [`\levelledadvantage{Magery}{2}[25]`], [`advantage("Magery", 25, level: 2)`],
+  [`\levelledadvantage{Magery}{2}[25]`], [`advantage("Magery", points: 25, level: 2)`],
   [`\meleeattack{name=…, level=…}`], [`melee-attack(name, level, damage, reach: …)`],
   [`\GCGet{ST}\GCResult`], [`#level-of(key, "ST")`],
   [`\GCTotalPoints`], [`#total-points(key)`],
@@ -106,6 +106,39 @@ calculated (advantages without points) show `[?]` and count as 0.
 )
 
 Reading characters from GCS files is not supported yet.
+
+= Writing your own renderer
+
+`stat-block()` covers the layout of the SJ Games books, and its `title`
+and `section` hooks restyle parts of it. For anything else (a table, a
+one-line summary for an adventure's cast list, a card) build your own from
+the dictionary `character()` returns. Its shape is public API, documented
+under `character` in the reference below.
+
+```typ
+#let one-liner(char) = {
+  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #char.attributes.at(k).level])
+  let skills = char.skills.map(s => [#s.name\-#s.level])
+  [*#char.name:* #attributes.join[, ]. _Skills:_ #skills.join[, ].]
+}
+
+#one-liner(character(name: "Guard", st: 11, skill("Spear", 12, "DX/A")))
+```
+
+#let one-liner(char) = {
+  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #char.attributes.at(k).level])
+  let skills = char.skills.map(s => [#s.name\-#s.level])
+  [*#char.name:* #attributes.join[, ]. _Skills:_ #skills.join[, ].]
+}
+#block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt,
+  one-liner(character(name: "Guard", st: 11, skill("Spear", 12, "DX/A"))))
+
+Point costs are already worked out (`char.skills.first().points`), and
+`total-points(char)` gives the total.
+
+Once Typst supports user-defined elements, `stat-block` will become one,
+so that show and set rules can restyle it like a built-in. Until then the
+hooks and your own functions are the way to customise it.
 
 = Reference
 

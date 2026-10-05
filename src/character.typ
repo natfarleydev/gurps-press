@@ -38,8 +38,8 @@
 /// An advantage.
 ///
 /// ```example
-/// #let afro = advantage("Natural afro", 1)
-/// #let magery = advantage("Magery", 25, level: 2)
+/// #let afro = advantage("Natural afro", points: 1)
+/// #let magery = advantage("Magery", points: 25, level: 2)
 /// #afro.points, #magery.level
 /// ```
 ///
@@ -47,46 +47,36 @@
 #let advantage(
   /// -> str | content
   name,
-  /// Optional point cost. Shown as `[?]` and counted as 0 when omitted.
-  /// -> int
-  ..points,
+  /// Point cost. Shown as `[?]` and counted as 0 when `none`.
+  /// -> int | none
+  points: none,
   /// Level for levelled advantages, e.g. `Magery 2`.
   /// -> int | none
   level: none,
-) = trait(
-  "advantage",
-  name,
-  take-optional(points, "advantage", "points"),
-  level,
-)
+) = trait("advantage", name, points, level)
 
 /// A disadvantage. The point cost, if given, must be zero or negative.
 ///
 /// ```example
-/// #disadvantage("Bad Temper", -10).points
+/// #disadvantage("Bad Temper", points: -10).points
 /// ```
 ///
 /// -> dictionary
 #let disadvantage(
   /// -> str | content
   name,
-  /// Optional point cost (≤ 0).
-  /// -> int
-  ..points,
+  /// Point cost (≤ 0). Shown as `[?]` and counted as 0 when `none`.
+  /// -> int | none
+  points: none,
   /// Level for levelled disadvantages.
   /// -> int | none
   level: none,
 ) = {
-  let d = trait(
-    "disadvantage",
-    name,
-    take-optional(points, "disadvantage", "points"),
-    level,
-  )
+  let d = trait("disadvantage", name, points, level)
   if d.points != none and d.points > 0 {
     panic(
       "disadvantage() points must be zero or negative, got " + str(d.points)
-        + " for " + repr(plain-text(name)) + ". Write -" + str(d.points) + ".",
+        + " for " + repr(plain-text(name)) + ". Write points: -" + str(d.points) + ".",
     )
   }
   d
@@ -157,7 +147,10 @@
 /// directly, or give the controlling attribute and difficulty as GURPS
 /// writes them (`"DX/E"`, `"IQ/VH"`, `"Per/Average"`) and the cost is
 /// worked out by @character. The base may also be another skill or spell on
-/// the same character. Difficulties: `E`/`Easy`, `A`/`Average`, `H`/`Hard`,
+/// the same character (`"Typst/H"`); it is matched against the plain text
+/// of skill and spell names, so `[_Typst_]` matches `"Typst"`. Give a skill
+/// a string name if other skills are based on it and its name is mostly
+/// formatting or symbols. Difficulties: `E`/`Easy`, `A`/`Average`, `H`/`Hard`,
 /// `VH`/`Very Hard`, `W`/`Wildcard`.
 ///
 /// ```example
@@ -337,7 +330,7 @@
 /// #let napoleon = character(
 ///   name: "Napoleon",
 ///   st: 9, hp: 12,
-///   advantage("Natural afro", 1),
+///   advantage("Natural afro", points: 1),
 ///   quirk("Big teeth"),
 ///   skill("Nunchuck", 16, "DX/E"),
 /// )
@@ -345,11 +338,22 @@
 /// #total-points(napoleon) points
 /// ```
 ///
-/// The result is a dictionary with keys `kind` (`"character"`), `name`,
-/// `attributes` (keyed `ST`, `DX`, `IQ`, `HT`, `HP`, `Will`, `Per`, `FP`,
-/// `Basic Speed`, `Basic Move`; each `(level:, points:)`), `dodge`, `sm`,
-/// `dr`, `thr`, `sw`, and arrays `advantages`, `perks`, `disadvantages`,
-/// `quirks`, `skills`, `spells`, `attacks`. Read values with @level-of.
+/// The result is a plain dictionary, and its shape is public API: read it
+/// directly, or with @level-of, to quote numbers or write your own
+/// renderer. It has these keys:
+///
+/// - `kind`: `"character"`; `name`.
+/// - `attributes`: keyed `ST`, `DX`, `IQ`, `HT`, `HP`, `Will`, `Per`, `FP`,
+///   `Basic Speed`, `Basic Move`, in that order; each `(level:, points:)`.
+/// - `dodge`, `sm`, `dr`, `thr`, `sw`: as given or calculated.
+/// - `advantages`, `perks`, `disadvantages`, `quirks`: arrays of
+///   `(kind:, name:, points:, level:)` in the order given.
+/// - `skills`, `spells`: arrays of `(kind:, name:, level:, points:, base:,
+///   difficulty:)`, with `points` worked out where a base was given.
+/// - `attacks`: arrays of `(kind:, name:, level:, damage:, notes:)` plus
+///   `reach` (melee) or `range` (ranged).
+///
+/// Unknown values are `none`.
 ///
 /// -> dictionary
 #let character(
@@ -461,17 +465,35 @@
     c.at(list).push(t)
   }
 
-  // Work out skill and spell costs given as "<base>/<difficulty>".
+  // Work out skill and spell costs given as "<base>/<difficulty>". A base
+  // is an attribute, or a skill or spell found by the plain text of its name.
+  let named = (c.skills + c.spells).map(o => (plain-text(o.name), o))
   let base-level(s) = {
     if s.base in a { return a.at(s.base).level }
-    let found = (c.skills + c.spells).find(o => plain-text(o.name) == s.base)
-    if found == none {
+    let found = named.filter(((name, _)) => name == s.base)
+    let what = s.kind + " " + repr(plain-text(s.name))
+    if found.len() > 1 {
       panic(
-        "cannot work out the cost of " + s.kind + " " + repr(plain-text(s.name))
-          + ": no attribute, skill or spell called " + repr(s.base),
+        "cannot work out the cost of " + what + ": more than one skill or spell is called "
+          + repr(s.base) + ". Rename one, or give the points explicitly.",
       )
     }
-    found.level
+    if found.len() == 0 {
+      let blank = named.filter(((name, _)) => name.trim() == "")
+      let hint = if blank.len() > 0 {
+        (
+          " " + str(blank.len()) + " skill(s) or spell(s) have no plain text in their "
+            + "name and can never match: give them a string name."
+        )
+      } else { "" }
+      panic(
+        "cannot work out the cost of " + what + ": no attribute, skill or spell called "
+          + repr(s.base) + ". Attributes: " + a.keys().join(", ") + ". Skills and spells: "
+          + named.map(((name, _)) => repr(name)).join(", ") + "." + hint,
+      )
+    }
+    let (_, base) = found.first()
+    base.level
   }
   for list in ("skills", "spells") {
     c.at(list) = c.at(list).map(s => {
@@ -486,9 +508,10 @@
 
 // --- Reading characters ---------------------------------------------------
 
-/// The level of an attribute, skill or spell, looked up by name. Also
-/// knows `"Dodge"` and `"SM"`. Panics, listing what exists, if the name is
-/// unknown.
+/// The level of an attribute, skill or spell, looked up by name (skills
+/// and spells by the plain text of theirs). Also knows `"Dodge"` and
+/// `"SM"`. Panics, listing what exists, if the name is unknown, and if more
+/// than one attribute, skill or spell has that name.
 ///
 /// ```example
 /// #let c = character(dx: 12, skill("Stealth", 13, "DX/A"))
@@ -507,14 +530,21 @@
   let levels = char.attributes.pairs().map(((k, v)) => (k, v.level))
   levels += (("Dodge", char.dodge), ("SM", char.sm))
   levels += (char.skills + char.spells).map(s => (plain-text(s.name), s.level))
-  let found = levels.find(((k, _)) => k == name)
-  if found == none {
+  let found = levels.filter(((k, _)) => k == name)
+  if found.len() == 0 {
     panic(
       "level-of(): no attribute, skill or spell called " + repr(name)
         + ". Known: " + levels.map(((k, _)) => k).join(", "),
     )
   }
-  found.last()
+  if found.len() > 1 {
+    panic(
+      "level-of(): more than one attribute, skill or spell is called " + repr(name)
+        + ". Rename one so it can be looked up.",
+    )
+  }
+  let ((_, level),) = found
+  level
 }
 
 /// Total character points: the sum of every known cost. Traits without a

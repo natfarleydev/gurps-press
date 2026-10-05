@@ -9,7 +9,7 @@ if [[ "$OSTYPE" == "linux"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   DATA_DIR="$HOME/Library/Application Support"
 else
-  DATA_DIR="${APPDATA}"
+  DATA_DIR="${APPDATA:?Unsupported OS: set APPDATA to where Typst keeps its data}"
 fi
 
 function read-toml() {

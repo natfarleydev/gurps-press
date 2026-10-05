@@ -11,11 +11,11 @@
 #stat-block(character(
   name: "Napoleon",
   st: 9, hp: 12, dr: [1 (glasses)],
-  advantage("Natural afro", 1),
-  advantage("Magery", 25, level: 2),
+  advantage("Natural afro", points: 1),
+  advantage("Magery", points: 25, level: 2),
   advantage("Zoology"),
   perk("Fur"),
-  disadvantage("Bad Temper", -10),
+  disadvantage("Bad Temper", points: -10),
   quirk("Big teeth"),
   skill("Nunchuck", 16, "DX/E"),
   skill("Bow", 12, 4),
@@ -30,6 +30,6 @@
 #stat-block(show-points: false, character(
   name: [The _Thing_],
   st: 20, dx: 9, basic-speed: 5.75,
-  advantage("Claws", 8),
+  advantage("Claws", points: 8),
   skill("Brawling", 12, "DX/E"),
 ))
