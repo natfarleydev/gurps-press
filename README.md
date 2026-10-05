@@ -55,11 +55,10 @@ task, and a reference for each function.
 3. Compile it. In the web app, the preview updates when you type. On your
    computer, run `typst watch main.typ`.
 
-> [!NOTE]
-> `gurps-ink` is not on Typst Universe yet, so the `@preview` import
-> fails. Until then, install it on your computer: clone this repository
-> and run `just install`. Then write
-> `#import "@local/gurps-ink:0.1.0": *`.
+**Note:** `gurps-ink` is not on Typst Universe yet, so the `@preview`
+import fails. Until then, install it on your computer: clone this
+repository and run `just install`. Then write
+`#import "@local/gurps-ink:0.1.0": *`.
 
 ## Functions
 
