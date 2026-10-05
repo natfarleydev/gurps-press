@@ -64,10 +64,10 @@ src/damage.typ        thrust/swing damage tables
 src/character.typ     trait constructors, character(), level-of(), total-points()
 src/stat-block.typ    stat-block() renderer
 tests/<name>/test.typ tytanic unit tests (one directory per test)
-docs/manual.typ       manual, generated from doc-comments with tidy
-docs/how-to.typ       the manual's how-to guides (own file so its show rule stays local)
-docs/style.typ        example layout shared by manual.typ and how-to.typ
-docs/sourcebook.typ   the manual's tutorial page (shown as source + picture)
+docs/manual.typ       manual: overview, chapters, example, reference (tidy)
+docs/chapters/        one file per user-guide chapter (start, legal, dice, characters)
+docs/style.typ        example layout and `examples` show rule shared by the chapters
+docs/example/tortoise-and-hare.typ  example one-shot; `just doc` builds its PDF and pictures
 docs/readme-examples.typ  renders each README ```typ block to docs/readme-<n>.png
 scripts/              packaging helpers used by the Justfile and CI
 ```
@@ -89,14 +89,24 @@ Anything not re-exported from `src/lib.typ` is private.
   by `tests/readme`); tests import
   `/src/lib.typ`.
 - Docs are for someone writing an unofficial GURPS sourcebook. They know
-  GURPS; don't explain its rules. The manual follows Diátaxis: tutorial,
-  how-to guides (one task each, headings start with a verb), explanation,
-  reference. Write in ASD-STE100 style: sentences of 20 words or fewer,
-  active voice, imperative for instructions, one term per thing.
-- Every example shows code on the left and its result on the right: in
-  the manual, each ```typ block in `docs/how-to.typ` and each tidy example;
-  in the README, an HTML table with the picture that `just doc` renders
-  from that block. Re-run `just doc` after changing a README example.
+  GURPS; don't explain its rules. The manual is a user guide first: one
+  chapter per pillar (legal notices, dice and books, characters), each
+  opening with the questions it answers, each section answering one
+  question with a verb heading. "Find your question" in the overview
+  maps every section; add new sections there. The reference uses the same
+  three groups. The Tortoise and the Hare is the running example: reuse
+  it rather than inventing new characters.
+- Write in ASD-STE100 style: sentences of 20 words or fewer, active
+  voice, imperative for instructions, one term per thing.
+- Never claim more than the sources say. The notices cite the SJ Games
+  online policy (section IV; section II forbids looking like an SJ Games
+  product); dice and titles cite the SJ Games Authors' Guidelines. The
+  game-aid notice is a community convention, not policy text.
+- In the manual, every example shows code on the left and its result on
+  the right (`#show: examples` in a chapter file; tidy examples use the
+  same layout). The README is Markdown: plain code blocks, with the
+  picture that `just doc` renders from the first one. Re-run `just doc`
+  after changing a README example or the example adventure.
 
 ## Workflow: TDD (always)
 
