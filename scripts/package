@@ -25,9 +25,20 @@ echo "Install dir: $TARGET"
 
 # .typstignore and the file list are relative to the repository root.
 cd "$ROOT"
+ROOT_ABS="$(pwd -P)"
 
-# ignore rules
-readarray -t ignores < <(grep -v '^#' .typstignore | grep '[^[:blank:]]')
+# The target with symlinks resolved, so it can be skipped if it lies inside
+# the repository (otherwise a second run would package the first one).
+TARGET_ABS="$TARGET"
+if [[ -d "$(dirname "$TARGET")" ]]; then
+  TARGET_ABS="$(cd "$(dirname "$TARGET")"; pwd -P)/$(basename "$TARGET")"
+fi
+
+# ignore rules (a while-read loop: macOS ships Bash 3.2, without readarray)
+ignores=()
+while IFS= read -r line; do
+  ignores+=("$line")
+done < <(grep -v '^#' .typstignore | grep '[^[:blank:]]')
 
 # recursively print all files that are not excluded via .typstignore
 function enumerate {
@@ -35,17 +46,23 @@ function enumerate {
   if [[ -f "$root" ]]; then
     echo "$root"
   else
-    local files
-    readarray -t files < <(find "$root" \
+    local files=() line
+    while IFS= read -r line; do
+      files+=("$line")
+    done < <(find "$root" \
       -mindepth 1 -maxdepth 1 \
       -not -name .git \
       -not -name .typstignore)
     # declare -p files >&2
 
     local f
-    for f in "${files[@]}"; do
+    for f in ${files[@]+"${files[@]}"}; do
       local include
       include=1
+      # never package the output itself
+      if [[ "$ROOT_ABS/${f#./}" == "$TARGET_ABS" ]]; then
+        continue
+      fi
 
       local ignore
       for ignore in ${ignores[@]+"${ignores[@]}"}; do
@@ -68,12 +85,15 @@ function enumerate {
 }
 
 # List of all files that get packaged
-readarray -t files < <(enumerate ".")
+files=()
+while IFS= read -r line; do
+  files+=("$line")
+done < <(enumerate ".")
 # declare -p files >&2
 
 TMP="$(mktemp -d)"
 
-for f in "${files[@]}"; do
+for f in ${files[@]+"${files[@]}"}; do
   mkdir -p "$TMP/$(dirname "$f")" 2>/dev/null
   cp -r "$ROOT/$f" "$TMP/$f"
 done
