@@ -152,7 +152,7 @@ is its Hiking skill.
 == The Hare
 
 The Hare is the fastest animal in the meadow. It also has Overconfidence
-(p.~B148): it cannot believe that it could lose.
+(#basic-set(148)): it cannot believe that it could lose.
 
 #block(breakable: false, stat-block(hare))
 
@@ -178,16 +178,16 @@ mile long and has three landmarks.
 Play the race in three steps.
 
 + *Taunt (optional).* At the start, the Tortoise can mock the Hare. Roll
-  a Quick Contest (p.~B348) of the Tortoise's
+  a Quick Contest (#basic-set(348)) of the Tortoise's
   Fast-Talk-#level-of(tortoise, "Fast-Talk") against the Hare's Will of
   #level-of(hare, "Will"). If the Tortoise wins, the Hare takes −4 on its
   roll in step 2.
 + *The nap.* At the clover patch, the Hare is far ahead. The GM rolls
-  #dice(3) against the Hare's self-control number of 12 (p.~B120). On a
+  #dice(3) against the Hare's self-control number of 12 (#basic-set(120)). On a
   failure, the Hare lies down for a nap.
 + *The finish.* Roll a Quick Contest: the Tortoise's
-  Hiking-#level-of(tortoise, "Hiking") (p.~B200) against the Hare's
-  Running-#level-of(hare, "Running") (p.~B218). The Hare gets +4 for its
+  Hiking-#level-of(tortoise, "Hiking") (#basic-set(200)) against the Hare's
+  Running-#level-of(hare, "Running") (#basic-set(218)). The Hare gets +4 for its
   speed. If it took a nap, it gets −4 instead. If the player says that
   the Tortoise uses the gap in the hedge, the Tortoise gets +2. The
   winner reaches the pond first. On a tie, the Tortoise wins by the
@@ -244,8 +244,8 @@ calculated exactly from the rules; `docs/example/odds.typ` shows how.
   George Fyler Townsend (1867). Public domain. The italic quotations
   come from this translation.
 - #gurps-book("Basic Set"), Fourth Edition, #sjgames. Rules cited:
-  self-control rolls (p.~B120), Overconfidence (p.~B148), Hiking
-  (p.~B200), Running (p.~B218), Quick Contests (p.~B348).
+  self-control rolls (#basic-set(120)), Overconfidence (#basic-set(148)), Hiking
+  (#basic-set(200)), Running (#basic-set(218)), Quick Contests (#basic-set(348)).
 - #sjgames,
   #link("https://www.sjgames.com/general/online_policy.html")[Online
     Policy]: the disclaimer and the notice below.

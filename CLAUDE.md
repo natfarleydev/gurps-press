@@ -59,7 +59,7 @@ break one.
 ```
 typst.toml            package manifest (name, version, exclude list)
 src/lib.typ           entrypoint: ONLY re-exports the public API
-src/text.typ          gurps, sjgames, dice, gurps-book, policy texts
+src/text.typ          gurps, sjgames, dice, gurps-book, basic-set, policy texts
 src/damage.typ        thrust/swing damage tables
 src/character.typ     trait constructors, character(), level-of(), total-points()
 src/stat-block.typ    stat-block() renderer

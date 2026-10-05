@@ -117,7 +117,7 @@ $N(10) = #ways.at(10)$. So
 $ P(#dice(3) = k) = N(k) / 216. $
 
 A success roll against skill $s$ succeeds on $k <= s$, with two
-exceptions (p.~B348): $k <= 4$ always succeeds, and $k = 18$ (or $k = 17$
+exceptions (#basic-set(348)): $k <= 4$ always succeeds, and $k = 18$ (or $k = 17$
 when $s <= 15$) always fails. Write $S(s)$ for the chance of success:
 
 $ S(s) = sum_(k = 3)^18 P(#dice(3) = k) dot bb(1)[k "succeeds against" s] $
