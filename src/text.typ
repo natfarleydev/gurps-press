@@ -101,19 +101,18 @@
   ..pages,
 ) = {
   let pages = take-optional(pages, "gurps-book", "pages")
-  let ref = if pages == none {
-    none
-  } else if type(pages) == array {
-    [ pp.~#pages.map(p => [#p]).join([, ])]
+  if pages == none { return strong(emph[GURPS #title]) }
+  let ref = if type(pages) == array {
+    [pp.~#pages.map(p => [#p]).join([, ])]
   } else if (
     type(pages) == int
       or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
   ) {
-    [ p.~#pages]
+    [p.~#pages]
   } else {
-    [ pp.~#pages]
+    [pp.~#pages]
   }
-  [#strong(emph[GURPS #title])#ref]
+  [#strong(emph[GURPS #title,]) #ref]
 }
 
 #let gurps-linked = link(gurps-url, gurps)
