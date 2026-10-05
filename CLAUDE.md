@@ -46,8 +46,10 @@ canonical name `gurps`). Not yet submitted; see "Releasing".
 4. **Be deterministic wherever we can.** A rule a tool can check is
    enforced by that tool, not written down as an instruction for a person
    or an AI reviewer to remember. Spelling is `typos`, package rules are
-   `package-check`, README examples are compiled by `tests/readme`,
-   behaviour is pinned by tytanic tests, and all of it runs in CI. When a
+   `package-check`, formatting is `typstyle` (`just fmt-check`), README
+   and manual examples are checked by `tests/readme`, doc-comments on the
+   public API by `tests/doc-comments`, behaviour by the other tytanic
+   tests, and all of it runs in CI. When a
    new rule comes up, first look for a linter, formatter, test or CI step
    that can enforce it, and add that. Only a rule no tool can check
    becomes prose (here, or as a CodeRabbit instruction), and
@@ -75,13 +77,17 @@ Anything not re-exported from `src/lib.typ` is private.
 
 ## Conventions
 
-- Two-space indent, `kebab-case` names (Typst Universe recommendation).
-- Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4 syntax):
-  description, a ```` ```example ```` block where useful, per-parameter
-  docs with `-> type`, and a return `-> type`. The doc-comment **is the spec**.
+- Formatting is whatever `typstyle` (defaults) produces: run `just fmt`.
+  Names are `kebab-case` (Typst Universe recommendation).
+- Every public definition has a tidy doc-comment (`///`, tidy ≥ 0.4
+  syntax): description, a ```` ```example ```` block where useful,
+  per-parameter docs with `-> type`, and a return `-> type`. The
+  doc-comment **is the spec**. `tests/doc-comments` checks that it exists
+  and ends in the return type.
 - Fail loudly: invalid input panics with a message saying what was wrong and
   how to fix it. Every panic path has a test using `catch`/`assert-panic`.
-- Examples in README/docs import `@preview/gurps-ink:<version>`; tests import
+- Examples in README/docs import `@preview/gurps-ink:<version>` (checked
+  by `tests/readme`); tests import
   `/src/lib.typ`.
 
 ## Workflow: TDD (always)
@@ -101,11 +107,13 @@ Anything not re-exported from `src/lib.typ` is private.
 
 ## Commands
 
-Requires `typst` (0.15), `tt` (tytanic 0.4) and `just`.
+Requires `typst` (0.15), `tt` (tytanic 0.4), `typstyle` (0.15), `typos`
+and `just`.
 
 ```
 just test            # run all tests
 just update <name>   # regenerate reference images
+just fmt             # format all Typst files (CI checks with fmt-check)
 just doc             # build docs/manual.pdf and README example image
 just install         # install as @local/gurps-ink:<version>
 just ci              # what CI runs
@@ -156,7 +164,7 @@ clear to a newcomer, ready for Typst Universe but not yet submitted.
 **Done:** the port is feature-complete for v0.1.0 and lives in PR #1
 (`feat/initial-port`). PR #2 was stacked on it and merged in; fixes for
 review comments arrive the same way (a branch stacked on
-`feat/initial-port`, merged when green). 17 tytanic tests pass on Typst
+`feat/initial-port`, merged when green). 18 tytanic tests pass on Typst
 0.13, 0.14 and 0.15; CI, `typos` and `package-check` are green. Licence
 is MIT-0 (Universe requires OSI approval, which CC0 lacks).
 
