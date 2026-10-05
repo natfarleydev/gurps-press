@@ -7,18 +7,24 @@
 // Your own look: gurps-ink sets no fonts, colours or page layout.
 #let accent = rgb("#2f5d50")
 #set document(title: "The Tortoise and the Hare")
-#set page(paper: "a5", margin: (x: 15mm, y: 18mm), numbering: "1")
-#set text(size: 9.5pt)
+#set page(paper: "a5", margin: (x: 14mm, y: 15mm), numbering: "1")
+#set text(size: 9pt)
 #set par(justify: true)
 #show heading: set text(fill: accent)
 #show link: underline
 
 // The old story, quoted beside the adventure. The text is the
 // public-domain translation by George Fyler Townsend (1867).
-#let aside(body) = block(
+#let aside(body, source: [Aesop]) = block(
+  width: 100%,
   inset: (left: 8pt, y: 2pt),
   stroke: (left: 1.5pt + accent),
-  text(fill: accent.darken(20%), emph(body)),
+  text(fill: accent.darken(20%))[
+    #set par(justify: false)
+    #emph(body)
+    #linebreak()
+    --- #source
+  ],
 )
 
 // The two characters. Each section below uses them again.
@@ -36,9 +42,9 @@
   advantage("Very Fit", points: 15),
   disadvantage("Stubbornness", points: -5),
   quirk("Never hurries"),
-  skill("Running", 14, "HT/A"),
   skill("Hiking", 14, "HT/A"),
-  skill("Fast-Talk", 11, "IQ/A"),
+  skill("Fast-Talk", 12, "IQ/A"),
+  skill("Survival (Woodlands)", 11, "Per/A"),
 )
 #let hare = character(
   name: "The Hare",
@@ -49,13 +55,30 @@
   basic-move: 9,
   disadvantage("Overconfidence (12)", points: -5),
   quirk("Naps after lunch"),
-  skill("Running", 13, "HT/A"),
+  skill("Running", 16, "HT/A"),
   melee-attack("Kick", 13, [#dice(..thrust(6)) cr], reach: "C"),
 )
+
+// The odds in the designer's note, in per cent. They are calculated,
+// not playtested.
+#let odds = (walks: 26, hedge: 37, taunt: 45, both: 57, awake: 79, asleep: 86)
 
 // The player builds the Tortoise on 50 points. Compilation stops if a
 // change makes it cost more.
 #assert(total-points(tortoise) <= 50, message: "The Tortoise is over 50 points")
+
+#block(
+  fill: accent.lighten(88%),
+  inset: 8pt,
+  radius: 3pt,
+  width: 100%,
+  text(size: 8.5pt)[
+    *An example, not a tested adventure.* This one-shot shows what the
+    `gurps-ink` package can do: stat blocks, dice, book references and
+    the #sjgames notices. Nobody has playtested it. Check the numbers
+    before you use it at your table.
+  ],
+)
 
 #align(center)[
   #text(size: 22pt, fill: accent, weight: "bold")[The Tortoise \ and the Hare]
@@ -76,13 +99,14 @@ One player is the Tortoise: slow, stubborn and very hard to stop. The GM
 plays the Hare: the fastest animal in the meadow, and the first to say
 so.
 
-The adventure is short. It fits in a lunch break, or opens a longer
-session. It needs one player, one GM, three six-sided dice and the
+The adventure is short. It fits in a lunch break. It needs one player, one GM, three six-sided dice and the
 #gurps-book("Basic Set"). New players learn Quick Contests and
-self-control rolls. Old hands can play it for the fun of a story that
-they think they know.
+self-control rolls.
 
-#aside[
+#aside(
+  source: [Aesop, "The Hare and the Tortoise", translated by George Fyler
+    Townsend (1867). Each quotation in this style is from this fable.],
+)[
   A Hare one day ridiculed the short feet and slow pace of the Tortoise,
   who replied, laughing: "Though you be swift as the wind, I will beat you
   in a race."
@@ -120,7 +144,8 @@ The Hare laughs so hard that it falls over. Then it accepts.
 == The Tortoise
 
 The Tortoise has a shell like a cobblestone and a will like a mule. It
-moves at a crawl, but it does not stop, and it does not tire.
+cannot run at all. It walks, it does not stop and it does not tire: that
+is its Hiking skill.
 
 #block(breakable: false, stat-block(tortoise))
 
@@ -155,17 +180,25 @@ Play the race in three steps.
 + *Taunt (optional).* At the start, the Tortoise can mock the Hare. Roll
   a Quick Contest (#basic-set(348)) of the Tortoise's
   Fast-Talk-#level-of(tortoise, "Fast-Talk") against the Hare's Will of
-  #level-of(hare, "Will"). If the Tortoise wins, the Hare takes −2 on its
+  #level-of(hare, "Will"). If the Tortoise wins, the Hare takes −4 on its
   roll in step 2.
 + *The nap.* At the clover patch, the Hare is far ahead. The GM rolls
   #dice(3) against the Hare's self-control number of 12 (#basic-set(120)). On a
   failure, the Hare lies down for a nap.
-+ *The finish.* Roll a Quick Contest of Running (#basic-set(218)): the
-  Tortoise's Running-#level-of(tortoise, "Running") against the Hare's
-  Running-#level-of(hare, "Running"). The Hare gets +4 for its speed, or
-  −6 if it took a nap. If the player says that the Tortoise uses the gap
-  in the hedge, the Tortoise gets +2. The winner reaches the pond first.
-  On a tie, the Tortoise wins by the length of its nose.
++ *The finish.* Roll a Quick Contest: the Tortoise's
+  Hiking-#level-of(tortoise, "Hiking") (#basic-set(200)) against the Hare's
+  Running-#level-of(hare, "Running") (#basic-set(218)). The Hare gets +4 for its
+  speed. If it took a nap, it gets −4 instead. If the player says that
+  the Tortoise uses the gap in the hedge, the Tortoise gets +2. The
+  winner reaches the pond first. On a tie, the Tortoise wins by the
+  length of its nose.
+
+*Designer's note.* These odds are calculated, not playtested. If the
+player only walks, the Tortoise wins #odds.walks% of races. With the
+hedge, it wins #odds.hedge%. With the taunt, #odds.taunt%. With the
+taunt and the hedge, #odds.both%. Even against the hedge, an awake Hare
+wins #odds.awake% of races, and a sleeping Hare loses #odds.asleep%.
+Clever play pays, as it should.
 
 #aside[
   The Hare, lying down by the wayside, fell fast asleep.
@@ -174,8 +207,8 @@ Play the race in three steps.
 = After the Race
 
 If the Tortoise wins, the meadow cheers, and the Hare is quiet for a
-whole week. If the Hare wins, it boasts until the leaves fall. In both
-cases, give the player 1 character point.
+whole week. If the Hare wins, it boasts until the leaves fall. Either
+way, the story is over: this one-shot does not lead to a campaign.
 
 #aside[Slow but steady wins the race.]
 
@@ -193,23 +226,26 @@ cases, give the player 1 character point.
 
 #set text(size: 8pt)
 
-*Authors.* Nathanael Farley and Claude. Nathanael Farley had the idea,
-directed the work and reviewed the result. Claude, an AI model by
-Anthropic (Claude Opus 5.5), drafted the text, the characters and the
-race rules, and typeset them. Made in October 2026.
+*Author.* Nathanael Farley, October 2026.
+
+*Use of AI.* Claude Opus 5.5, an AI model by Anthropic, was used to
+draft the text, the characters and the race rules, to calculate the
+odds, and to typeset the adventure. Nathanael Farley gave the
+directions and reviewed the result.
 
 *Tools.* Typeset with #link("https://typst.app")[Typst] and
 #link("https://github.com/natfarleydev/gurps-typst")[`gurps-ink`]
 0.1.0. The source of this adventure is `docs/example/tortoise-and-hare.typ`
-in the `gurps-ink` repository.
+in the `gurps-ink` repository. The odds in the designer's note were
+calculated exactly from the rules; `docs/example/odds.typ` shows how.
 
 *References.*
 - Aesop, "The Hare and the Tortoise", in _Aesop's Fables_, translated by
   George Fyler Townsend (1867). Public domain. The italic quotations
   come from this translation.
 - #gurps-book("Basic Set"), Fourth Edition, #sjgames. Rules cited:
-  self-control rolls (#basic-set(120)), Overconfidence (#basic-set(148)), Running
-  (#basic-set(218)), Quick Contests (#basic-set(348)).
+  self-control rolls (#basic-set(120)), Overconfidence (#basic-set(148)), Hiking
+  (#basic-set(200)), Running (#basic-set(218)), Quick Contests (#basic-set(348)).
 - #sjgames,
   #link("https://www.sjgames.com/general/online_policy.html")[Online
     Policy]: the disclaimer and the notice below.

@@ -67,7 +67,9 @@ tests/<name>/test.typ tytanic unit tests (one directory per test)
 docs/manual.typ       manual: overview, chapters, example, reference (tidy)
 docs/chapters/        one file per user-guide chapter (start, legal, dice, characters)
 docs/style.typ        example layout and `examples` show rule shared by the chapters
-docs/example/tortoise-and-hare.typ  example one-shot; `just doc` builds its PDF and pictures
+docs/example/tortoise-and-hare.typ  example one-shot; standalone and copyable
+docs/example/odds.typ  the one-shot plus an appendix that calculates its odds;
+                      `just doc` builds docs/tortoise-and-hare.pdf from it
 docs/readme-examples.typ  renders each README ```typ block to docs/readme-<n>.png
 scripts/              packaging helpers used by the Justfile and CI
 ```
