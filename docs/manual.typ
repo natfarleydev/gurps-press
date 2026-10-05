@@ -73,6 +73,8 @@ that dictionary into content. Keeping them apart means you can define a
 character once and print it, or quote its numbers, anywhere:
 
 ```typ
+#import "@preview/gurps-ink:0.1.0": *
+
 #let guard = character(st: 12, skill("Broadsword", 13, "DX/A"))
 The guard swings for #dice(..guard.sw) and has
 #level-of(guard, "HP") HP.
@@ -116,6 +118,8 @@ the dictionary `character()` returns. Its shape is public API, documented
 under `character` in the reference below.
 
 ```typ
+#import "@preview/gurps-ink:0.1.0": *
+
 #let one-liner(char) = {
   let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #char.attributes.at(k).level])
   let skills = char.skills.map(s => [#s.name\-#s.level])
