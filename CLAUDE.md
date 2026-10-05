@@ -65,7 +65,10 @@ src/character.typ     trait constructors, character(), level-of(), total-points(
 src/stat-block.typ    stat-block() renderer
 tests/<name>/test.typ tytanic unit tests (one directory per test)
 docs/manual.typ       manual, generated from doc-comments with tidy
-docs/example.typ      source of the README picture docs/example.png
+docs/how-to.typ       the manual's how-to guides (own file so its show rule stays local)
+docs/style.typ        example layout shared by manual.typ and how-to.typ
+docs/sourcebook.typ   the manual's tutorial page (shown as source + picture)
+docs/readme-examples.typ  renders each README ```typ block to docs/readme-<n>.png
 scripts/              packaging helpers used by the Justfile and CI
 ```
 
@@ -85,6 +88,15 @@ Anything not re-exported from `src/lib.typ` is private.
 - Examples in README/docs import `@preview/gurps-ink:<version>` (checked
   by `tests/readme`); tests import
   `/src/lib.typ`.
+- Docs are for someone writing an unofficial GURPS sourcebook. They know
+  GURPS; don't explain its rules. The manual follows Diátaxis: tutorial,
+  how-to guides (one task each, headings start with a verb), explanation,
+  reference. Write in ASD-STE100 style: sentences of 20 words or fewer,
+  active voice, imperative for instructions, one term per thing.
+- Every example shows code on the left and its result on the right: in
+  the manual, each ```typ block in `docs/how-to.typ` and each tidy example;
+  in the README, an HTML table with the picture that `just doc` renders
+  from that block. Re-run `just doc` after changing a README example.
 
 ## Workflow: TDD (always)
 

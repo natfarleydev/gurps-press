@@ -18,10 +18,11 @@ test *args:
 update *args:
   tt update {{ args }}
 
-# build docs/manual.pdf and the README picture docs/example.png
+# build the pictures in docs/, then docs/manual.pdf (which shows some of them)
 doc:
+  typst compile --root . docs/readme-examples.typ "docs/readme-{p}.png" --ppi 144
+  typst compile --root . docs/sourcebook.typ docs/sourcebook.png --ppi 144
   typst compile --root . docs/manual.typ docs/manual.pdf
-  typst compile --root . docs/example.typ docs/example.png --ppi 144
 
 # print the package version from typst.toml (used by CI and release)
 version:

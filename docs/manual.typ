@@ -1,156 +1,132 @@
 // The gurps-ink manual. Build with `just doc` (writes docs/manual.pdf).
-// The reference section is generated from the doc-comments in src/.
+//
+// Structure (Diátaxis): a tutorial, how-to guides, an explanation and a
+// reference. The reference is generated from the doc-comments in src/.
+// Write in ASD-STE100 style: short sentences, active voice, instructions
+// in the imperative, one word for one thing.
 
 #import "@preview/tidy:0.4.3"
 #import "/src/lib.typ"
 #import "/src/lib.typ": *
+#import "style.typ": import-line, layout-example, version
 
-#let version = toml("/typst.toml").package.version
 
 #set document(title: "gurps-ink manual", author: "Nathanael Farley")
-#set page(numbering: "1", margin: (x: 2.5cm, y: 2.5cm))
+#set page(numbering: "1", margin: (x: 2cm, y: 2.5cm))
 #set heading(numbering: "1.1")
 #show link: set text(fill: blue.darken(30%))
-#show raw.where(block: true): block.with(
-  fill: luma(245),
-  inset: 8pt,
-  radius: 3pt,
-  width: 100%,
-)
+
 
 #align(center)[
   #text(2em, weight: "bold")[gurps-ink] \
-  Typeset #gurps game aids \
+  Typeset unofficial #gurps material \
   Version #version
 ]
 
-#outline(depth: 1)
+#outline(depth: 2)
 
 = Introduction
 
-`gurps-ink` helps you write home-made #gurps material: adventures, NPC
-handouts, house-rule documents. It gives you
+Use `gurps-ink` to write an unofficial #gurps sourcebook, adventure or
+handout in Typst. It typesets stat blocks and calculates their point
+costs. It writes dice, damage and book references in the style of the
+#sjgames books. It also gives you the notices that the #sjgames online
+policy asks for.
 
-- dice in #gurps notation (#dice(3, -1)) and book references
-  (#gurps-book("Basic Set", 16));
-- the boilerplate the Steve Jackson Games online policy asks for;
-- NPC stat blocks that work out point costs, secondary characteristics and
-  basic damage for you.
+This manual has four parts:
 
-It is the successor to the LaTeX package
-#link("https://github.com/natfarleydev/gurps-latex-package")[gurps-latex-package].
+- *Tutorial* (@tutorial): make one sourcebook page, step by step. Start
+  here if `gurps-ink` is new to you.
+- *How-to guides* (@how-to): do one task, such as "hide point costs".
+- *What gurps-ink calculates* (@calculates): know which numbers come
+  from `gurps-ink` and which come from you.
+- *Reference* (@reference): all functions and their arguments.
 
-= Quick start
+In each example, the code is on the left and the result is on the right.
+Each example in the tutorial and the how-to guides is complete: copy it
+into a new file and it compiles. A reference example needs the import
+line first.
 
-```typ
-#import "@preview/gurps-ink:0.1.0": *
+= Tutorial: make a sourcebook page <tutorial>
 
-#let napoleon = character(
-  name: "Napoleon",
-  st: 9, hp: 12,
-  advantage("Natural afro", points: 1),
-  quirk("Big teeth"),
-  skill("Nunchuck", 16, "DX/E"),
-  melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
+This tutorial makes the page on the right. It has a heading, text with a
+book reference, two stat blocks and the legal notices.
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: 8pt,
+  block(radius: 3pt, stroke: .5pt + luma(200), inset: 5pt, width: 100%, {
+    set text(size: 0.65em)
+    raw(
+      read("sourcebook.typ")
+        .replace("\r\n", "\n")
+        .split("\n")
+        .filter(line => not line.starts-with("//"))
+        .join("\n")
+        .replace("#import \"/src/lib.typ\": *", import-line),
+      lang: "typst",
+      block: true,
+    )
+  }),
+  block(
+    radius: 3pt,
+    stroke: .5pt + luma(200),
+    inset: 5pt,
+    image("sourcebook.png", width: 100%),
+  ),
 )
 
-#stat-block(napoleon)
+Do these steps:
 
-#sjgames-disclaimer
-```
++ Import `gurps-ink` on the first line. All its functions are then
+  available.
++ Set up the page. This page has two columns, as many sourcebooks have.
++ Make the characters with `character()`. Put them in one dictionary,
+  `npcs`. Then you can use each character again in the text.
++ Write the text. `#gurps-book("Basic Set", 348)` refers to a page of
+  the Basic Set. `#dice(..npcs.sergeant.sw)` writes the swing damage of
+  the sergeant.
++ Typeset each character with `stat-block()`. Put each stat block in
+  `block(breakable: false, ..)`. Then a column break cannot split a stat
+  block.
++ Add the legal notices at the end. Make them small with `text(size: ..)`.
 
-#block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, stat-block(character(
-  name: "Napoleon",
-  st: 9,
-  hp: 12,
-  advantage("Natural afro", points: 1),
-  quirk("Big teeth"),
-  skill("Nunchuck", 16, "DX/E"),
-  melee-attack("Punch", 18, [#dice(1, -2) cr], reach: "C"),
-)))
+Next, read the how-to guides for the tasks that you need.
 
-= Building characters
+= How-to guides <how-to>
 
-A character is built in two steps. `character()` collects everything and
-works out the numbers; it returns a plain dictionary. `stat-block()` turns
-that dictionary into content. Keeping them apart means you can define a
-character once and print it, or quote its numbers, anywhere:
+#include "how-to.typ"
 
-```typ
-#import "@preview/gurps-ink:0.1.0": *
+= What gurps-ink calculates <calculates>
 
-#let guard = character(st: 12, skill("Broadsword", 13, "DX/A"))
-The guard swings for #dice(..guard.sw) and has
-#level-of(guard, "HP") HP.
-```
+`character()` calculates these values from the Basic Set rules:
 
-Only say what differs from an average human. Leave a cost out and it is
-calculated; give one and it is used as-is. Traits whose cost cannot be
-calculated (advantages without points) show `[?]` and count as 0.
+- The point cost of each attribute and secondary characteristic.
+- The point cost of each skill and spell that has a cost such as
+  `"DX/A"`.
+- Dodge, from Basic Speed.
+- Thrust and swing damage, from ST.
+- The point total.
 
-= Writing your own renderer
+You must give these values:
 
-`stat-block()` covers the layout of the SJ Games books, and its `title`
-and `section` hooks restyle parts of it. For anything else (a table, a
-one-line summary for an adventure's cast list, a card) build your own from
-the dictionary `character()` returns. Its shape is public API, documented
-under `character` in the reference below.
+- The point cost of each advantage and disadvantage.
+- The skill level and damage of each attack.
+- ST damage above ST 100. Give `thr:` and `sw:`.
+- Discounts, such as the SM discount to ST. Give the cost yourself, for
+  example `st: (level: 20, points: 90)`.
 
-```typ
-#import "@preview/gurps-ink:0.1.0": *
+A value that you give always replaces the calculated value.
 
-#let one-liner(char) = {
-  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #char.attributes.at(k).level])
-  let skills = char.skills.map(s => [#s.name\-#s.level])
-  [*#char.name:* #attributes.join[, ]. _Skills:_ #skills.join[, ].]
-}
+#pagebreak(weak: true)
+= Reference <reference>
 
-#one-liner(character(name: "Guard", st: 11, skill("Spear", 12, "DX/A")))
-```
-
-#let one-liner(char) = {
-  let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #(
-      char.attributes.at(k).level
-    )])
-  let skills = char.skills.map(s => [#s.name\-#s.level])
-  [*#char.name:* #attributes.join[, ]. _Skills:_ #skills.join[, ].]
-}
-#block(stroke: 0.5pt + luma(180), inset: 8pt, radius: 3pt, one-liner(character(
-  name: "Guard",
-  st: 11,
-  skill("Spear", 12, "DX/A"),
-)))
-
-Point costs are already worked out (`char.skills.first().points`), and
-`total-points(char)` gives the total.
-
-Once Typst supports user-defined elements, `stat-block` will become one,
-so that show and set rules can restyle it like a built-in. Until then the
-hooks and your own functions are the way to customise it.
-
-= Reference
-
-// Examples stack code above output at full width, so paragraphs and stat
-// blocks are shown at their real size, in the body font, instead of shrunk
-// into a column in the code font.
-#let preview-block(body, ..args) = block(..args, {
-  set text(font: "Libertinus Serif", size: 11pt)
-  body
-})
 #let style = (
   dictionary(tidy.styles.default)
     + (
       show-example: (..args) => tidy.show-example.show-example(
         ..args,
-        layout: tidy.show-example.default-layout-example.with(
-          code-block: block.with(radius: 3pt, stroke: .5pt + luma(200)),
-          preview-block: preview-block.with(
-            radius: 3pt,
-            stroke: .5pt + luma(200),
-          ),
-          dir: ttb,
-          scale-preview: 100%,
-        ),
+        layout: layout-example,
       ),
     )
 )

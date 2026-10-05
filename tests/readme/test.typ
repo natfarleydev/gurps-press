@@ -32,7 +32,7 @@
 
 // The manual's examples are self-contained too, and import this version.
 #let manual-blocks = (
-  read("/docs/manual.typ")
+  read("/docs/how-to.typ")
     .replace("\r\n", "\n")
     .matches(regex("(?s)```typ\n(.*?)```"))
     .map(m => m.captures.first())
@@ -46,7 +46,7 @@
 }
 
 // Other documentation must not mention an old version either.
-#for path in ("/docs/manual.typ",) {
+#for path in ("/docs/manual.typ", "/docs/how-to.typ") {
   for m in read(path).matches(regex("@preview/gurps-ink:([0-9.]+)")) {
     assert.eq(
       m.captures.first(),

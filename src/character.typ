@@ -53,15 +53,16 @@
 #let advantage(
   /// -> str | content
   name,
-  /// Point cost. Shown as `[?]` and counted as 0 when `none`.
+  /// The point cost. If it is `none`, the stat block shows `[?]` and the
+  /// total counts it as 0.
   /// -> int | none
   points: none,
-  /// Level for levelled advantages, e.g. `Magery 2`.
+  /// The level of an advantage that has levels, such as `Magery 2`.
   /// -> int | none
   level: none,
 ) = trait("advantage", name, points, level)
 
-/// A disadvantage. The point cost, if given, must be zero or negative.
+/// A disadvantage. If you give a point cost, it must be zero or negative.
 ///
 /// ```example
 /// #disadvantage("Bad Temper", points: -10).points
@@ -71,10 +72,11 @@
 #let disadvantage(
   /// -> str | content
   name,
-  /// Point cost (≤ 0). Shown as `[?]` and counted as 0 when `none`.
+  /// The point cost, zero or less. If it is `none`, the stat block shows
+  /// `[?]` and the total counts it as 0.
   /// -> int | none
   points: none,
-  /// Level for levelled disadvantages.
+  /// The level of a disadvantage that has levels.
   /// -> int | none
   level: none,
 ) = {
@@ -93,7 +95,7 @@
   d
 }
 
-/// A perk. Always costs 1 point.
+/// A perk. Its cost is always 1 point.
 ///
 /// -> dictionary
 #let perk(
@@ -101,7 +103,7 @@
   name,
 ) = trait("perk", name, 1, none)
 
-/// A quirk. Always costs −1 point.
+/// A quirk. Its cost is always −1 point.
 ///
 /// -> dictionary
 #let quirk(
@@ -176,15 +178,20 @@
 
 /// A skill at a given level.
 ///
-/// The third argument says what the skill costs. Either give the points
-/// directly, or give the controlling attribute and difficulty as GURPS
-/// writes them (`"DX/E"`, `"IQ/VH"`, `"Per/Average"`) and the cost is
-/// worked out by @character. The base may also be another skill or spell on
-/// the same character (`"Typst/H"`); it is matched against the plain text
-/// of skill and spell names, so `[_Typst_]` matches `"Typst"`. Give a skill
-/// a string name if other skills are based on it and its name is mostly
-/// formatting or symbols. Difficulties: `E`/`Easy`, `A`/`Average`, `H`/`Hard`,
-/// `VH`/`Very Hard`, `W`/`Wildcard`.
+/// The third argument is the cost. It is optional. Give it in one of two
+/// forms:
+///
+/// - The points, such as `4`.
+/// - The base and the difficulty, such as `"DX/E"` or `"Per/Average"`.
+///   Then @character calculates the points.
+///
+/// The base can be an attribute, or a skill or spell of the same
+/// character (`"Typst/H"`). The match uses the plain text of skill and
+/// spell names, so `[_Typst_]` matches `"Typst"`. If a skill is a base
+/// for other skills, give it a name that has plain text.
+///
+/// The difficulty is `E`, `A`, `H`, `VH` or `W`, or the full word
+/// (`Easy`, `Average`, `Hard`, `Very Hard`, `Wildcard`).
 ///
 /// ```example
 /// #skill("Stealth", 12, "DX/A") \
@@ -196,15 +203,15 @@
 #let skill(
   /// -> str | content
   name,
-  /// Effective skill level.
+  /// The skill level.
   /// -> int
   level,
-  /// Optional cost: points, or `"<base>/<difficulty>"`.
+  /// The cost: points, or `"<base>/<difficulty>"`. It is optional.
   /// -> int | str
   ..cost,
 ) = skill-like("skill", name, level, cost)
 
-/// A spell. Works exactly like @skill.
+/// A spell. It has the same arguments as @skill.
 ///
 /// ```example
 /// #spell("Fireball", 14, "IQ/H")
@@ -245,15 +252,15 @@
 #let melee-attack(
   /// -> str | content
   name,
-  /// Effective skill with the attack.
+  /// The skill level with the attack.
   /// -> int
   level,
-  /// Damage, e.g. `[#dice(2, 1) cut]`.
+  /// The damage, such as `[#dice(2, 1) cut]`.
   /// -> str | content
   damage,
   /// -> str | content | none
   reach: none,
-  /// Free-form notes printed after the attack.
+  /// Notes. The stat block shows them after the attack.
   /// -> str | content | none
   notes: none,
 ) = attack("melee-attack", name, level, damage, "reach", reach, notes)
@@ -347,27 +354,13 @@
   if s.difficulty == "W" { points * 3 } else { points }
 }
 
-/// Builds a character. Only state what differs from the defaults: an
-/// average human (all attributes 10) is `character()`.
+/// Makes a character. Give only the values that are not the default.
 ///
-/// Every attribute argument takes a level, or a dictionary
-/// `(level: …, points: …)` to override the calculated cost (useful for
-/// discounts such as SM-reduced ST). Defaults and costs follow the Basic
-/// Set:
+/// Give each attribute as a level. `character()` calculates its cost from
+/// the Basic Set rules. To give a different cost, such as an SM discount
+/// to ST, give a dictionary: `st: (level: 20, points: 90)`.
 ///
-/// #table(
-///   columns: 3,
-///   [*Argument*], [*Default*], [*Cost per level*],
-///   [`st`, `ht`], [10], [10],
-///   [`dx`, `iq`], [10], [20],
-///   [`hp`], [ST], [2],
-///   [`will`, `per`], [IQ], [5],
-///   [`fp`], [HT], [3],
-///   [`basic-speed`], [(DX+HT)/4], [20 per 1.00],
-///   [`basic-move`], [⌊Basic Speed⌋], [5],
-/// )
-///
-/// Traits, skills, spells and attacks are passed as positional arguments.
+/// Give the traits, skills, spells and attacks as positional arguments.
 ///
 /// ```example
 /// #let napoleon = character(
@@ -381,9 +374,8 @@
 /// #total-points(napoleon) points
 /// ```
 ///
-/// The result is a plain dictionary, and its shape is public API: read it
-/// directly, or with @level-of, to quote numbers or write your own
-/// renderer. It has these keys:
+/// The result is a dictionary. Its keys are public API. Read them, or use
+/// @level-of, to quote numbers or to make your own layout. The keys are:
 ///
 /// - `kind`: `"character"`; `name`.
 /// - `attributes`: keyed `ST`, `DX`, `IQ`, `HT`, `HP`, `Will`, `Per`, `FP`,
@@ -392,15 +384,15 @@
 /// - `advantages`, `perks`, `disadvantages`, `quirks`: arrays of
 ///   `(kind:, name:, points:, level:)` in the order given.
 /// - `skills`, `spells`: arrays of `(kind:, name:, level:, points:, base:,
-///   difficulty:)`, with `points` worked out where a base was given.
+///   difficulty:)`. If the skill has a base, `points` is calculated.
 /// - `attacks`: arrays of `(kind:, name:, level:, damage:, notes:)` plus
 ///   `reach` (melee) or `range` (ranged).
 ///
-/// Unknown values are `none`.
+/// A value that is not known is `none`.
 ///
 /// -> dictionary
 #let character(
-  /// Shown as the stat block title.
+  /// The name. The stat block shows it in the title.
   /// -> str | content | none
   name: none,
   /// -> int | dictionary
@@ -419,25 +411,25 @@
   per: auto,
   /// -> auto | int | dictionary
   fp: auto,
-  /// In steps of 0.25.
+  /// A multiple of 0.25.
   /// -> auto | int | float | dictionary
   basic-speed: auto,
   /// -> auto | int | dictionary
   basic-move: auto,
-  /// Defaults to ⌊Basic Speed⌋ + 3. Has no point cost.
+  /// The default is ⌊Basic Speed⌋ + 3. It has no point cost.
   /// -> auto | int
   dodge: auto,
-  /// Size Modifier.
+  /// The Size Modifier.
   /// -> int
   sm: 0,
-  /// Damage Resistance, e.g. `2` or `[3 (torso only)]`.
+  /// The Damage Resistance, such as `2` or `[3 (torso only)]`.
   /// -> int | str | content
   dr: 0,
-  /// Thrust damage: a `(count, modifier)` pair or content. Defaults to
-  /// @thrust of ST.
+  /// The thrust damage: a `(count, modifier)` pair or content. The
+  /// default is @thrust of ST.
   /// -> auto | array | content
   thr: auto,
-  /// Swing damage, like `thr`. Defaults to @swing of ST.
+  /// The swing damage, as for `thr`. The default is @swing of ST.
   /// -> auto | array | content
   sw: auto,
   /// Results of @advantage, @disadvantage, @perk, @quirk, @skill, @spell,
@@ -583,10 +575,12 @@
 
 // --- Reading characters ---------------------------------------------------
 
-/// The level of an attribute, skill or spell, looked up by name (skills
-/// and spells by the plain text of theirs). Also knows `"Dodge"` and
-/// `"SM"`. Panics, listing what exists, if the name is unknown, and if more
-/// than one attribute, skill or spell has that name.
+/// The level of an attribute, skill or spell, found by its name. For a
+/// skill or spell, it uses the plain text of the name. It also knows
+/// `"Dodge"` and `"SM"`.
+///
+/// Compilation stops if no name matches, or if two names match. The
+/// message lists the names that the character has.
 ///
 /// ```example
 /// #let c = character(dx: 12, skill("Stealth", 13, "DX/A"))
@@ -598,7 +592,7 @@
   /// A result of @character.
   /// -> dictionary
   char,
-  /// e.g. `"ST"`, `"Basic Move"`, `"Stealth"`.
+  /// The name, such as `"ST"`, `"Basic Move"` or `"Stealth"`.
   /// -> str
   name,
 ) = {
@@ -625,8 +619,8 @@
   level
 }
 
-/// Total character points: the sum of every known cost. Traits without a
-/// cost count as 0.
+/// The point total of a character: the sum of all known costs. A trait
+/// that has no cost counts as 0.
 ///
 /// ```example
 /// #total-points(character(st: 12, dx: 11))

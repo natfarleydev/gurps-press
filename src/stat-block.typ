@@ -47,14 +47,14 @@
 // Sort key: letters and digits only, case-insensitive (so "TeX" ≈ "tex").
 #let sort-key(t) = lower(plain-text(t.name)).replace(regex("[^\p{L}\p{N}]"), "")
 
-/// Typesets a character from @character as a stat block in the style of
-/// SJ Games supplements.
+/// Typesets a character from @character as a stat block, in the style of
+/// the SJ Games books.
 ///
-/// Lines, in order: the title (name and total points), the four basic
-/// attributes, HP/Will/Per/FP, Basic Speed/Basic Move/Dodge, SM/DR/thr/sw,
-/// then labelled lists of advantages, perks, disadvantages, quirks, skills,
-/// spells and attacks. Empty lists are left out. Lists are sorted by name.
-/// Skills and spells read `Name-level`, as in the books.
+/// The lines are: the title (name and point total), ST/DX/IQ/HT,
+/// HP/Will/Per/FP, Basic Speed/Basic Move/Dodge and SM/DR/thr/sw. Then
+/// come the lists: advantages, perks, disadvantages, quirks, skills,
+/// spells and attacks. Each list is in alphabetical order. An empty list
+/// does not show.
 ///
 /// ```example
 /// #stat-block(character(
@@ -68,9 +68,10 @@
 /// ))
 /// ```
 ///
-/// To frame it, wrap it: `#block(stroke: 0.5pt, inset: 8pt)[#stat-block(c)]`.
+/// To frame it, put it in a block:
+/// `#block(stroke: 0.5pt, inset: 8pt)[#stat-block(c)]`.
 ///
-/// Two hooks restyle parts of the block without rewriting it:
+/// Two hooks change parts of the stat block:
 ///
 /// ```example
 /// #stat-block(
@@ -80,22 +81,22 @@
 /// )
 /// ```
 ///
-/// For a different layout altogether, write your own renderer from the
-/// @character dictionary; the manual shows how.
+/// For a different layout, write your own function that uses the
+/// dictionary from @character. The manual shows how.
 ///
 /// -> content
 #let stat-block(
   /// A result of @character.
   /// -> dictionary
   char,
-  /// Print point costs (`[10]`) and the total. Turn off for a monster
-  /// manual feel.
+  /// Show the point costs (`[10]`) and the total. Use `false` for a
+  /// handout or a bestiary.
   /// -> bool
   show-points: true,
-  /// Draws the first line. Called as `title(char, total)`, where `total` is
-  /// the total points, or `none` when `show-points` is off. It must return
-  /// content or a string; return `none`, or pass `title: none`, to leave
-  /// the line out. `auto` means
+  /// Makes the first line. The call is `title(char, total)`. `total` is
+  /// the point total, or `none` if `show-points` is `false`. Return
+  /// content or a string. To remove the line, return `none` or give
+  /// `title: none`. `auto` is this function:
   /// ```typ
   /// (char, total) => {
   ///   let points = if total != none [#total points]
@@ -105,12 +106,12 @@
   /// ```
   /// -> auto | none | function
   title: auto,
-  /// Draws each labelled list: Advantages, Perks, Disadvantages, Quirks,
-  /// Skills, Spells and Attacks. Called as `section(label, body)`, where
-  /// `body` is the finished list (entries joined by semicolons, ending in
-  /// a full stop; for attacks, a block with one paragraph per attack).
-  /// It must return content or a string; return `none` to leave that list
-  /// out. `auto` means `(label, body) => [#strong[#label:] #body]`.
+  /// Makes each list: Advantages, Perks, Disadvantages, Quirks, Skills,
+  /// Spells and Attacks. The call is `section(label, body)`. `body` is the
+  /// finished list: the entries, with semicolons between them and a full
+  /// stop at the end. For attacks, `body` is a block with one paragraph
+  /// for each attack. Return content or a string. To remove the list,
+  /// return `none`. `auto` is `(label, body) => [#strong[#label:] #body]`.
   /// -> auto | function
   section: auto,
 ) = {

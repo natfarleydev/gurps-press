@@ -69,7 +69,7 @@
   "range",
 ))
 
-// The manual's "Writing your own renderer" example works on this contract.
+// The manual's "Make your own layout" example works on this contract.
 #import "/src/util.typ": plain-text
 #let one-liner(char) = {
   let attributes = ("ST", "DX", "IQ", "HT").map(k => [#k #(
