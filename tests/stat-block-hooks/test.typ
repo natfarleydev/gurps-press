@@ -41,3 +41,12 @@
 #assert(catch(() => stat-block(c, title: [Napoleon])).contains("title"))
 #assert-panic(() => stat-block(c, section: none))
 #assert(catch(() => stat-block(c, section: none)).contains("section"))
+
+// Hooks must return content, a string or none; anything else is caught
+// with the hook's name instead of failing deep inside the layout.
+#assert.eq(type(stat-block(c, title: (..) => "Napoleon")), content)
+#let _ = text-of(section: (label, body) => none)
+#assert-panic(() => stat-block(c, title: (..) => 42))
+#assert(catch(() => stat-block(c, title: (..) => 42)).contains("title"))
+#assert-panic(() => stat-block(c, section: (..) => 42))
+#assert(catch(() => stat-block(c, section: (..) => 42)).contains("section"))

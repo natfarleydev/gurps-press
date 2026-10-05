@@ -73,8 +73,9 @@
   /// -> bool
   show-points: true,
   /// Draws the first line. Called as `title(char, total)`, where `total` is
-  /// the total points, or `none` when `show-points` is off. Return `none`,
-  /// or pass `title: none`, to leave the line out. `auto` means
+  /// the total points, or `none` when `show-points` is off. It must return
+  /// content or a string; return `none`, or pass `title: none`, to leave
+  /// the line out. `auto` means
   /// ```typ
   /// (char, total) => {
   ///   let points = if total != none [#total points]
@@ -88,7 +89,8 @@
   /// Skills, Spells and Attacks. Called as `section(label, body)`, where
   /// `body` is the finished list (entries joined by semicolons, ending in
   /// a full stop; for attacks, a block with one paragraph per attack).
-  /// `auto` means `(label, body) => [#strong[#label:] #body]`.
+  /// It must return content or a string; return `none` to leave that list
+  /// out. `auto` means `(label, body) => [#strong[#label:] #body]`.
   /// -> auto | function
   section: auto,
 ) = {
