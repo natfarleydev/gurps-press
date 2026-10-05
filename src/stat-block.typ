@@ -24,6 +24,18 @@
 }
 #let default-section(label, body) = [#strong[#label:] #body]
 
+// Runs a hook and checks it returned something that can go in a line.
+#let call-hook(name, hook, ..args) = {
+  let result = hook(..args)
+  if result != none and type(result) not in (content, str) {
+    panic(
+      "stat-block() " + name + " hook must return content, a string or none, got "
+        + repr(result) + ". Wrap it in brackets, e.g. [#" + repr(result) + "].",
+    )
+  }
+  result
+}
+
 // Sort key: letters and digits only, case-insensitive (so "TeX" ≈ "tex").
 #let sort-key(t) = lower(plain-text(t.name)).replace(regex("[^\p{L}\p{N}]"), "")
 
@@ -127,7 +139,7 @@
   let lines = ()
 
   if title != none {
-    let heading = title(char, if show-points { total-points(char) })
+    let heading = call-hook("title", title, char, if show-points { total-points(char) })
     if heading != none { lines.push(heading) }
   }
   lines.push(sentence(("ST", "DX", "IQ", "HT").map(attr)))
@@ -156,7 +168,7 @@
   ) {
     let items = char.at(key)
     if items.len() > 0 {
-      lines.push(section(label, sentence(items.sorted(key: sort-key).map(entry))))
+      lines.push(call-hook("section", section, label, sentence(items.sorted(key: sort-key).map(entry))))
     }
   }
 
@@ -171,7 +183,7 @@
   }
   if char.attacks.len() > 0 {
     let entries = char.attacks.sorted(key: sort-key).map(attack-entry)
-    lines.push(section("Attacks", block(spacing: 0.65em, entries.join(parbreak()))))
+    lines.push(call-hook("section", section, "Attacks", block(spacing: 0.65em, entries.join(parbreak()))))
   }
 
   block({
