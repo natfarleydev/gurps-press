@@ -13,9 +13,11 @@
     .join()
 )
 
-#assert(
-  exports.len() >= 20,
-  message: "expected the public API, got " + repr(exports),
+// The parser finds exactly the names the module exports, no more, no less.
+#import "/src/lib.typ" as gurps-ink
+#assert.eq(
+  exports.map(((file, name)) => name).sorted(),
+  dictionary(gurps-ink).keys().sorted(),
 )
 
 // The parser sees both import styles in lib.typ: lists and single names.
