@@ -16,6 +16,14 @@
 // SM is written with a sign (SM +1, SM −2) except for zero.
 #let format-sm(sm) = if sm > 0 { "+" + str(sm) } else { str(sm) }
 
+// The hooks' defaults, exactly as documented on stat-block().
+#let default-title(char, total) = {
+  let points = if total != none [#total points]
+  if char.name == none { points }
+  else [#strong(char.name)#if points != none [ (#points)]]
+}
+#let default-section(label, body) = [#strong[#label:] #body]
+
 // Sort key: letters and digits only, case-insensitive (so "TeX" ≈ "tex").
 #let sort-key(t) = lower(plain-text(t.name)).replace(regex("[^\p{L}\p{N}]"), "")
 
@@ -90,6 +98,20 @@
   if type(show-points) != bool {
     panic("stat-block() show-points must be true or false, got " + repr(show-points))
   }
+  if title == auto { title = default-title }
+  if section == auto { section = default-section }
+  if title != none and type(title) != function {
+    panic(
+      "stat-block() title must be a function (char, total) => content, auto or none, got "
+        + repr(title),
+    )
+  }
+  if type(section) != function {
+    panic(
+      "stat-block() section must be a function (label, body) => content or auto, got "
+        + repr(section),
+    )
+  }
 
   let cost(points) = if show-points {
     [ \[#if points == none [?] else { str(points) }\]]
@@ -102,11 +124,9 @@
 
   let lines = ()
 
-  if char.name != none or show-points {
-    let total = if show-points [#total-points(char) points]
-    lines.push(if char.name == none { total } else {
-      [#strong(char.name)#if show-points [ (#total)]]
-    })
+  if title != none {
+    let heading = title(char, if show-points { total-points(char) })
+    if heading != none { lines.push(heading) }
   }
   lines.push(sentence(("ST", "DX", "IQ", "HT").map(attr)))
   lines.push(sentence(("HP", "Will", "Per", "FP").map(attr)))
@@ -134,7 +154,7 @@
   ) {
     let items = char.at(key)
     if items.len() > 0 {
-      lines.push([#strong[#label:] #sentence(items.sorted(key: sort-key).map(entry))])
+      lines.push(section(label, sentence(items.sorted(key: sort-key).map(entry))))
     }
   }
 
@@ -149,7 +169,7 @@
   }
   if char.attacks.len() > 0 {
     let entries = char.attacks.sorted(key: sort-key).map(attack-entry)
-    lines.push([#strong[Attacks:] #block(spacing: 0.65em, entries.join(parbreak()))])
+    lines.push(section("Attacks", block(spacing: 0.65em, entries.join(parbreak()))))
   }
 
   block({
