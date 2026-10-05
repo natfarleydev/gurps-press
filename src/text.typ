@@ -148,8 +148,9 @@
   #link(online-policy-url)[online policy].
 ]
 
-/// The notice from the SJ Games online policy for a free game aid that
-/// has no official license.
+/// A notice for a free game aid that has no official license. The SJ
+/// Games online policy does not give this text. Many free GURPS game aids
+/// use it.
 ///
 /// ```example
 /// #sjgames-game-aid[Jane Doe]
