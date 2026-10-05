@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit with its default review settings and no custom instructions.
+reviews:
+  # Approve the PR once every CodeRabbit comment is resolved; request
+  # changes while any are open. An approval means the PR can be merged.
+  request_changes_workflow: true
+  auto_review:
+    # Also review PRs stacked on other branches, not just PRs into main.
+    base_branches: [".*"]

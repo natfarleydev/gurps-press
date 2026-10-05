@@ -1,0 +1,7 @@
+# Spell-check config for https://github.com/crate-ci/typos
+[files]
+extend-exclude = ["tests/**/ref/", "docs/*.pdf", "docs/*.png", "LICENSE"]
+
+[default.extend-words]
+# GURPS abbreviation for "thrust" damage.
+thr = "thr"

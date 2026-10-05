@@ -1,0 +1,90 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    # Tytanic bundles its own Typst compiler, so each tytanic version tests
+    # one Typst version. typst.toml promises 0.13 as the minimum.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - typst: "0.13"
+            tytanic: 0.2.2
+          - typst: "0.14"
+            tytanic: 0.3.4
+          - typst: "0.15"
+            tytanic: 0.4.1
+    name: Tests (Typst ${{ matrix.typst }})
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install tytanic
+        uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2
+        with:
+          tool: tytanic@${{ matrix.tytanic }}
+
+      - name: Run tests
+        run: tt run --no-fail-fast
+
+      - name: Upload test output
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: test-output-typst-${{ matrix.typst }}
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
+
+  docs:
+    name: Docs, spelling and package check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2
+        with:
+          tool: just,typos,typstyle@0.15.1
+
+      - uses: typst-community/setup-typst@48aeee7543d37f01afd1ffb27307dc277387ba13 # v4
+        with:
+          typst-version: "0.15"
+
+      - name: Formatting
+        run: just fmt-check
+
+      - name: Spell check
+        run: just spell
+
+      - name: Build manual and README image
+        run: just doc
+
+      - name: Package
+        run: just package out
+
+      - name: Check package against Typst Universe rules
+        run: |
+          docker run --rm -v "$PWD/out/gurps-ink/$(just version):/data" \
+            ghcr.io/typst/package-check check
+
+      - name: Upload built docs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: docs
+          path: |
+            docs/manual.pdf
+            docs/example.png
+          retention-days: 5
