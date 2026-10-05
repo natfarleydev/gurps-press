@@ -1,4 +1,4 @@
-// The pictures next to the README examples. `just doc` compiles this file
+// The pictures of the README examples. `just doc` compiles this file
 // to docs/readme-<n>.png: page n shows the n-th ```typ block of README.md.
 // The pictures come from the README itself, so they cannot drift from it.
 #import "/src/lib.typ"

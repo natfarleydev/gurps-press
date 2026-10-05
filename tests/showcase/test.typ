@@ -7,8 +7,8 @@
 
 #gurps is an excellent RPG system which can be typeset with Typst! It uses
 six-sided dice which are notated as #dice($n$, $m$), e.g. #dice(3),
-#dice(4, 0), #dice(2, -1), #dice(7, 11). Rules live in
-#gurps-book("Basic Set", 16).
+#dice(4, 0), #dice(2, -1), #dice(7, 11). Rules live on
+#basic-set(16).
 
 = A character appears
 

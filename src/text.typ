@@ -78,18 +78,45 @@
   box[#(count)d#suffix]
 }
 
+// "p. 3" for one page, "pp. 1, 5" or "pp. 3–5" otherwise. Each page in an
+// array gets the prefix; a single string or content gets it once.
+#let page-ref(caller, pages, prefix: "") = {
+  let one-page = (
+    type(pages) == int
+      or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
+  )
+  if type(pages) == array {
+    [pp.~#pages.map(p => [#prefix#p]).join([, ])]
+  } else if one-page {
+    [p.~#prefix#pages]
+  } else if type(pages) in (str, content) {
+    [pp.~#prefix#pages]
+  } else {
+    panic(
+      caller
+        + "() pages must be an int, str, content or array, got "
+        + str(type(pages)),
+    )
+  }
+}
+
 /// A reference to a GURPS book in the house style of SJ Games: the title
-/// in bold italics, then the pages if you give them.
+/// in bold italics, then a comma and the pages if you give them.
 ///
 /// ```example
 /// #gurps-book("High Tech") \
 /// #gurps-book("Zombies", 3) \
 /// #gurps-book("Warehouse 23", "1, 3–5") \
-/// #gurps-book("Basic Set", (16, 170))
+/// #gurps-book("Fantasy", (12, 20))
 /// ```
 ///
 /// One page (an `int`, or a string of digits) gets "p.". All other pages
 /// get "pp.". Commas join the pages in an array.
+///
+/// For pages of the _Basic Set_, use @basic-set: SJ Games writes them as
+/// "p. B348". So `gurps-book("Basic Set", 348)` panics. To cite the
+/// _Basic Set_ by title anyway, give the title as content:
+/// `gurps-book([Basic Set], 348)`.
 ///
 /// -> content
 #let gurps-book(
@@ -101,20 +128,37 @@
   ..pages,
 ) = {
   let pages = take-optional(pages, "gurps-book", "pages")
-  let ref = if pages == none {
-    none
-  } else if type(pages) == array {
-    [ pp.~#pages.map(p => [#p]).join([, ])]
-  } else if (
-    type(pages) == int
-      or (type(pages) == str and pages.match(regex("^[0-9]+$")) != none)
-  ) {
-    [ p.~#pages]
-  } else {
-    [ pp.~#pages]
+  if pages == none { return strong(emph[GURPS #title]) }
+  if title == "Basic Set" {
+    panic(
+      "gurps-book(\"Basic Set\", ...): SJ Games writes Basic Set pages as "
+        + "\"p. B348\"; use basic-set("
+        + repr(pages)
+        + "). To show the title anyway, write it as content: "
+        + "gurps-book([Basic Set], ...)",
+    )
   }
-  [#strong(emph[GURPS #title])#ref]
+  [#strong(emph[GURPS #title,]) #page-ref("gurps-book", pages)]
 }
+
+/// A page reference to the GURPS _Basic Set_ in the house style of
+/// SJ Games: each page gets a "B", and no title is shown.
+///
+/// ```example
+/// Roll a Quick Contest (#basic-set(348)). \
+/// #basic-set((16, 170)) \
+/// #basic-set("16–17")
+/// ```
+///
+/// One page (an `int`, or a string of digits) gets "p.". All other pages
+/// get "pp.". Commas join the pages in an array, and each gets a "B".
+///
+/// -> content
+#let basic-set(
+  /// The page or pages.
+  /// -> int | str | content | array
+  pages,
+) = page-ref("basic-set", pages, prefix: "B")
 
 #let gurps-linked = link(gurps-url, gurps)
 #let sjgames-linked = link(sjgames-url, sjgames)
@@ -148,8 +192,9 @@
   #link(online-policy-url)[online policy].
 ]
 
-/// The notice from the SJ Games online policy for a free game aid that
-/// has no official license.
+/// A notice for a free game aid that has no official license. The SJ
+/// Games online policy does not give this text. Many free GURPS game aids
+/// use it.
 ///
 /// ```example
 /// #sjgames-game-aid[Jane Doe]

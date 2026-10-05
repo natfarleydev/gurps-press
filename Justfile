@@ -21,7 +21,8 @@ update *args:
 # build the pictures in docs/, then docs/manual.pdf (which shows some of them)
 doc:
   typst compile --root . docs/readme-examples.typ "docs/readme-{p}.png" --ppi 144
-  typst compile --root . docs/sourcebook.typ docs/sourcebook.png --ppi 144
+  typst compile --root . docs/example/odds.typ docs/tortoise-and-hare.pdf
+  typst compile --root . docs/example/odds.typ "docs/tortoise-and-hare-{p}.png" --ppi 144
   typst compile --root . docs/manual.typ docs/manual.pdf
 
 # print the package version from typst.toml (used by CI and release)

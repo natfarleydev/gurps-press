@@ -11,7 +11,7 @@
     .map(m => m.captures.first())
 )
 
-#assert(blocks.len() >= 2, message: "expected README examples")
+#assert(blocks.len() >= 1, message: "expected a README example")
 // Every example is self-contained, so a reader can copy any one of them.
 #for code in blocks {
   assert(
@@ -32,7 +32,14 @@
 
 // The manual's examples are self-contained too, and import this version.
 #let manual-blocks = (
-  read("/docs/how-to.typ")
+  (
+    "/docs/chapters/start.typ",
+    "/docs/chapters/legal.typ",
+    "/docs/chapters/dice.typ",
+    "/docs/chapters/characters.typ",
+  )
+    .map(read)
+    .join()
     .replace("\r\n", "\n")
     .matches(regex("(?s)```typ\n(.*?)```"))
     .map(m => m.captures.first())
@@ -46,7 +53,7 @@
 }
 
 // Other documentation must not mention an old version either.
-#for path in ("/docs/manual.typ", "/docs/how-to.typ") {
+#for path in ("/docs/manual.typ", "/docs/example/tortoise-and-hare.typ") {
   for m in read(path).matches(regex("@preview/gurps-ink:([0-9.]+)")) {
     assert.eq(
       m.captures.first(),

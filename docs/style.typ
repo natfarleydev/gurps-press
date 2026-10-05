@@ -1,5 +1,6 @@
-// Shared by docs/manual.typ and docs/how-to.typ.
+// Shared by docs/manual.typ and the chapter files in docs/chapters/.
 #import "@preview/tidy:0.4.3"
+#import "/src/lib.typ"
 
 #let version = toml("/typst.toml").package.version
 #let import-line = "#import \"@preview/gurps-ink:" + version + "\": *"
@@ -20,4 +21,28 @@
     dir: ltr,
     scale-preview: 100%,
   ),
+)
+
+// Apply with `#show: examples` at the top of a chapter file. Then each
+// ```typ block in that file is compiled and shown next to its result.
+// tests/readme checks that each block imports the current version.
+#let examples(body) = {
+  show raw.where(block: true, lang: "typ"): it => layout-example(
+    it,
+    eval(
+      it.text.replace(import-line, ""),
+      mode: "markup",
+      scope: dictionary(lib),
+    ),
+  )
+  body
+}
+
+// The box at the start of each chapter: the questions that it answers.
+#let answers(..questions) = block(
+  fill: luma(245),
+  inset: 8pt,
+  radius: 3pt,
+  width: 100%,
+  [*This chapter answers:* #list(..questions.pos())],
 )
