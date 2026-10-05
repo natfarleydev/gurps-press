@@ -465,17 +465,35 @@
     c.at(list).push(t)
   }
 
-  // Work out skill and spell costs given as "<base>/<difficulty>".
+  // Work out skill and spell costs given as "<base>/<difficulty>". A base
+  // is an attribute, or a skill or spell found by the plain text of its name.
+  let named = (c.skills + c.spells).map(o => (plain-text(o.name), o))
   let base-level(s) = {
     if s.base in a { return a.at(s.base).level }
-    let found = (c.skills + c.spells).find(o => plain-text(o.name) == s.base)
-    if found == none {
+    let found = named.filter(((name, _)) => name == s.base)
+    let what = s.kind + " " + repr(plain-text(s.name))
+    if found.len() > 1 {
       panic(
-        "cannot work out the cost of " + s.kind + " " + repr(plain-text(s.name))
-          + ": no attribute, skill or spell called " + repr(s.base),
+        "cannot work out the cost of " + what + ": more than one skill or spell is called "
+          + repr(s.base) + ". Rename one, or give the points explicitly.",
       )
     }
-    found.level
+    if found.len() == 0 {
+      let blank = named.filter(((name, _)) => name.trim() == "")
+      let hint = if blank.len() > 0 {
+        (
+          " " + str(blank.len()) + " skill(s) or spell(s) have no plain text in their "
+            + "name and can never match: give them a string name."
+        )
+      } else { "" }
+      panic(
+        "cannot work out the cost of " + what + ": no attribute, skill or spell called "
+          + repr(s.base) + ". Attributes: " + a.keys().join(", ") + ". Skills and spells: "
+          + named.map(((name, _)) => repr(name)).join(", ") + "." + hint,
+      )
+    }
+    let (_, base) = found.first()
+    base.level
   }
   for list in ("skills", "spells") {
     c.at(list) = c.at(list).map(s => {
