@@ -1,10 +1,10 @@
-// An example sourcebook: a one-shot adventure made with gurps-ink.
+// An example sourcebook: a one-shot adventure made with gurps-press.
 // `just doc` compiles it to docs/tortoise-and-hare.pdf, and the manual
 // shows its pages. In your own document, import the package with
-// #import "@preview/gurps-ink:0.1.0": *
+// #import "@local/gurps-press:0.1.0": *
 #import "/src/lib.typ": *
 
-// Your own look: gurps-ink sets no fonts, colours or page layout.
+// Your own look: gurps-press sets no fonts, colours or page layout.
 #let accent = rgb("#2f5d50")
 #set document(title: "The Tortoise and the Hare")
 #set page(paper: "a5", margin: (x: 14mm, y: 15mm), numbering: "1")
@@ -74,7 +74,7 @@
   width: 100%,
   text(size: 8.5pt)[
     *An example, not a tested adventure.* This one-shot shows what the
-    `gurps-ink` package can do: stat blocks, dice, book references and
+    `gurps-press` package can do: stat blocks, dice, book references and
     the #sjgames notices. Nobody has playtested it. Check the numbers
     before you use it at your table.
   ],
@@ -234,9 +234,9 @@ odds, and to typeset the adventure. Nathanael Farley gave the
 directions and reviewed the result.
 
 *Tools.* Typeset with #link("https://typst.app")[Typst] and
-#link("https://github.com/natfarleydev/gurps-ink")[`gurps-ink`]
+#link("https://github.com/natfarleydev/gurps-press")[`gurps-press`]
 0.1.0. The source of this adventure is `docs/example/tortoise-and-hare.typ`
-in the `gurps-ink` repository. The odds in the designer's note were
+in the `gurps-press` repository. The odds in the designer's note were
 calculated exactly from the rules; `docs/example/odds.typ` shows how.
 
 *References.*

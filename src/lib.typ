@@ -1,4 +1,4 @@
-// gurps-ink: typeset GURPS game aids.
+// gurps-press: typeset GURPS game aids.
 //
 // This file only re-exports the public API; see the other files in src/.
 

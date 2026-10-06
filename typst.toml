@@ -1,5 +1,5 @@
 [package]
-name = "gurps-ink"
+name = "gurps-press"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["Nathanael Farley <@natfarleydev>"]
