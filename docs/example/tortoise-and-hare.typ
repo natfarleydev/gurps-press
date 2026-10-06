@@ -234,7 +234,7 @@ odds, and to typeset the adventure. Nathanael Farley gave the
 directions and reviewed the result.
 
 *Tools.* Typeset with #link("https://typst.app")[Typst] and
-#link("https://github.com/natfarleydev/gurps-typst")[`gurps-ink`]
+#link("https://github.com/natfarleydev/gurps-ink")[`gurps-ink`]
 0.1.0. The source of this adventure is `docs/example/tortoise-and-hare.typ`
 in the `gurps-ink` repository. The odds in the designer's note were
 calculated exactly from the rules; `docs/example/odds.typ` shows how.

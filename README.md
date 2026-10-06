@@ -1,7 +1,7 @@
 # gurps-ink
 
-[![CI status](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-typst/actions/workflows/ci.yml)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-typst?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-typst&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+[![CI status](https://github.com/natfarleydev/gurps-ink/actions/workflows/ci.yml/badge.svg)](https://github.com/natfarleydev/gurps-ink/actions/workflows/ci.yml)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/natfarleydev/gurps-ink?utm_source=oss&utm_medium=github&utm_campaign=natfarleydev%2Fgurps-ink&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A [Typst](https://typst.app) package for people who write unofficial
 ***GURPS*** material: a sourcebook, an adventure or a handout. It does
@@ -59,7 +59,7 @@ advice. Read the online policy before you publish.
   with the questions that it answers.
 - [The Tortoise and the Hare](docs/tortoise-and-hare.pdf) is an example
   one-shot adventure made with `gurps-ink`. Its source is
-  `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-typst).
+  `docs/example/tortoise-and-hare.typ` in the [repository](https://github.com/natfarleydev/gurps-ink).
 
 ## Install
 
@@ -113,7 +113,7 @@ The code is in `src/`. `src/lib.typ` decides what is public. The `///`
 comment above each public function documents it, and the manual shows
 these comments. Work test-first: write the behaviour in the comment, add a
 failing test in `tests/`, then make the test pass. `CLAUDE.md` in the
-[repository](https://github.com/natfarleydev/gurps-typst) has the
+[repository](https://github.com/natfarleydev/gurps-ink) has the
 conventions and the release checklist.
 
 ## Legal

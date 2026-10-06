@@ -14,7 +14,7 @@ your computer:
 
 + Install #link("https://github.com/typst/typst#installation")[Typst]
   and #link("https://just.systems")[just].
-+ Clone the #link("https://github.com/natfarleydev/gurps-typst")[repository].
++ Clone the #link("https://github.com/natfarleydev/gurps-ink")[repository].
 + In the repository, run `just install`.
 + In your document, write `#import "@local/gurps-ink:0.1.0": *`.
 
