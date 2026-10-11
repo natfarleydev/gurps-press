@@ -10,6 +10,8 @@ CLAUDE.md
 _typos.toml
 .gitignore
 .gitattributes
+# local tool state
+.claude
 # build output
 out
 dist
