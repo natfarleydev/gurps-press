@@ -47,6 +47,43 @@ jobs:
             tests/**/ref/*.png
           retention-days: 5
 
+  install:
+    # `just install` must work wherever authors write: on Windows Typst's
+    # data directory is a `C:\...` path, not a POSIX one.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    name: Install (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2
+        with:
+          tool: just
+
+      - uses: typst-community/setup-typst@48aeee7543d37f01afd1ffb27307dc277387ba13 # v4
+        with:
+          typst-version: "0.15"
+
+      - name: Install as @local
+        run: just install
+
+      - name: Leave the repository untouched
+        run: test -z "$(git status --porcelain)"
+
+      - name: Compile a document that imports the install
+        run: |
+          printf '#import "@local/gurps-press:%s": *\n#dice(3, -1)\n' \
+            "$(just version)" > "$RUNNER_TEMP/smoke.typ"
+          typst compile "$RUNNER_TEMP/smoke.typ"
+
   docs:
     name: Docs, spelling and package check
     runs-on: ubuntu-latest
@@ -73,7 +110,11 @@ jobs:
         run: just doc
 
       - name: Package
-        run: just package out
+        run: |
+          # Local tool state (e.g. Claude Code worktrees) must never ship.
+          mkdir -p .claude && touch .claude/settings.local.json
+          just package out
+          test ! -e "out/gurps-press/$(just version)/.claude"
 
       - name: Check package against Typst Universe rules
         run: |
