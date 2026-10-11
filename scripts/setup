@@ -28,10 +28,15 @@ function resolve-target() {
   local target="$1"
 
   if [[ "$target" == "@local" ]]; then
-    echo "${DATA_DIR}/typst/packages/local"
+    target="${DATA_DIR}/typst/packages/local"
   elif [[ "$target" == "@preview" ]]; then
-    echo "${DATA_DIR}/typst/packages/preview"
-  else
-    echo "$target"
+    target="${DATA_DIR}/typst/packages/preview"
   fi
+
+  # Git Bash on Windows: APPDATA, and paths `just` passes on, look like
+  # C:\... ; make them /c/... so they are absolute to the scripts.
+  if command -v cygpath >/dev/null; then
+    target="$(cygpath -u "$target")"
+  fi
+  echo "$target"
 }
